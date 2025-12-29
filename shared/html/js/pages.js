@@ -495,7 +495,8 @@
         if (!controls) return false;
         var checkbox = controls.querySelector(".checkbox input");
         if (!checkbox) return false;
-        return checkbox.checked == true;
+        if (checkbox.disabled === true) return false;
+        return checkbox.checked === true || checkbox.checked + "" === "true";
     }
 
     function noticeLoadSelectPage() {

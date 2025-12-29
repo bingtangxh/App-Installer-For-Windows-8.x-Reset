@@ -1623,6 +1623,8 @@ public ref class MainHtmlWnd: public System::Windows::Forms::Form, public IScrip
 	{
 		if (!(g_wcmdflags & (DWORD)CMDPARAM::SILENT))
 		{
+			auto launch_when_ready = (bool)InvokeCallScriptFunction ("getLaunchWhenReady");
+			if (!launch_when_ready) return;
 			std::vector <std::wnstring> appids;
 			for (auto &it : g_pkginfo)
 				for (auto &it_s : it.applications)
