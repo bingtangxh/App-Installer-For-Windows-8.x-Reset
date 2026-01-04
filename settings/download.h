@@ -148,12 +148,7 @@ public ref class DownloadHelper
 		}
 
 		DWORD protocols =
-			WINHTTP_FLAG_SECURE_PROTOCOL_TLS1 |
-			WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_1 |
-			WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_2 |
-			WINHTTP_FLAG_SECURE_PROTOCOL_SSL3 |
-			WINHTTP_FLAG_SECURE_PROTOCOL_SSL2 |
-			WINHTTP_FLAG_SECURE_PROTOCOL_ALL;
+			WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_2;
 
 		WinHttpSetOption (
 			hSession,
@@ -183,6 +178,13 @@ public ref class DownloadHelper
 			WINHTTP_NO_REFERER,
 			WINHTTP_DEFAULT_ACCEPT_TYPES,
 			isHttps ? WINHTTP_FLAG_SECURE : 0);
+		DWORD redirect = WINHTTP_OPTION_REDIRECT_POLICY_ALWAYS;
+		WinHttpSetOption (
+			hRequest,
+			WINHTTP_OPTION_REDIRECT_POLICY,
+			&redirect,
+			sizeof (redirect)
+		);
 
 		if (!hRequest)
 		{ 
@@ -191,6 +193,13 @@ public ref class DownloadHelper
 			ReportError (outPath, L"WinHttpOpenRequest failed: " + GetLastErrorString ());
 			return;
 		}
+		LPCWSTR ua = L"Mozilla/5.0 (Windows NT 6.2; Win32; x86) AppInstallerUpdater/1.0";
+		WinHttpAddRequestHeaders (
+			hRequest,
+			(std::wstring (L"User-Agent: ") + ua).c_str (),
+			-1,
+			WINHTTP_ADDREQ_FLAG_ADD
+		);
 
 		if (!WinHttpSendRequest (hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0,
 			WINHTTP_NO_REQUEST_DATA, 0, 0, 0))
@@ -207,6 +216,25 @@ public ref class DownloadHelper
 			CancelHttpHandle (hRequest); hRequest = nullptr;
 			CancelHttpHandle (hConnect); hConnect = nullptr;
 			CancelHttpHandle (hSession); hSession = nullptr;
+			DWORD status = 0;
+			DWORD size = sizeof (status);
+
+			WinHttpQueryHeaders (
+				hRequest,
+				WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
+				NULL,
+				&status,
+				&size,
+				NULL
+			);
+
+			if (status >= 400)
+			{
+				ReportError (outPath,
+					L"HTTP error: " + std::to_wstring (status));
+				return;
+			}
+
 			ReportError (outPath, L"WinHttpReceiveResponse failed: " + GetLastErrorString ());
 			return;
 		}
