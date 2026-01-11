@@ -381,7 +381,8 @@ progress.win-ring:indeterminate::-ms-fill {
 }
 
 .page>.content h1 {
-    font-size: 25pt;
+    font-size: /*25pt*/
+    23pt;
     margin-bottom: 8px;
 }
 
