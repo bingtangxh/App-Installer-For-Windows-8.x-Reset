@@ -1,5 +1,5 @@
 #pragma once
-#using "./PriFileFormat.dll"
+// #using "./PriFileFormat.dll"
 using namespace PriFileFormat;
 #include <comip.h>
 #include <atlbase.h>

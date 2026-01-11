@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle ("Update")]
+[assembly: AssemblyTitle ("更新")]
 [assembly: AssemblyDescription ("")]
 [assembly: AssemblyConfiguration ("")]
-[assembly: AssemblyCompany ("")]
-[assembly: AssemblyProduct ("Update")]
-[assembly: AssemblyCopyright ("Copyright ©  2026")]
+[assembly: AssemblyCompany ("Windows Modern")]
+[assembly: AssemblyProduct ("Windows 现代风格实用工具")]
+[assembly: AssemblyCopyright ("Copyright © 2026 Windows Modern。版权所有。")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 

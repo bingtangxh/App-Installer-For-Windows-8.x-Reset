@@ -56,11 +56,11 @@ System::Drawing::Color GetDwmThemeColor ()
 	}
 	else return System::Drawing::Color::FromArgb (0, 120, 215); // 如果获取失败，返回默认颜色
 }
-String ^ColorToHtml (System::Drawing::Color color)
+System::String ^ColorToHtml (System::Drawing::Color color)
 {
-	return String::Format ("#{0:X2}{1:X2}{2:X2}", color.R, color.G, color.B);
+	return System::String::Format ("#{0:X2}{1:X2}{2:X2}", color.R, color.G, color.B);
 }
-System::Drawing::Color StringToColor (String ^colorStr)
+System::Drawing::Color StringToColor (System::String ^colorStr)
 {
 	using Color = System::Drawing::Color;
 	using Regex = System::Text::RegularExpressions::Regex;
@@ -68,7 +68,7 @@ System::Drawing::Color StringToColor (String ^colorStr)
 	{
 		return (value < min) ? min : (value > max) ? max : value;
 	};
-	String ^normalized = colorStr->Trim ()->ToLower ();
+	System::String ^normalized = colorStr->Trim ()->ToLower ();
 	if (normalized == "transparent") return Color::Transparent;
 	if (Color::FromName (normalized).IsKnownColor)
 	{
@@ -76,17 +76,17 @@ System::Drawing::Color StringToColor (String ^colorStr)
 	}
 	if (normalized->StartsWith ("#"))
 	{
-		String^ hex = normalized->Substring (1);
+		System::String^ hex = normalized->Substring (1);
 		if (hex->Length == 3 || hex->Length == 4)
 		{
-			hex = String::Concat (
+			hex = System::String::Concat (
 				hex [0].ToString () + hex [0],
 				hex [1].ToString () + hex [1],
 				hex [2].ToString () + hex [2],
 				(hex->Length == 4) ? (hex [3].ToString () + hex [3]) : ""
 			);
 		}
-		uint32_t argb = Convert::ToUInt32 (hex, 16);
+		uint32_t argb = System::Convert::ToUInt32 (hex, 16);
 		switch (hex->Length)
 		{
 			case 6: return Color::FromArgb (
@@ -101,19 +101,19 @@ System::Drawing::Color StringToColor (String ^colorStr)
 				(argb >> 8) & 0xFF,
 				argb & 0xFF
 			);
-			default: throw gcnew ArgumentException ("Invalid hex color format");
+			default: throw gcnew System::ArgumentException ("Invalid hex color format");
 		}
 	}
 	System::Text::RegularExpressions::Match ^match = Regex::Match (normalized,
 		"^(rgba?)\\s*\\(\\s*(\\d+%?)\\s*,\\s*(\\d+%?)\\s*,\\s*(\\d+%?)\\s*,?\\s*([\\d.]+%?)?\\s*\\)$");
 	if (match->Success)
 	{
-		auto GetComponent = [&] (String^ val) -> int
+		auto GetComponent = [&] (System::String^ val) -> int
 		{
 			if (val->EndsWith ("%"))
 			{
 				float percent = float::Parse (val->TrimEnd ('%')) / 100.0f;
-				return Clamp ((int)Math::Round (percent * 255), 0, 255);
+				return Clamp ((int)System::Math::Round (percent * 255), 0, 255);
 			}
 			return Clamp (int::Parse (val), 0, 255);
 		};
@@ -122,16 +122,16 @@ System::Drawing::Color StringToColor (String ^colorStr)
 		int b = GetComponent (match->Groups [4]->Value);
 		if (match->Groups [1]->Value == "rgba")
 		{
-			String^ alphaVal = match->Groups [5]->Value;
+			System::String^ alphaVal = match->Groups [5]->Value;
 			int a = 255;
 			if (alphaVal->EndsWith ("%"))
 			{
 				float percent = float::Parse (alphaVal->TrimEnd ('%')) / 100.0f;
-				a = Clamp ((int)Math::Round (percent * 255), 0, 255);
+				a = Clamp ((int)System::Math::Round (percent * 255), 0, 255);
 			}
-			else if (!String::IsNullOrEmpty (alphaVal))
+			else if (!System::String::IsNullOrEmpty (alphaVal))
 			{
-				a = Clamp ((int)Math::Round (float::Parse (alphaVal) * 255), 0, 255);
+				a = Clamp ((int)System::Math::Round (float::Parse (alphaVal) * 255), 0, 255);
 			}
 			return Color::FromArgb (a, r, g, b);
 		}

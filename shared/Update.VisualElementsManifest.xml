@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<Application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <VisualElements DisplayName="Update" BackgroundColor="#F1F7C0" ShowNameOnSquare150x150Logo="on" ForegroundText="light" Square150x150Logo="Update.Assets\150x150Logo.png" Square70x70Logo="Update.Assets\70x70Logo.png" />
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GeneratedByTileIconifier="true">
+  <VisualElements ShowNameOnSquare150x150Logo="on" Square150x150Logo="VisualElements\MediumIconUpdate.png" Square70x70Logo="VisualElements\SmallIconUpdate.png" ForegroundText="light" BackgroundColor="#ffc107" TileIconifierColorSelection="Custom" TileIconifierCreatedWithUpgrade="false" />
 </Application>

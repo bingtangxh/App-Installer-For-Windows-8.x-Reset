@@ -186,6 +186,11 @@
   <ItemGroup>
     <ResourceCompile Include="priformatcli.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PriFileFormat\PriFile.csproj">
+      <Project>{ef4012d4-ef08-499c-b803-177739350b2d}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
