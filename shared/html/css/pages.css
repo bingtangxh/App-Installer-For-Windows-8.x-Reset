@@ -328,7 +328,7 @@ progress.win-ring:indeterminate::-ms-fill {
     position: relative;
     width: 100%;
     max-width: 100%;
-    min-height: 10%;
+    min-height: 5%;
     overflow-x: hidden;
     overflow-y: auto;
     max-height: calc(100% - 10.5em);
@@ -648,4 +648,24 @@ progress.win-ring:indeterminate::-ms-fill {
 .page.installsuccess>.controls>.command button:nth-of-type(2),
 .page.installfailed>.controls>.command button:nth-of-type(2) {
     display: none;
+}
+
+.page .content .pkgsupport {
+    display: none;
+}
+
+.page.preinstall .content .pkgsupport.preinstall {
+    display: block;
+}
+
+.page .content .pkgsupport>* {
+    display: none;
+}
+
+.page .content .pkgsupport.support>.support {
+    display: block;
+}
+
+.page .content .pkgsupport.not-support>.not-support {
+    display: block;
 }

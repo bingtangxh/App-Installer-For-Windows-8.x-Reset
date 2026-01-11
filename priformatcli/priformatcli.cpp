@@ -354,29 +354,55 @@ PCSPRIFILE CreatePriFileInstanceFromPath (LPCWSTR lpswFilePath)
 	}
 	return nullptr;
 }
+//void DestroyPriFileInstance (PCSPRIFILE pFilePri)
+//{
+//	if (!pFilePri) return;
+//	try
+//	{
+//		if (g_tasklist.find (pFilePri) != g_tasklist.end ())
+//		{
+//			g_tasklist [pFilePri].bIsRunning = false;
+//			g_tasklist.erase (pFilePri);
+//		}
+//		IntPtr handlePtr = IntPtr (pFilePri); 
+//		System::Runtime::InteropServices::GCHandle handle = System::Runtime::InteropServices::GCHandle::FromIntPtr (handlePtr);
+//		PriFileInst ^inst = safe_cast <PriFileInst ^> (handle.Target);
+//		delete inst;
+//		handle.Free ();
+//		System::GC::Collect ();
+//		System::GC::WaitForPendingFinalizers ();
+//		System::GC::Collect ();
+//	}
+//	catch (System::Exception ^e)
+//	{
+//		SetPriLastError (MPStringToStdW (e->Message));
+//	}
+//}
 void DestroyPriFileInstance (PCSPRIFILE pFilePri)
 {
 	if (!pFilePri) return;
 	try
 	{
-		if (g_tasklist.find (pFilePri) != g_tasklist.end ())
+		CreateScopedLock (g_threadlock);
+		auto it = g_tasklist.find (pFilePri);
+		if (it != g_tasklist.end ())
 		{
-			g_tasklist [pFilePri].bIsRunning = false;
-			g_tasklist.erase (pFilePri);
+			it->second.bIsRunning = false;
+			g_tasklist.erase (it);
 		}
-		IntPtr handlePtr = IntPtr (pFilePri); 
+		IntPtr handlePtr = IntPtr (pFilePri);
 		System::Runtime::InteropServices::GCHandle handle = System::Runtime::InteropServices::GCHandle::FromIntPtr (handlePtr);
 		PriFileInst ^inst = safe_cast <PriFileInst ^> (handle.Target);
 		delete inst;
 		handle.Free ();
-		System::GC::Collect ();
-		System::GC::WaitForPendingFinalizers ();
-		System::GC::Collect ();
 	}
 	catch (System::Exception ^e)
 	{
 		SetPriLastError (MPStringToStdW (e->Message));
 	}
+	System::GC::Collect ();
+	System::GC::WaitForPendingFinalizers ();
+	System::GC::Collect ();
 }
 LPCWSTR PriFileGetLastError ()
 {
@@ -724,44 +750,96 @@ void PriFileIterateTaskCli (Object^ pFilePriObj)
 	PCSPRIFILE pFilePri = (PCSPRIFILE)ptr.ToPointer ();
 	PriFileIterateTask (pFilePri);
 }
+//void AddPriResourceName (PCSPRIFILE pFilePri, const std::vector <std::wnstring> &urilist)
+//{
+//	if (!pFilePri) return;
+//	if (!urilist.size ()) return;
+//	try { g_tasklist.at (pFilePri); } catch (const std::exception &e) { g_tasklist [pFilePri] = TASKINFO_SEARCH (); }
+//	auto &task = g_tasklist.at (pFilePri);
+//	bool isallfined = true;
+//	{
+//		CreateScopedLock (g_threadlock);
+//		CreateScopedLock (g_iterlock);
+//		for (auto &it : urilist)
+//		{
+//			if (it.empty ()) continue;
+//			try
+//			{
+//				if (task.mapTasks [TASKITEM_SEARCH (it)].has_search ())
+//				{
+//					isallfined = isallfined && true;
+//					continue;
+//				}
+//				else isallfined = isallfined && false;
+//			}
+//			catch (const std::exception &e)
+//			{
+//				task.mapTasks [TASKITEM_SEARCH (it)] = TASKRESULT_FIND ();
+//				isallfined = isallfined && false;
+//			}
+//		}
+//	}
+//	if (isallfined) return;
+//	// while (task.bIsRunning) { Sleep (200); }
+//	System::Threading::Thread ^t = nullptr;
+//	if (!task.bIsRunning)
+//	{
+//		// task.bIsRunning = true;
+//		t = gcnew System::Threading::Thread (gcnew System::Threading::ParameterizedThreadStart (PriFileIterateTaskCli));
+//		t->IsBackground = true;
+//		t->Start (IntPtr (pFilePri));
+//	}
+//}
 void AddPriResourceName (PCSPRIFILE pFilePri, const std::vector <std::wnstring> &urilist)
 {
 	if (!pFilePri) return;
 	if (!urilist.size ()) return;
-	try { g_tasklist.at (pFilePri); } catch (const std::exception &e) { g_tasklist [pFilePri] = TASKINFO_SEARCH (); }
-	auto &task = g_tasklist.at (pFilePri);
-	bool isallfined = true;
 	{
 		CreateScopedLock (g_threadlock);
+		if (g_tasklist.find (pFilePri) == g_tasklist.end ())
+		{
+			g_tasklist [pFilePri] = TASKINFO_SEARCH ();
+		}
+	}
+	TASKINFO_SEARCH *ptask = nullptr;
+	{
+		CreateScopedLock (g_threadlock);
+		ptask = &g_tasklist.at (pFilePri);
+	}
+	auto &task = *ptask;
+	bool isallfined = true;
+	{
 		CreateScopedLock (g_iterlock);
 		for (auto &it : urilist)
 		{
 			if (it.empty ()) continue;
-			try
+			TASKITEM_SEARCH key (it);
+			auto itFound = task.mapTasks.find (key);
+			if (itFound != task.mapTasks.end ())
 			{
-				if (task.mapTasks [TASKITEM_SEARCH (it)].has_search ())
+				if (itFound->second.has_search ())
 				{
 					isallfined = isallfined && true;
 					continue;
 				}
 				else isallfined = isallfined && false;
 			}
-			catch (const std::exception &e)
+			else
 			{
-				task.mapTasks [TASKITEM_SEARCH (it)] = TASKRESULT_FIND ();
+				task.mapTasks [key] = TASKRESULT_FIND ();
 				isallfined = isallfined && false;
 			}
 		}
 	}
 	if (isallfined) return;
-	// while (task.bIsRunning) { Sleep (200); }
-	System::Threading::Thread ^t = nullptr;
-	if (!task.bIsRunning)
 	{
-		// task.bIsRunning = true;
-		t = gcnew System::Threading::Thread (gcnew System::Threading::ParameterizedThreadStart (PriFileIterateTaskCli));
-		t->IsBackground = true;
-		t->Start (IntPtr (pFilePri));
+		CreateScopedLock (g_threadlock);
+		if (!task.bIsRunning)
+		{
+			System::Threading::Thread ^t = gcnew System::Threading::Thread (gcnew System::Threading::ParameterizedThreadStart (PriFileIterateTaskCli));
+			t->IsBackground = true;
+			t->Start (IntPtr (pFilePri));
+		}
 	}
 }
 void FindPriResource (PCSPRIFILE pFilePri, HLPCWSTRLIST hUriList)

@@ -113,6 +113,7 @@
                 push_nonull(titlepart, content.querySelector(".pkgapplabel"));
                 push_nonull(titlepart, content.querySelector(".pkgpublisher"));
                 push_nonull(titlepart, content.querySelector(".pkgversion"));
+                push_nonull(titlepart, content.querySelector(".pkgsupport"));
                 push_nonull(textpart, content.querySelector(".pkgfunctions-label"));
                 push_nonull(textpart, content.querySelector(".functions"));
                 push_nonull(textpart, content.querySelector(".moreinfo"));
@@ -320,6 +321,13 @@
     function setFlyoutDisplayInfo(pkginfo) {
         var flyout = document.getElementById("moreinfo-flyout");
         var content = document.getElementById("moreinfo-flyout-content");
+        var ret = {
+            architectureSupport: false,
+            osminversionSupport: false,
+            showArchitectureText: "",
+            showOsminversionText: "",
+        };
+        var sysArch = Bridge.External.System.Archievement;
         (function() {
             var name = content.querySelector(".id.name");
             name.textContent = pkginfo.identity.name;
@@ -328,32 +336,52 @@
             var version = content.querySelector(".id.version");
             version.textContent = stringifyVersion(pkginfo.identity.realver);
             var arch = content.querySelector(".id.arch");
+            console.log(pkginfo.identity.architecture);
             if (pkginfo.type === 1) {
                 switch (pkginfo.identity.architecture) {
                     case 1:
                         arch.textContent = "x86";
+                        if (sysArch == 0 || sysArch == 9) ret.architectureSupport = true;
                         break;
                     case 2:
                         arch.textContent = "x64";
+                        if (sysArch == 9) ret.architectureSupport = true;
                         break;
                     case 4:
                         arch.textContent = "ARM";
+                        if (sysArch == 5 || sysArch == 12) ret.architectureSupport = true;
                         break;
                     case 8:
                         arch.textContent = "ARM64";
+                        if (sysArch == 12) ret.architectureSupport = true;
                         break;
-                    case 16:
+                    case 15:
                         arch.textContent = "Neutral";
+                        if (sysArch != 6 && sysArch > 0) ret.architectureSupport = true;
                         break;
                 }
+                ret.showArchitectureText = arch.textContent;
             } else if (pkginfo.type === 2) {
                 var varch = pkginfo.identity.architecture;
                 var strarr = [];
-                if (varch & 1) strarr.push("x86");
-                if (varch & 2) strarr.push("x64");
-                if (varch & 4) strarr.push("ARM");
-                if (varch & 8) strarr.push("ARM64");
+                if (varch & 1) {
+                    strarr.push("x86");
+                    if (sysArch == 0 || sysArch == 9) ret.architectureSupport = true;
+                }
+                if (varch & 2) {
+                    strarr.push("x64");
+                    if (sysArch == 9) ret.architectureSupport = true;
+                }
+                if (varch & 4) {
+                    strarr.push("ARM");
+                    if (sysArch == 5 || sysArch == 12) ret.architectureSupport = true;
+                }
+                if (varch & 8) {
+                    strarr.push("ARM64");
+                    if (sysArch == 12) ret.architectureSupport = true;
+                }
                 arch.textContent = strarr.join(", ");
+                ret.showArchitectureText = arch.textContent;
             }
             var family = content.querySelector(".id.family");
             family.textContent = pkginfo.identity.package_family_name;
@@ -370,6 +398,24 @@
             var sys = content.querySelector(".info.sys");
             var strutils = Bridge.External.String;
             sys.textContent = strutils.format(Bridge.Resources.byname("IDS_MOREINFO_INFOSYS_VALUE"), pkginfo.prerequisites.os_min_version_description, stringifyVersion(pkginfo.prerequisites.os_min_version));
+            var pkgSupportVer = pkginfo.prerequisites.os_min_version;
+            var systemSupportVer = Bridge.External.System.Version;
+            ret.showOsminversionText = stringifyVersion(pkgSupportVer);
+            if (pkgSupportVer.major < systemSupportVer.major) {
+                ret.osminversionSupport = true;
+            } else if (pkgSupportVer.major == systemSupportVer.major) {
+                if (pkgSupportVer.minor < systemSupportVer.minor) {
+                    ret.osminversionSupport = true;
+                } else if (pkgSupportVer.minor == systemSupportVer.minor) {
+                    if (pkgSupportVer.major == 6 && pkgSupportVer.minor == 3 && pkgSupportVer.build == 1) {
+                        if (pkginfo.identity.architecture & (4 | 8)) {
+                            ret.osminversionSupport = true;
+                        }
+                    } else {
+                        ret.osminversionSupport = true;
+                    }
+                }
+            }
             var lang = content.querySelector(".info.langs");
             lang.innerHTML = "";
             for (var i = 0; i < pkginfo.resources.languages.length; i++) {
@@ -379,6 +425,7 @@
                 lang.appendChild(li);
             }
         })();
+        return ret;
     }
 
     function noticeLoadPreinstallPage(ismul) {
@@ -451,7 +498,16 @@
                     funclist.appendChild(li);
                 }
             }
-            setFlyoutDisplayInfo(pkginfo);
+            var support = setFlyoutDisplayInfo(pkginfo);
+            var supportDisplay = page.querySelector(".pkgsupport");
+            if (support.architectureSupport && support.osminversionSupport) {
+                supportDisplay.classList.add("support");
+                supportDisplay.classList.remove("not-support");
+            } else {
+                supportDisplay.classList.add("not-support");
+                supportDisplay.classList.remove("support");
+            }
+            supportDisplay.setAttribute("title", strutils.format("OS Min Version: {0}, Architecture: {1}", support.showOsminversionText, support.showArchitectureText));
         }
     }
 

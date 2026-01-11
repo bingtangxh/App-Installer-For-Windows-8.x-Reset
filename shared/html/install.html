@@ -257,7 +257,12 @@
                 <p class="pkgtitle multiple" data-res-byname="IDS_PREINSTALL_MPKGNAME"></p>
                 <p class="pkgapplabel" data-res-byname="IDS_MSAPP"></p>
                 <p class="pkgpublisher" data-res-byname="IDS_PUBLISHER"></p>
-                <p class="pkgversion" data-res-byname="IDS_VERSION"></p><br />
+                <p class="pkgversion" data-res-byname="IDS_VERSION"></p>
+                <p class="pkgsupport preinstall">
+                    <span class="support" data-res-byname="IDS_PREINSTALL_SUPPOS"></span>
+                    <span class="not-support" data-res-byname="IDS_PREINSTALL_NOSUPPOS"></span>
+                </p>
+                <br />
                 <p class="pkgfunctions-label" data-res-byname="IDS_FUNCTIONNAME"></p>
                 <div class="functions">
                     <ul>
@@ -317,6 +322,7 @@
                             var slfilter = storelogo.querySelector(".filter");
                             var pi = Bridge.Package.pkginfo(this.value);
                             var reason = page.querySelector(".reason textarea");
+                            var support = page.querySelector(".pkgsupport");
                             if (pi && pi.valid) {
                                 var res = Bridge.Resources;
                                 pkgtitle.textContent = strutils.format(res.byname("IDS_PREINSTALL_MPKGNAME"), pi.properties.display_name);
@@ -355,7 +361,16 @@
                                     storelogo.style.backgroundColor = bc;
                                     slfilter.style.background = Color.genTileBackFilter(bc);
                                 }
-                                setFlyoutDisplayInfo(pi);
+                                var support = setFlyoutDisplayInfo(pi);
+                                var supportDisplay = page.querySelector(".pkgsupport");
+                                if (support.architectureSupport && support.osminversionSupport) {
+                                    supportDisplay.classList.add("support");
+                                    supportDisplay.classList.remove("not-support");
+                                } else {
+                                    supportDisplay.classList.add("not-support");
+                                    supportDisplay.classList.remove("support");
+                                }
+                                supportDisplay.setAttribute("title", strutils.format("OS Min Version: {0}, Architecture: {1}", support.showOsminversionText, support.showArchitectureText));
                                 var hres = Bridge.Package.installResult(this.value);
                                 if (hres && hres.failed) {
                                     reason.textContent = hres.message;

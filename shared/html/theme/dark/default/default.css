@@ -30,10 +30,18 @@
 }
 
 .page .reason textarea {
-    background-color: rgba (255, 255, 255, 0);
+    background-color: rgba(255, 255, 255, 0);
     color: white;
     border: 2px solid white;
     box-sizing: border-box;
+}
+
+.page .content .pkgsupport.support>.support {
+    color: rgb(84, 197, 52);
+}
+
+.page .content .pkgsupport.not-support>.not-support {
+    color: rgb(209, 57, 46);
 }
 
 

@@ -1,5 +1,4 @@
 #include <Windows.h>
-#include <set>
 #include <msclr/marshal_cppstd.h>
 #include <ShObjIdl.h>
 #include <ShlObj.h>       // KNOWNFOLDERID, SHGetKnownFolderPath
@@ -284,6 +283,37 @@ public ref class _I_System
 			if (VerifyVersionInfoW (&osvi, VER_MAJORVERSION, conditionMask)) return TRUE;
 			DWORD error = GetLastError ();
 			return (error == ERROR_OLD_WIN_VERSION) ? FALSE : FALSE;
+		}
+	}
+	property int Archievement
+	{
+		int get ()
+		{
+			SYSTEM_INFO si;
+			ZeroMemory (&si, sizeof (si));
+			typedef VOID (WINAPI *LPFN_GetNativeSystemInfo)(LPSYSTEM_INFO);
+			LPFN_GetNativeSystemInfo fnGetNativeSystemInfo =
+				(LPFN_GetNativeSystemInfo)GetProcAddress (
+					GetModuleHandleW (L"kernel32.dll"),
+					"GetNativeSystemInfo");
+			if (fnGetNativeSystemInfo) fnGetNativeSystemInfo (&si);
+			else GetSystemInfo (&si);
+			return (int)si.wProcessorArchitecture;
+		}
+	}
+	property _I_Version ^Version
+	{
+		_I_Version ^get ()
+		{
+			auto ver = Environment::OSVersion->Version;
+			try
+			{
+				return gcnew _I_Version (ver->Major, ver->Minor, ver->Build, ver->Revision);
+			}
+			catch (...)
+			{
+				return gcnew _I_Version (ver->Major, ver->Minor, ver->Build, 0);
+			}
 		}
 	}
 };
@@ -1038,7 +1068,7 @@ public ref class MainHtmlWnd: public System::Windows::Forms::Form, public IScrip
 		_I_IEFrame ^ieframe;
 		_I_System3 ^sys;
 		public:
-		IBridge (MainHtmlWnd ^wnd): wndinst (wnd), _I_Bridge_Base2 (wnd) 
+		IBridge (MainHtmlWnd ^wnd): wndinst (wnd), _I_Bridge_Base2 (wnd)
 		{
 			ieframe = gcnew _I_IEFrame (wnd);
 			sys = gcnew _I_System3 (wnd);

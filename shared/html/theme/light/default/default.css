@@ -20,6 +20,14 @@
     color: #0078d7;
 }
 
+.page .content .pkgsupport.support>.support {
+    color: rgb(0, 138, 23);
+}
+
+.page .content .pkgsupport.not-support>.not-support {
+    color: rgb(236, 28, 36);
+}
+
 
 /* App Launch List */
 
