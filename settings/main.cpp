@@ -56,7 +56,7 @@ struct iconhandle
 
 LPCWSTR g_lpAppId = L"WindowsModern.PracticalToolsProject!Settings";
 LPCWSTR g_idInVe = L"Settings";
-LPCWSTR g_wndclass = L"Win32_WebUI_WindowsModern";
+LPCWSTR g_wndclass = L"Win32_WebUI_WindowsModern_Settings";
 iconhandle g_hIconMain (LoadRCIcon (IDI_ICON_MAIN));
 initfile g_initfile (CombinePath (GetProgramRootDirectoryW (), L"config.ini"));
 vemanifest g_vemani (

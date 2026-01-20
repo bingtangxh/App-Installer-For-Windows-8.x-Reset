@@ -1,0 +1,13 @@
+@font-face {
+    font-family: "segxmvr";
+    src: url('segxmvr.woff') format('woff'), url('segxmvr.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Segoe Xbox Symbol";
+    src: url('segxsym.woff') format('woff'), url('segxsym.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}

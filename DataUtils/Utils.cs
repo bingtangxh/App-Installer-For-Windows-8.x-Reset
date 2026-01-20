@@ -181,5 +181,9 @@ namespace DataUtils
 		}
 		public static bool NNoEmpty (this string l) => !((l ?? "")?.NEmpty () ?? true);
 		public static string NNormalize (this string l) => (l ?? "")?.Trim ()?.ToLower () ?? "";
+		public interface IJsonBuild
+		{
+			object BuildJSON ();
+		}
 	}
 }

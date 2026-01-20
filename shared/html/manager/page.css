@@ -1,0 +1,318 @@
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    user-select: none;
+    -ms-user-select: none;
+}
+
+body * {
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+*,
+button,
+input,
+select,
+textarea,
+a,
+label,
+p,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ul,
+ol,
+li,
+dl,
+dt,
+dd,
+table,
+th,
+td,
+tr,
+img,
+iframe,
+object,
+embed,
+audio,
+video,
+canvas,
+form,
+fieldset,
+legend,
+.win-type-x-large,
+.win-type-xx-large,
+.font-fixed {
+    font-family: "Microsoft YaHei", "Segoe UI", "Ebrima", "Nirmala", "Gadugi", "Segoe UI Emoji", "Segoe UI Symbol", "Meiryo", "Leelawadee", "Microsoft JhengHei", "Malgun Gothic", "Estrangelo Edessa", "Microsoft Himalaya", "Microsoft New Tai Lue", "Microsoft PhagsPa", "Microsoft Tai Le", "Microsoft Yi Baiti", "Mongolian Baiti", "MV Boli", "Myanmar Text", "Javanese Text", "Cambria Math";
+}
+
+.pagecontainer {
+    padding: 0px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    /* background-color: #f3f3f3; */
+    background-color: white;
+}
+
+.pagecontainer.full {
+    padding: 0px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.pagecontainer>.page {
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    box-sizing: border-box;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+.page>aside {
+    overflow-y: auto;
+    overflow-x: hidden;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    transition: all 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+    background-color: rgba(34, 34, 34, 1);
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    box-sizing: border-box;
+    width: 300px;
+}
+
+.page.fold>aside {
+    width: 90px;
+}
+
+.page>main {
+    overflow-x: hidden;
+    overflow-y: auto;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    transition: all 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    box-sizing: border-box;
+    left: 300px;
+}
+
+.page.fold>main {
+    left: 90px;
+}
+
+.page>aside hr {
+    margin-top: 9px;
+    margin-bottom: 9px;
+    width: calc(100% - 35px * 2);
+    border-color: rgba(100, 100, 100, 1);
+}
+
+.page.fold>aside hr {
+    width: calc(100% - 10px * 2);
+}
+
+aside>nav {
+    padding-top: 40px;
+    box-sizing: border-box;
+}
+
+aside>nav ul {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+aside>nav ul li {
+    width: 100%;
+    height: 50px;
+    box-sizing: border-box;
+    transition: all 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+    font-size: 13pt;
+    padding: 0 35px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: flex-start;
+    align-items: center;
+    display: -ms-flexbox;
+    -ms-flex-direction: row;
+    -ms-flex-pack: start;
+    -ms-flex-align: center;
+}
+
+.page.fold>aside>nav ul li {
+    padding: 0;
+}
+
+aside>nav ul li div[role=img] {
+    height: 100%;
+    text-align: center;
+    font-family: 'Segoe UI Symbol', Symbols, 'Segoe Xbox Symbol', segxmvr, 'Segoe MDL2 Assets', 'Segoe Fluent Icons';
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    display: -ms-flexbox;
+    -ms-flex-direction: row;
+    -ms-flex-wrap: none;
+    -ms-flex-pack: center;
+    -ms-flex-align: center;
+    -ms-flex-line-pack: center;
+    text-align: center;
+}
+
+.page.fold>aside>nav ul li div[role=img] {
+    min-width: 90px;
+    width: 90px;
+}
+
+.page.fold>aside>nav ul li span {
+    display: none;
+    opacity: 0;
+}
+
+.page>aside>nav ul li span {
+    display: block;
+    opacity: 1;
+    text-overflow: ellipsis;
+    transition: all 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+    white-space: nowrap;
+    /* 不换行 */
+    overflow-x: hidden;
+    /* 超出隐藏 */
+    overflow-y: hidden;
+}
+
+.page>aside>nav ul li div[role=img] {
+    font-size: 15pt;
+    margin-right: 5px;
+}
+
+.page>aside>nav ul li.title div[role=img] {
+    font-size: 13pt;
+    margin: 0;
+}
+
+.page>aside>nav ul li.title {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: row-reverse;
+    flex-direction: row-reverse;
+    -ms-flex-wrap: nowrap;
+    -ms-flex-pack: start;
+    /* justify-content: flex-start */
+    -ms-flex-align: center;
+    /* align-items: center */
+    align-content: center;
+}
+
+.page>aside>nav ul li.title span,
+.page>aside>nav ul li.title div[role=placeholder] {
+    flex: 1;
+    -ms-flex: 1;
+}
+
+.page.fold>aside>nav ul li.title div[role=placeholder] {
+    display: none;
+}
+
+.page>aside>nav ul li:hover {
+    background-color: rgba(58, 58, 58, 1);
+    position: relative;
+}
+
+.page.fold>aside>nav ul li:hover {
+    width: 300px;
+    padding: 0 30px;
+}
+
+.page.fold>aside>nav ul li:hover div[role=img] {
+    min-width: 0;
+    width: auto;
+}
+
+.page.fold>aside>nav ul li:hover span {
+    display: block;
+    opacity: 1;
+    padding: 0 30px;
+}
+
+.page.fold>aside>nav ul li.title:hover {
+    width: 90px;
+    padding: 0;
+}
+
+.page.fold>aside>nav ul li.title:hover div[role=img] {
+    min-width: 0;
+    width: 90px;
+}
+
+.page.fold>aside>nav ul li.title:hover span {
+    display: none;
+    opacity: 0;
+}
+
+.page>aside>nav ul li:active {
+    background-color: rgba(100, 100, 100, 1);
+}
+
+.page.fold aside,
+.page.fold aside>nav,
+.page.fold aside>nav ul,
+.page.fold aside>nav ul li {
+    overflow-x: visible;
+    overflow-y: visible;
+}
+
+.main.padding {
+    padding: 44px 60px;
+}
+
+.section {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: white;
+}
+
+.section.padding {
+    padding: 44px 60px;
+}
+
+.section.padding .bottom-compensate {
+    padding-bottom: 44px;
+}

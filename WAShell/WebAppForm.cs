@@ -12,56 +12,90 @@ namespace WAShell
 {
 	[ComVisible (true)]
 	[ClassInterface (ClassInterfaceType.AutoDual)]
-	public partial class WebAppForm: Form, IScriptBridge, IWebBrowserPageScale
+	public partial class WebAppForm: Form, IScriptBridge, IWebBrowserPageScale, ITaskbarProgress
 	{
-		SplashForm splash;
-		ITaskbarList3 taskbar = null;
+		SplashForm splash = new SplashForm ();
+		TaskbarProgress taskbar = null;
+		public WebBrowser WebUI => webui;
+		public SplashForm SplashScreen => splash;
+		public object PublicObjectForScripting { get { return webui?.ObjectForScripting; } set { webui.ObjectForScripting = null; webui.ObjectForScripting = value; } }
+		protected Bridge._I_BridgeBase NowObject { get { return webui?.ObjectForScripting as Bridge._I_BridgeBase; } }
 		public WebAppForm ()
 		{
+			splash.Host = this;
 			InitializeComponent ();
+			webui.ObjectForScripting = new Bridge._I_BridgeBase (this, this, this, this);
+			taskbar = new TaskbarProgress (Handle);
 		}
-		public int PageScale
+		public virtual int PageScale
 		{
-			get
-			{
-				var web2 = WebBrowserHelper.GetWebBrowser2 (webui);
-				if (web2 == null) return 0;
-				object inArg = null;
-				object outArg = null;
-				try
-				{
-					web2.ExecWB (
-						OLECMDID.OLECMDID_OPTICAL_ZOOM,
-						OLECMDEXECOPT.OLECMDEXECOPT_DODEFAULT,
-						ref inArg,
-						ref outArg
-					);
-					if (outArg is int) return (int)outArg;
-				}
-				catch { }
-				return 0;
-			}
+			get { return IEHelper.WebBrowserHelper.GetPageScale (webui); }
+			set { IEHelper.WebBrowserHelper.SetPageScale (webui, value); }
+		}
+		public double ProgressValue
+		{
 			set
 			{
-				var web2 = WebBrowserHelper.GetWebBrowser2 (webui);
-				if (web2 == null) return;
-				object inArg = value;
-				object outArg = null;
-				try
-				{
-					web2.ExecWB (
-						OLECMDID.OLECMDID_OPTICAL_ZOOM,
-						OLECMDEXECOPT.OLECMDEXECOPT_DONTPROMPTUSER,
-						ref inArg,
-						ref outArg
-					);
-				}
-				catch { }
+				if (taskbar == null) return;
+				double total = 1000000;
+				taskbar.SetValue ((ulong)(value * total), (ulong)total);
 			}
 		}
-		public object CallEvent (string funcName, object e)
+		public TBPFLAG ProgressStatus { set { taskbar.SetState (value); } }
+		public virtual object CallEvent (string funcName, object e)
 		{
 			return null;
+		}
+		private void WebAppForm_Load (object sender, EventArgs e)
+		{
+			// splash.SplashBackgroundColor = Color.Green;
+			splash.ResizeSplashScreen ();
+			splash.Show ();
+			splash.Update ();
+			// splash.FadeOut ();
+		}
+		private bool issetdpi = false;
+		protected virtual void webui_DocumentCompleted (object sender, WebBrowserDocumentCompletedEventArgs e)
+		{
+			if (!issetdpi)
+			{
+				issetdpi = true;
+				ExecScript ("Bridge.Frame.scale = Bridge.Frame.scale * Bridge.UI.dpi");
+			}
+			ExecScript ("Windows.UI.DPI.mode = 1");
+			if (e.Url.ToString () == webui.Url.ToString ())
+			{
+				splash.FadeOut ();
+			}
+		}
+		protected object CallScriptFunction (string funcName, params object [] args) { return webui.Document.InvokeScript (funcName, args); }
+		protected object CallScriptFunction (string funcName) { return webui.Document.InvokeScript (funcName); }
+		public object InvokeCallScript (string funcName, params object [] args)
+		{
+			if (this.InvokeRequired)
+			{
+				return this.Invoke (
+					new Func<string, object [], object> (CallScriptFunction),
+					funcName, args
+				);
+			}
+			else return CallScriptFunction (funcName, args);
+		}
+		public object InvokeCallScript (string funcName)
+		{
+			if (this.InvokeRequired)
+			{
+				return this.Invoke (
+					new Func<string, object> (CallScriptFunction),
+					funcName
+				);
+			}
+			else return CallScriptFunction (funcName);
+		}
+		public object ExecScript (params object [] cmdline) { return InvokeCallScript ("eval", cmdline); }
+		private void WebAppForm_FormClosing (object sender, FormClosingEventArgs e)
+		{
+			webui.ObjectForScripting = null;
 		}
 	}
 }

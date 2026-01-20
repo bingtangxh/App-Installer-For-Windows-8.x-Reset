@@ -39,6 +39,7 @@
 			this.webui.Name = "webui";
 			this.webui.Size = new System.Drawing.Size(661, 416);
 			this.webui.TabIndex = 0;
+			this.webui.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.webui_DocumentCompleted);
 			// 
 			// WebAppForm
 			// 
@@ -49,6 +50,8 @@
 			this.Controls.Add(this.webui);
 			this.Name = "WebAppForm";
 			this.Text = "Main Web App Form";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WebAppForm_FormClosing);
+			this.Load += new System.EventHandler(this.WebAppForm_Load);
 			this.ResumeLayout(false);
 
 		}

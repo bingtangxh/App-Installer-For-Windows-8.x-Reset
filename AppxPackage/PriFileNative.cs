@@ -32,10 +32,10 @@ namespace AppxPackage
 		public static extern string PriFileGetLastError ();
 
 		[DllImport (DLL, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void FindPriStringResource (PCSPRIFILE pFilePri, ref LPCWSTRLIST hUriList);
+		public static extern void FindPriStringResource (PCSPRIFILE pFilePri, IntPtr hUriList);
 
 		[DllImport (DLL, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void FindPriPathResource (PCSPRIFILE pFilePri, ref LPCWSTRLIST hPathList);
+		public static extern void FindPriPathResource (PCSPRIFILE pFilePri, IntPtr hPathList);
 
 		[DllImport (DLL, CallingConvention = CallingConvention.Cdecl)]
 		public static extern void ClearPriCacheData ();
@@ -44,7 +44,7 @@ namespace AppxPackage
 		public static extern IntPtr GetPriResource (PCSPRIFILE pFilePri, [MarshalAs (UnmanagedType.LPWStr)] string lpswResId);
 
 		[DllImport (DLL, CallingConvention = CallingConvention.Cdecl)]
-		public static extern void FindPriResource (PCSPRIFILE pFilePri, ref LPCWSTRLIST hUriList);
+		public static extern void FindPriResource (PCSPRIFILE pFilePri, IntPtr hUriList);
 
 		[DllImport (DLL, CallingConvention = CallingConvention.Cdecl)]
 		[return: MarshalAs (UnmanagedType.Bool)]
@@ -64,14 +64,42 @@ namespace AppxPackage
 			Marshal.FreeHGlobal (ptr); // 如果 DLL 返回的内存要求 free
 			return s;
 		}
-
+		[DllImport (DLL, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void FreePriString (IntPtr p);
 	}
-	[StructLayout (LayoutKind.Sequential)]
-	public struct LPCWSTRLIST
+	public static class LpcwstrListHelper
 	{
-		public uint dwLength; // DWORD
-		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 1)]
-		public IntPtr [] aswArray; // LPCWSTR*，数组
-	}
+		public static IntPtr Create (IEnumerable<string> strings)
+		{
+			if (strings == null) return IntPtr.Zero;
+			var list = new List<string> (strings);
+			int count = list.Count;
+			int size = sizeof (uint) + IntPtr.Size * count;
+			IntPtr pMem = Marshal.AllocHGlobal (size);
+			Marshal.WriteInt32 (pMem, count);
+			IntPtr pArray = pMem + sizeof (uint);
+			for (int i = 0; i < count; i++)
+			{
+				IntPtr pStr = Marshal.StringToHGlobalUni (list [i]);
+				Marshal.WriteIntPtr (pArray, i * IntPtr.Size, pStr);
+			}
+			return pMem;
+		}
+		public static void Destroy (IntPtr pList)
+		{
+			if (pList == IntPtr.Zero)
+				return;
 
+			int count = Marshal.ReadInt32 (pList);
+			IntPtr pArray = pList + sizeof (uint);
+
+			for (int i = 0; i < count; i++)
+			{
+				IntPtr pStr = Marshal.ReadIntPtr (pArray, i * IntPtr.Size);
+				if (pStr != IntPtr.Zero)
+					Marshal.FreeHGlobal (pStr);
+			}
+			Marshal.FreeHGlobal (pList);
+		}
+	}
 }

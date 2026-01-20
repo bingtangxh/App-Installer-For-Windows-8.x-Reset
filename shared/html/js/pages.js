@@ -336,7 +336,7 @@
             var version = content.querySelector(".id.version");
             version.textContent = stringifyVersion(pkginfo.identity.realver);
             var arch = content.querySelector(".id.arch");
-            console.log(pkginfo.identity.architecture);
+            //console.log(pkginfo, JSON.stringify(pkginfo));
             if (pkginfo.type === 1) {
                 switch (pkginfo.identity.architecture) {
                     case 1:

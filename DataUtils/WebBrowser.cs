@@ -22,12 +22,13 @@ namespace DataUtils
 		void ExecWB (
 			OLECMDID cmdID,
 			OLECMDEXECOPT cmdexecopt,
-			ref object pvaIn,
-			ref object pvaOut
+			[In, Optional] object pvaIn,
+			[Out, Optional] object pvaOut
 		);
 	}
 	public static class WebBrowserHelper
 	{
+		static Guid CGID_MSHTML = new Guid ("DE4BA900-59CA-11CF-9592-444553540000");
 		public static IWebBrowser2 GetWebBrowser2 (WebBrowser browser)
 		{
 			return browser.ActiveXInstance as IWebBrowser2;
@@ -37,4 +38,20 @@ namespace DataUtils
 	{
 		int PageScale { get; set; }
 	}
+	[ComImport]
+	[Guid ("B722BCCB-4E68-101B-A2BC-00AA00404770")]
+	[InterfaceType (ComInterfaceType.InterfaceIsIUnknown)]
+	public interface IOleCommandTarget
+	{
+		[PreserveSig]
+		int Exec (
+			ref Guid pguidCmdGroup,
+			uint nCmdID,
+			uint nCmdexecopt,
+			ref object pvaIn,
+			ref object pvaOut
+		);
+	}
+
+
 }

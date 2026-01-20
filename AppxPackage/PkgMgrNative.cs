@@ -14,6 +14,8 @@ namespace NativeWrappers
 	using HRESULT = System.Int32;
 	using BOOL = System.Int32;
 	using UINT64 = System.UInt64;
+	using System.Collections.Generic;
+	using System.Linq;
 
 	public static class PackageManageHelper
 	{
@@ -184,6 +186,43 @@ namespace NativeWrappers
 				result [i] = pStr == IntPtr.Zero ? null : Marshal.PtrToStringUni (pStr);
 			}
 			return result;
+		}
+	}
+	internal static class NativeUtil
+	{
+		public static string ToAbsoluteUriString (Uri uri)
+		{
+			if (uri == null) return null;
+			return uri.AbsoluteUri;
+		}
+
+		public static IntPtr AllocStringArray (IEnumerable<string> values)
+		{
+			if (values == null) return IntPtr.Zero;
+
+			var list = values.Where (s => !string.IsNullOrEmpty (s)).ToList ();
+			if (list.Count == 0) return IntPtr.Zero;
+
+			IntPtr mem = Marshal.AllocHGlobal (IntPtr.Size * list.Count);
+			for (int i = 0; i < list.Count; i++)
+			{
+				IntPtr pStr = Marshal.StringToHGlobalUni (list [i]);
+				Marshal.WriteIntPtr (mem, i * IntPtr.Size, pStr);
+			}
+			return mem;
+		}
+
+		public static void FreeStringArray (IntPtr array, int count)
+		{
+			if (array == IntPtr.Zero) return;
+
+			for (int i = 0; i < count; i++)
+			{
+				IntPtr p = Marshal.ReadIntPtr (array, i * IntPtr.Size);
+				if (p != IntPtr.Zero)
+					Marshal.FreeHGlobal (p);
+			}
+			Marshal.FreeHGlobal (array);
 		}
 	}
 }

@@ -92,12 +92,14 @@
     Object.defineProperty(global.Bridge.UI, "darkmode", {
         get: function() { return ext.System.UI.DarkMode; }
     });
-    Object.defineProperty(global.Bridge.UI.Splash, "backcolor", {
-        get: function() { return ext.System.UI.SplashBackgroundColor; },
-    });
-    Object.defineProperty(global.Bridge.UI.Splash, "imageurl", {
-        get: function() { return ext.System.UI.SplashImage; },
-    });
-
-
+    try {
+        Object.defineProperty(global.Bridge.UI.Splash, "backcolor", {
+            get: function() { return ext.System.UI.SplashBackgroundColor; },
+        });
+    } catch (e) {}
+    try {
+        Object.defineProperty(global.Bridge.UI.Splash, "imageurl", {
+            get: function() { return ext.System.UI.SplashImage; },
+        });
+    } catch (e) {}
 })(this);

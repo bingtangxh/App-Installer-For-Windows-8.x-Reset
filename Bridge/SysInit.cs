@@ -10,6 +10,8 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.Drawing;
 using Newtonsoft.Json;
+using AppxPackage;
+using ModernNotice;
 
 namespace Bridge
 {
@@ -73,9 +75,9 @@ namespace Bridge
 	[ClassInterface (ClassInterfaceType.AutoDual)]
 	public class _I_InitConfig
 	{
-		InitConfig Create (string filepath) => new InitConfig (filepath);
-		InitConfig GetConfig () => InitFileStore.Config;
-		InitConfig Current => InitFileStore.Config;
+		public InitConfig Create (string filepath) => new InitConfig (filepath);
+		public InitConfig GetConfig () => InitFileStore.Config;
+		public InitConfig Current => InitFileStore.Config;
 	}
 	[ComVisible (true)]
 	[ClassInterface (ClassInterfaceType.AutoDual)]
@@ -147,6 +149,369 @@ namespace Bridge
 	}
 	[ComVisible (true)]
 	[ClassInterface (ClassInterfaceType.AutoDual)]
+	public class _I_PackageManager
+	{
+		public enum JsAsyncResultKind
+		{
+			Success,
+			Failed,
+			None        // 什么都不回调（极少数情况）
+		}
+		public sealed class JsAsyncResult
+		{
+			public JsAsyncResultKind Kind { get; private set; }
+			public object Value { get; private set; }
+			private JsAsyncResult (JsAsyncResultKind kind, object value)
+			{
+				Kind = kind;
+				Value = value;
+			}
+			public static JsAsyncResult Success (object value = null)
+			{
+				return new JsAsyncResult (JsAsyncResultKind.Success, value);
+			}
+			public static JsAsyncResult Failed (object value = null)
+			{
+				return new JsAsyncResult (JsAsyncResultKind.Failed, value);
+			}
+			public static JsAsyncResult None ()
+			{
+				return new JsAsyncResult (JsAsyncResultKind.None, null);
+			}
+		}
+		internal static class JsAsyncRunner
+		{
+			public static void Run (
+				Func<Action<object>, JsAsyncResult> work,
+				object jsSuccess,
+				object jsFailed,
+				object jsProgress)
+			{
+				var success = jsSuccess;
+				var failed = jsFailed;
+				var progress = jsProgress;
+
+				System.Threading.ThreadPool.QueueUserWorkItem (_ =>
+				{
+					try
+					{
+						Action<object> reportProgress = p =>
+						{
+							if (progress != null)
+								CallJS (progress, p);
+						};
+						JsAsyncResult result = work (reportProgress);
+						if (result == null) return;
+						switch (result.Kind)
+						{
+							case JsAsyncResultKind.Success:
+								CallJS (success, result.Value);
+								break;
+
+							case JsAsyncResultKind.Failed:
+								CallJS (failed, result.Value);
+								break;
+
+							case JsAsyncResultKind.None:
+							default:
+								break;
+						}
+					}
+					catch (Exception ex)
+					{
+						// 框架级异常兜底 → failed
+						CallJS (jsFailed, ex.Message);
+					}
+				});
+			}
+			private static void CallJS (object jsFunc, params object [] args)
+			{
+				if (jsFunc == null) return;
+				try
+				{
+					object [] invokeArgs = new object [(args?.Length ?? 0) + 1];
+					invokeArgs [0] = 1; 
+					if (args != null)
+						for (int i = 0; i < args.Length; i++)
+							invokeArgs [i + 1] = args [i];
+					jsFunc.GetType ().InvokeMember (
+						"call",
+						System.Reflection.BindingFlags.InvokeMethod,
+						null,
+						jsFunc,
+						invokeArgs
+					);
+				}
+				catch
+				{
+				}
+			}
+		}
+		private string BuildJsonText (object obj)
+		{
+			return Newtonsoft.Json.JsonConvert.SerializeObject (
+				obj,
+				Newtonsoft.Json.Formatting.Indented
+			);
+		}
+		public void AddPackage (string path, int options, object success, object failed, object progress)
+		{
+			JsAsyncRunner.Run (
+				report => {
+					var hr = PackageManager.AddPackage (
+						path,
+						null,
+						(DeploymentOptions)options,
+						e => report (e)
+					);
+					if (hr == null) return JsAsyncResult.Failed ("Unknown error");
+					return hr.Succeeded ? JsAsyncResult.Success (hr) : JsAsyncResult.Failed (hr);
+				},
+				success,
+				failed,
+				progress
+			);
+		}
+		public void GetPackages (object success, object failed)
+		{
+			JsAsyncRunner.Run (
+				report => {
+					var res = PackageManager.GetPackages ();
+					var hr = res.Item1;
+					var jsstr = "";
+					{
+						var ret = new
+						{
+							result = res.Item1,
+							list = res.Item2
+						};
+						jsstr = BuildJsonText (ret);
+					}
+					if (hr == null) return JsAsyncResult.Failed (jsstr);
+					return hr.Succeeded ? JsAsyncResult.Success (jsstr) : JsAsyncResult.Failed (jsstr);
+				},
+				success,
+				failed,
+				null
+			);
+		}
+		public void RemovePackage (string packageFullName, object success, object failed, object progress)
+		{
+			JsAsyncRunner.Run (
+				report => {
+					var hr = PackageManager.RemovePackage (
+						packageFullName,
+						e => report (e)
+					);
+					if (hr == null) return JsAsyncResult.Failed ("Unknown error");
+					return hr.Succeeded ? JsAsyncResult.Success (hr) : JsAsyncResult.Failed (hr);
+				},
+				success,
+				failed,
+				progress
+			);
+		}
+		public void ClearupPackage (string packageName, string userSID, object success, object failed, object progress)
+		{
+			JsAsyncRunner.Run (
+				report => {
+					var hr = PackageManager.ClearupPackage (
+						packageName,
+						userSID,
+						e => report (e)
+					);
+					if (hr == null) return JsAsyncResult.Failed ("Unknown error");
+					return hr.Succeeded ? JsAsyncResult.Success (hr) : JsAsyncResult.Failed (hr);
+				},
+				success,
+				failed,
+				progress
+			);
+		}
+		public void RegisterPackage (string path, int options, object success, object failed, object progress)
+		{
+			JsAsyncRunner.Run (
+				report => {
+					var hr = PackageManager.RegisterPackage (
+						path,
+						null,
+						(DeploymentOptions)options,
+						e => report (e)
+					);
+					if (hr == null) return JsAsyncResult.Failed ("Unknown error");
+					return hr.Succeeded ? JsAsyncResult.Success (hr) : JsAsyncResult.Failed (hr);
+				},
+				success,
+				failed,
+				progress
+			);
+		}
+		public void RegisterPackageByFullName (string packageFullName, int options, object success, object failed, object progress)
+		{
+			JsAsyncRunner.Run (
+				report => {
+					var hr = PackageManager.RegisterPackageByFullName (
+						packageFullName,
+						null,
+						(DeploymentOptions)options,
+						e => report (e)
+					);
+					if (hr == null) return JsAsyncResult.Failed ("Unknown error");
+					return hr.Succeeded ? JsAsyncResult.Success (hr) : JsAsyncResult.Failed (hr);
+				},
+				success,
+				failed,
+				progress
+			);
+		}
+		public _I_HResult SetPackageStatus (string packageFullName, int status)
+		{
+			return PackageManager.SetPackageStatus (packageFullName, (PackageStatus)status);
+		}
+		public void StagePackage (string path, int options, object success, object failed, object progress)
+		{
+			JsAsyncRunner.Run (
+				report => {
+					var hr = PackageManager.StagePackage (
+						path,
+						null,
+						(DeploymentOptions)options,
+						e => report (e)
+					);
+					if (hr == null) return JsAsyncResult.Failed ("Unknown error");
+					return hr.Succeeded ? JsAsyncResult.Success (hr) : JsAsyncResult.Failed (hr);
+				},
+				success,
+				failed,
+				progress
+			);
+		}
+		public void StageUserData (string packageFullName, object success, object failed, object progress)
+		{
+			JsAsyncRunner.Run (
+				report => {
+					var hr = PackageManager.StageUserData (
+						packageFullName,
+						e => report (e)
+					);
+					if (hr == null) return JsAsyncResult.Failed ("Unknown error");
+					return hr.Succeeded ? JsAsyncResult.Success (hr) : JsAsyncResult.Failed (hr);
+				},
+				success,
+				failed,
+				progress
+			);
+		}
+		public void UpdatePackage (string path, int options, object success, object failed, object progress)
+		{
+			JsAsyncRunner.Run (
+				report => {
+					var hr = PackageManager.UpdatePackage (
+						path,
+						null,
+						(DeploymentOptions)options,
+						e => report (e)
+					);
+					if (hr == null) return JsAsyncResult.Failed ("Unknown error");
+					return hr.Succeeded ? JsAsyncResult.Success (hr) : JsAsyncResult.Failed (hr);
+				},
+				success,
+				failed,
+				progress
+			);
+		}
+		public void FindPackageByIdentity (string packageName, string packagePublisher, object success, object failed)
+		{
+			JsAsyncRunner.Run (
+				report => {
+					var res = PackageManager.FindPackage (packageName, packagePublisher);
+					var hr = res.Item1;
+					var jsstr = "";
+					{
+						var ret = new
+						{
+							result = res.Item1,
+							list = res.Item2
+						};
+						jsstr = BuildJsonText (ret);
+					}
+					if (hr == null) return JsAsyncResult.Failed (jsstr);
+					return hr.Succeeded ? JsAsyncResult.Success (jsstr) : JsAsyncResult.Failed (jsstr);
+				},
+				success,
+				failed,
+				null
+			);
+		}
+		public void FindPackageByFamilyName (string packageFamilyName, object success, object failed)
+		{
+			JsAsyncRunner.Run (
+				report => {
+					var res = PackageManager.FindPackage (packageFamilyName);
+					var hr = res.Item1;
+					var jsstr = "";
+					{
+						var ret = new
+						{
+							result = res.Item1,
+							list = res.Item2
+						};
+						jsstr = BuildJsonText (ret);
+					}
+					if (hr == null) return JsAsyncResult.Failed (jsstr);
+					return hr.Succeeded ? JsAsyncResult.Success (jsstr) : JsAsyncResult.Failed (jsstr);
+				},
+				success,
+				failed,
+				null
+			);
+		}
+		public void FindPackageByFullName (string packageFullName, object success, object failed)
+		{
+			JsAsyncRunner.Run (
+				report => {
+					var res = PackageManager.FindPackageByFullName (packageFullName);
+					var hr = res.Item1;
+					var jsstr = "";
+					{
+						var ret = new
+						{
+							result = res.Item1,
+							list = res.Item2
+						};
+						jsstr = BuildJsonText (ret);
+					}
+					if (hr == null) return JsAsyncResult.Failed (jsstr);
+					return hr.Succeeded ? JsAsyncResult.Success (jsstr) : JsAsyncResult.Failed (jsstr);
+				},
+				success,
+				failed,
+				null
+			);
+		}
+	}
+	[ComVisible (true)]
+	[ClassInterface (ClassInterfaceType.AutoDual)]
+	public class _I_Package
+	{
+		public AppxPackage.PackageReader Reader (string packagePath) { return new AppxPackage.PackageReader (packagePath); }
+		public _I_PackageManager Manager => new _I_PackageManager ();
+	}
+	[ComVisible (true)]
+	[ClassInterface (ClassInterfaceType.AutoDual)]
+	public class _I_Notice
+	{
+		public string TemplateXml (string templateName) { return Notice.GetTemplateString (templateName); }
+		public string SimpleTemplateXml (string text, string imgPath = null) { return Notice.GetSimpleTemplateString (text, imgPath); }
+		public string SimpleTemplateXml2 (string title, string text = null, string imgPath = null) { return Notice.GetSimpleTemplateString2 (title, text, imgPath); }
+		public _I_HResult NoticeByXml (string appId, string xmlstr) { return Notice.Create (appId, xmlstr); }
+		public _I_HResult NoticeSimply (string appId, string text, string imgPath = null) { return Notice.Create (appId, text, imgPath); }
+		public _I_HResult NoticeSimply2 (string appId, string title, string text = null, string imgPath = null) { return Notice.Create (appId, title, text, imgPath); }
+		public _I_HResult NoticeSimplyByBase64 (string appId, string text, string imgBase64 = null) { return Notice.CreateWithImgBase64 (appId, text, imgBase64); }
+		public _I_HResult NoticeSimply2ByBase64 (string appId, string title, string text = null, string imgBase64 = null) { return Notice.CreateWithImgBase64 (appId, title, text, imgBase64); }
+	}
+	[ComVisible (true)]
+	[ClassInterface (ClassInterfaceType.AutoDual)]
 	public class _I_BridgeBase
 	{
 		protected readonly _I_String str = new _I_String ();
@@ -163,6 +528,10 @@ namespace Bridge
 		public _I_IEFrame IEFrame => ieframe;
 		public _I_VisualElements VisualElements => new _I_VisualElements ();
 		public StringResXmlDoc StringResources => ResXmlStore.StringRes;
+		public _I_Package Package => new _I_Package ();
+		public _I_Taskbar Taskbar { get; private set; } = null;
+		public _I_System System => system;
+		public _I_Notice Notice => new _I_Notice ();
 		public string CmdArgs
 		{
 			get
@@ -172,11 +541,12 @@ namespace Bridge
 				);
 			}
 		}
-		public _I_BridgeBase (Form wnd, IScriptBridge isc, IWebBrowserPageScale iwbps)
+		public _I_BridgeBase (Form wnd, IScriptBridge isc, IWebBrowserPageScale iwbps, ITaskbarProgress itp)
 		{
 			window = new _I_Window (isc);
 			system = new _I_System (wnd);
 			ieframe = new _I_IEFrame (iwbps);
+			Taskbar = new _I_Taskbar (itp);
 		}
 	}
 

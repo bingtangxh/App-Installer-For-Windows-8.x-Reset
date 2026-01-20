@@ -68,6 +68,10 @@
       <Project>{ffd3fd52-37a8-4f43-883c-de8d996cb0e0}</Project>
       <Name>DataUtils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\IEHelper\IEHelper.vcxproj">
+      <Project>{e4ca78a9-9408-4f5f-add6-730fd501ff8e}</Project>
+      <Name>IEHelper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PrivateInit\PrivateInit.csproj">
       <Project>{8e708d9a-6325-4aa9-b5a5-d1b5eca8eef7}</Project>
       <Name>PrivateInit</Name>

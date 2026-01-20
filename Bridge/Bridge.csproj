@@ -60,6 +60,10 @@
       <Project>{ffd3fd52-37a8-4f43-883c-de8d996cb0e0}</Project>
       <Name>DataUtils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ModernNotice\ModernNotice.csproj">
+      <Project>{c5587b6e-19c4-4484-aa97-5c20fbb07e43}</Project>
+      <Name>ModernNotice</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PrivateInit\PrivateInit.csproj">
       <Project>{8e708d9a-6325-4aa9-b5a5-d1b5eca8eef7}</Project>
       <Name>PrivateInit</Name>

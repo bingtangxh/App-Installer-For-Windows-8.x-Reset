@@ -8,7 +8,7 @@ namespace DataUtils
 	/// bits 48..63 = major, 32..47 = minor, 16..31 = build, 0..15 = revision.
 	/// </summary>
 	[ComVisible (true)]
-	public class Version: IComparable<Version>, IEquatable<Version>
+	public class Version: IComparable<Version>, IEquatable<Version>, Utilities.IJsonBuild
 	{
 		// Backing fields
 		private ushort major;
@@ -70,12 +70,13 @@ namespace DataUtils
 			// cast to ulong before shifting
 			return (((ulong)major) << 48) | (((ulong)minor) << 32) | (((ulong)build) << 16) | ((ulong)revision);
 		}
-		public void FromUInt64 (ulong value)
+		public Version FromUInt64 (ulong value)
 		{
 			major = (ushort)((value >> 48) & 0xFFFFUL);
 			minor = (ushort)((value >> 32) & 0xFFFFUL);
 			build = (ushort)((value >> 16) & 0xFFFFUL);
 			revision = (ushort)(value & 0xFFFFUL);
+			return this;
 		}
 		public ulong Data { get { return ToUInt64 (); } set { FromUInt64 (value); } }
 		public override string ToString ()
@@ -241,6 +242,16 @@ namespace DataUtils
 		{
 			if (v == null) return 0UL;
 			return v.ToUInt64 ();
+		}
+		public object BuildJSON ()
+		{
+			return new
+			{
+				major = Major,
+				minor = Minor,
+				build = Build,
+				revision = Revision
+			};
 		}
 	}
 	[ComVisible (true)]

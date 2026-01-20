@@ -32,6 +32,7 @@ namespace WAShell
 				if (ReferenceEquals (_host, value)) return;
 				DetachHostEvents (_host);
 				_host = value;
+				this.Owner = _host as Form;
 				AttachHostEvents (_host);
 				if (this.Visible)
 				{
@@ -44,18 +45,26 @@ namespace WAShell
 			if (host == null) return;
 			host.Resize += Host_Changed;
 			host.LocationChanged += Host_Changed;
+			host.Disposed += Host_Disposed;
 		}
 		private void DetachHostEvents (Control host)
 		{
 			if (host == null) return;
-
 			host.Resize -= Host_Changed;
 			host.LocationChanged -= Host_Changed;
+			host.Disposed -= Host_Disposed;
 		}
 		private void Host_Changed (object sender, EventArgs e)
 		{
-			if (!this.IsHandleCreated) return;
+			if (this.IsDisposed || !this.IsHandleCreated) return;
+			if (this.Owner == null || this.Owner.IsDisposed) return;
 			ResizeSplashScreen ();
+		}
+		private void Host_Disposed (object sender, EventArgs e)
+		{
+			DetachHostEvents (_host);
+			_host = null;
+			if (!this.IsDisposed) this.Hide ();   // 或 Hide()
 		}
 		public SplashForm ()
 		{
@@ -80,7 +89,7 @@ namespace WAShell
 				splashImage = value;
 				if (picbox != null && picbox.IsHandleCreated)
 				{
-					splashImage = picbox.Image;
+					picbox.Image = splashImage;
 				}
 			}
 		}
@@ -98,15 +107,14 @@ namespace WAShell
 		{
 			ResizeSplashScreen ();
 		}
-		private void ResizeSplashScreen ()
+		public void ResizeSplashScreen ()
 		{
-			Control owner = this.Owner;
-			if (owner == null) owner = this.Parent;
-			if (owner == null) return;
-			owner.Update ();
-			var pt = owner.PointToScreen (owner.ClientRectangle.Location);
-			Location = pt;
-			Size = owner.ClientSize;
+			if (this.IsDisposed || !this.IsHandleCreated) return;
+			Control owner = this.Owner ?? this.Parent;
+			if (owner == null || owner.IsDisposed || !owner.IsHandleCreated) return;
+			var pt = owner.PointToScreen (Point.Empty);
+			this.Location = pt;
+			this.Size = owner.ClientSize;
 			ResizeSplashImage ();
 		}
 		private void ResizeSplashImage ()
@@ -213,13 +221,13 @@ namespace WAShell
 			{
 				DetachHostEvents (_host);
 				_host = null;
-				base.OnFormClosed (e);
+				// base.OnFormClosed (e);
 			}
 			catch (Exception) { }
 		}
 		private void SplashForm_Shown (object sender, EventArgs e)
 		{
-			base.OnShown (e);
+			//base.OnShown (e);
 			this.Opacity = 1.0;
 			this.Visible = true;
 			this.Enabled = true;

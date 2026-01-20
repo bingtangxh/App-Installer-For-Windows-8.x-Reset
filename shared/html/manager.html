@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Package Manager</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="js/module.js"></script>
+    <script type="text/javascript" src="js/polyfill-ie.js"></script>
+    <link rel="stylesheet" href="libs/winjs/2.0/css/ui-light.css" id="winjs-style">
+    <script type="text/javascript" src="libs/winjs/1.0/js/base.js"></script>
+    <script type="text/javascript" src="libs/winjs/1.0/js/ui.js"></script>
+    <script type="text/javascript" src="js/color.js"></script>
+    <script type="text/javascript" src="js/promise.js"></script>
+    <script type="text/javascript" src="js/bridge.js"></script>
+    <script type="text/javascript" src="js/dpimodes.js"></script>
+    <script type="text/javascript" src="js/resources.js"></script>
+    <script type="text/javascript" src="js/animation.js"></script>
+    <link rel="stylesheet" href="fonts/fonts.css">
+    <link rel="stylesheet" href="fonts/segx.css">
+    <link rel="stylesheet" href="manager/page.css">
+    <link rel="stylesheet" href="manager/appitem.css">
+    <script type="text/javascript" src="js/event.js"></script>
+    <script type="text/javascript" src="js/tileback.js"></script>
+    <script type="text/javascript" src="js/load.js"></script>
+    <link rel="stylesheet" type="text/css" href="libs/msgbox/msgbox.css">
+    <script type="text/javascript" src="libs/msgbox/msgbox.js"></script>
+    <script type="text/javascript" src="js/init.js"></script>
+</head>
+
+<body>
+    <div id="settingpage" class="pagecontainer full">
+        <div class="page full guide fold">
+            <main class="main padding">
+                <div id="page-manager">
+                    <h2>应用</h2>
+                    <p>在这里，可以对安装的 Windows 商店应用进行管理。</p>
+                    <h3>安装的应用</h3>
+                    <template id="appitem-template">
+                       
+                    </template>
+                    <div class="appitem selected">
+                        <div role="img">
+                            <img width="24" height="24" src="images/applogo.default.png" />
+                        </div>
+                        <div role="divide"></div>
+                        <div role="excepticon">
+                            <div role="title" class="win-type-x-small"><span>App Name</span></div>
+                            <div role="control"><button>卸载</button></div>
+                        </div>
+                    </div>
+                    <ul>
+                        <li></li>
+                    </ul>
+                </div>
+            </main>
+            <aside class="win-ui-dark">
+                <nav class="container">
+                    <ul class="list top">
+                        <li class="title">
+                            <div role="img">&#58344;</div>
+                            <div role="placeholder"></div>
+                            <span class="win-type-base">应用管理</span>
+                        </li>
+                        <script>
+                            (function($) {
+                                var foldBtn = document.querySelector(".page aside nav ul li.title");
+                                var page = document.querySelector(".pagecontainer .page");
+                                Windows.UI.Event.Util.addEvent(foldBtn, "dblclick", function() {
+                                    page.classList.toggle("fold");
+                                });
+                            })(this);
+                        </script>
+                    </ul>
+                    <hr>
+                    <ul class="list">
+                        <li>
+                            <div role="img">&#57587;</div>
+                            <span class="win-type-base">管理</span>
+                        </li>
+                        <li>
+                            <div role="img">&#57587;</div>
+                            <span class="win-type-base">Manager</span>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
 
 namespace DataUtils
@@ -51,30 +48,69 @@ namespace DataUtils
 	}
 	public sealed class TaskbarProgress: IDisposable
 	{
-		private readonly ITaskbarList3 _taskbar;
 		private readonly IntPtr _hwnd;
+		private ITaskbarList3 _taskbar3;
 		public TaskbarProgress (IntPtr hwnd)
 		{
 			_hwnd = hwnd;
-			_taskbar = (ITaskbarList3)new TaskbarList ();
-			_taskbar.HrInit ();
+			object obj = new TaskbarList ();
+			ITaskbarList baseTaskbar = (ITaskbarList)obj;
+			baseTaskbar.HrInit ();
+			_taskbar3 = obj as ITaskbarList3;
+		}
+		public bool IsSupported
+		{
+			get { return _taskbar3 != null; }
 		}
 		public void SetState (TBPFLAG state)
 		{
-			_taskbar.SetProgressState (_hwnd, state);
+			if (_taskbar3 != null)
+				_taskbar3.SetProgressState (_hwnd, state);
 		}
 		public void SetValue (ulong completed, ulong total)
 		{
-			_taskbar.SetProgressValue (_hwnd, completed, total);
+			if (_taskbar3 != null)
+				_taskbar3.SetProgressValue (_hwnd, completed, total);
 		}
 		public void Clear ()
 		{
-			_taskbar.SetProgressState (_hwnd, TBPFLAG.TBPF_NOPROGRESS);
+			if (_taskbar3 != null)
+				_taskbar3.SetProgressState (_hwnd, TBPFLAG.TBPF_NOPROGRESS);
 		}
 		public void Dispose ()
 		{
-			Clear ();
-			Marshal.ReleaseComObject (_taskbar);
+			if (_taskbar3 != null)
+			{
+				Marshal.ReleaseComObject (_taskbar3);
+				_taskbar3 = null;
+			}
 		}
+		~TaskbarProgress () { Dispose (); }
+		public ITaskbarList3 Instance => _taskbar3;
+	}
+	[ComImport]
+	[Guid ("56FDF342-FD6D-11d0-958A-006097C9A090")]
+	[InterfaceType (ComInterfaceType.InterfaceIsIUnknown)]
+	public interface ITaskbarList
+	{
+		void HrInit ();
+		void AddTab (IntPtr hwnd);
+		void DeleteTab (IntPtr hwnd);
+		void ActivateTab (IntPtr hwnd);
+		void SetActiveAlt (IntPtr hwnd);
+	}
+	public interface ITaskbarProgress
+	{
+		double ProgressValue { set; }
+		TBPFLAG ProgressStatus { set; }
+	}
+	[ComVisible (true)]
+	[ClassInterface (ClassInterfaceType.AutoDual)]
+	public class _I_Taskbar
+	{
+		private ITaskbarProgress taskbar = null;
+		public double Progress { set { if (taskbar == null) return; taskbar.ProgressValue = value; } }
+		public int Status { set { if (taskbar == null) return; taskbar.ProgressStatus = (TBPFLAG)value; } }
+		public _I_Taskbar (ITaskbarProgress tp) { taskbar = tp; }
 	}
 }

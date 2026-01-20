@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace Update
 {
@@ -47,18 +47,36 @@ namespace Update
 		[STAThread]
 		static void Main (string [] args)
 		{
-			Process p = new Process ();
-			p.StartInfo.FileName = Path.Combine (AppDomain.CurrentDomain.BaseDirectory, "settings.exe");
-			var arguments = new List<string>
+			bool createdNew = false;
+			Mutex mutex = new Mutex (true, "WindowsModern.PracticalToolsProject!Settings.Update", out createdNew);
+			if (!createdNew)
 			{
-				"appinstaller",
-				"update"
-			};
-			arguments.AddRange (args);
-			p.StartInfo.Arguments = string.Join (" ", arguments.Select (EscapeArgument));
-			p.Start (); 
-			p.WaitForExit (); 
-			int exitCode = p.ExitCode; 
+				return;
+			}
+			try
+			{
+				Process p = new Process ();
+				p.StartInfo.FileName = Path.Combine (AppDomain.CurrentDomain.BaseDirectory, "settings.exe");
+				List<string> arguments = new List<string> ();
+				arguments.Add ("appinstaller");
+				arguments.Add ("update");
+				arguments.AddRange (args);
+				StringBuilder argBuilder = new StringBuilder ();
+				foreach (string a in arguments)
+				{
+					if (argBuilder.Length > 0)
+						argBuilder.Append (" ");
+					argBuilder.Append (EscapeArgument (a));
+				}
+				p.StartInfo.Arguments = argBuilder.ToString ();
+				p.Start ();
+				p.WaitForExit ();
+				int exitCode = p.ExitCode;
+			}
+			finally
+			{
+				mutex.ReleaseMutex ();
+			}
 		}
 	}
 }

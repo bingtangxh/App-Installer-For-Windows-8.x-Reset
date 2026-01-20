@@ -218,6 +218,12 @@ namespace NativeWrappers
 			}
 			return s;
 		}
+		public static string GetStringFromPkgRead (IntPtr nativePtr)
+		{
+			if (nativePtr == IntPtr.Zero) return null;
+			string s = Marshal.PtrToStringUni (nativePtr);
+			return s;
+		}
 
 		public static string PtrToStringNoFree (IntPtr nativePtr)
 		{

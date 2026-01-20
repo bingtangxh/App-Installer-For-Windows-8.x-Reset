@@ -364,6 +364,7 @@ class package_reader
 	prifilebundle pribundlereader;
 	std::vector <IStream *> prifilestreams;
 #endif
+
 	void initpri ()
 	{
 	#ifdef _PRI_READER_CLI_HEADER_
@@ -404,16 +405,21 @@ class package_reader
 					case 0b10: {
 						if (hlpri) pribundlereader.set (1, (IStream *)hlpri);
 						if (hspri) pribundlereader.set (2, (IStream *)hspri);
+						if (hlpri) prifilestreams.push_back ((IStream *)hlpri);
+						if (hspri) prifilestreams.push_back ((IStream *)hspri);
 						HANDLE hd = GetAppxBundleApplicationPackageFile (hReader);
 						destruct relthd ([&hd] () {
 							if (hd) DestroyAppxFileStream (hd);
 						});
 						HANDLE hdpri = GetPriFileFromPayloadPackage (hd);
 						if (hd) pribundlereader.set (3, (IStream *)hd);
+						if (hd) prifilestreams.push_back ((IStream *)hdpri);
 					} break;
 					case 0b11: {
 						if (ls) pribundlereader.set (1, (IStream *)hlpri);
 						if (ss) pribundlereader.set (2, (IStream *)hspri);
+						if (ls && hlpri) prifilestreams.push_back ((IStream *)hlpri);
+						if (ss && hspri) prifilestreams.push_back ((IStream *)hspri);
 					} break;
 					default:
 					case 0b00: {

@@ -36,10 +36,10 @@
                 for (var i = 0; i < nodes.length; i++) {
                     if (nodes[i].hasAttribute('data-res-byname')) {
                         var resName = nodes[i].getAttribute('data-res-byname');
-                        nodes[i].textContent = Bridge.Resources.byname(resName);
+                        try { nodes[i].textContent = Bridge.Resources.byname(resName); } catch (e) {}
                     } else if (nodes[i].hasAttribute('data-res-byid')) {
                         var resId = parseInt(nodes[i].getAttribute('data-res-byid'), 10);
-                        nodes[i].textContent = Bridge.Resources.byid(resId);
+                        try { nodes[i].textContent = Bridge.Resources.byid(resId); } catch (e) {}
                     } else if (nodes[i].hasAttribute('data-res-fromfile')) {
                         try {
                             var obj = eval(nodes[i].getAttribute('data-res-fromfile'));
