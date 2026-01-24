@@ -381,3 +381,152 @@ function messageBoxAsync(swText, swTitle, uType, swColor, pfCallback) {
         }
     });
 }
+
+function MessageBoxButton(swDisplayName, nValueReturn) {
+    this.displayName = swDisplayName;
+    this.value = nValueReturn;
+}
+
+function messageBoxAdvance(swText, swCaption, aCommands, swColor, pfCallback) {
+    var _lpText = swText;
+    var _lpCaption = swCaption;
+    var msgbox = document.createElement("div");
+    msgbox.classList.add("notice-back");
+    msgbox.classList.add("win-ui-dark");
+    var uniqueId = "msgbox_" + new Date().getTime();
+    msgbox.id = uniqueId;
+    var msgbody = document.createElement("div");
+    msgbody.classList.add("notice-body");
+    if (!IsBlackLabel(swColor)) {
+        msgbody.style.backgroundColor = swColor;
+    }
+    msgbox.appendChild(msgbody);
+    var msgcontainter = document.createElement("div");
+    msgcontainter.style.height = "100%";
+    msgcontainter.style.width = "100%";
+    msgcontainter.style.maxHeight = "100%";
+    msgcontainter.style.minHeight = "0px";
+    msgcontainter.style.boxSizing = "border-box";
+    msgbody.appendChild(msgcontainter);
+    var msgcaption = document.createElement("div");
+    msgcontainter.appendChild(msgcaption);
+    msgcontainter.style.display = "flex";
+    msgcontainter.style.flexDirection = "column";
+    var msgcontent = document.createElement("div");
+    msgcontent.style.flex = "1 1 auto";
+    msgcontent.style.marginRight = "3px";
+    msgcontent.style.overflowX = "hidden";
+    msgcontent.style.overflowY = "auto";
+    msgcontent.style.minHeight = "0px";
+    msgcontainter.appendChild(msgcontent);
+    if (_lpCaption instanceof HTMLElement) {
+        msgcaption.appendChild(_lpCaption);
+        msgcaption.classList.add("notice-title");
+    } else {
+        if (!IsBlackLabel(_lpCaption)) {
+            var msgtitle = document.createElement("h2");
+            msgtitle.textContent = _lpCaption;
+            msgtitle.classList.add("notice-title");
+            msgcaption.appendChild(msgtitle);
+        } else {
+            var msgtitle = document.createElement("h2");
+            msgtitle.textContent = "";
+            msgtitle.classList.add("notice-title");
+            msgcaption.appendChild(msgtitle);
+        }
+    }
+    if (_lpText instanceof HTMLElement || _lpText instanceof HTMLDivElement || typeof _lpText !== "string") {
+        try {
+            _lpText.classList.add("notice-text");
+            msgcontent.appendChild(_lpText);
+        } catch (e) {
+            if (!IsBlackLabel(_lpText)) {
+                var msgtext = document.createElement("p");
+                msgtext.textContent = _lpText;
+                msgtext.classList.add("notice-text");
+                if (IsBlackLabel(_lpCaption)) {
+                    msgtext.style.marginTop = "0";
+                }
+                msgcontent.appendChild(msgtext);
+            } else {
+                var msgtext = document.createElement("p");
+                msgtext.innerText = "";
+                msgtext.classList.add("notice-text");
+                if (IsBlackLabel(_lpCaption)) {
+                    msgtext.style.marginTop = "0";
+                }
+                msgcontent.appendChild(msgtext);
+            }
+        }
+    } else {
+        if (!IsBlackLabel(_lpText)) {
+            var msgtext = document.createElement("p");
+            msgtext.textContent = _lpText;
+            msgtext.classList.add("notice-text");
+            if (IsBlackLabel(_lpCaption)) {
+                msgtext.style.marginTop = "0";
+            }
+            msgcontent.appendChild(msgtext);
+        } else {
+            var msgtext = document.createElement("p");
+            msgtext.innerText = "";
+            msgtext.classList.add("notice-text");
+            if (IsBlackLabel(_lpCaption)) {
+                msgtext.style.marginTop = "0";
+            }
+            msgcontent.appendChild(msgtext);
+        }
+    }
+    var msgctrls = document.createElement("div");
+    msgctrls.classList.add("notice-controls");
+    msgcontainter.appendChild(msgctrls);
+    if (aCommands.length <= 0) {
+        aCommands.push(new MessageBoxButton(GetLocaleStringFromResId(800) || "OK", MBRET.IDOK));
+    }
+    for (var i = 0; i < aCommands.length; i++) {
+        var cmd = aCommands[i];
+        var btn = document.createElement("button");
+        btn.textContent = cmd.displayName;
+        btn.setAttribute("data-msgbox-value", cmd.value);
+        Windows.UI.Event.Util.addEvent(btn, "click", function(event) {
+            var btns = this.parentNode.querySelectorAll("button");
+            var lastbtnstatus = [];
+            for (var j = 0; j < btns.length; j++) {
+                lastbtnstatus.push(btns[j].disabled);
+                btns[j].disabled = true;
+            }
+            try {
+                pfCallback(this.getAttribute("data-msgbox-value"));
+            } catch (e) {}
+            msgbox.style.opacity = 0;
+            setTimeout(function(nodes, laststatus) {
+                for (var k = 0; k < nodes.length; k++) {
+                    nodes[k].disabled = laststatus[k];
+                }
+                document.body.removeChild(msgbox);
+            }, 500, btns, lastbtnstatus);
+        });
+        msgctrls.appendChild(btn);
+    }
+    document.body.appendChild(msgbox);
+    setTimeout(function() {
+        msgbox.style.opacity = 1;
+    }, 1);
+    return msgbox.id;
+}
+
+function messageBoxAdvanceAsync(swText, swCaption, aCommands, swColor) {
+    if (typeof Promise === "undefined") {
+        console.error("Promise is not supported in this environment.");
+        messageBoxAdvance(swText, swCaption, aCommands, swColor);
+    }
+    return new Promise(function(resolve, reject) {
+        try {
+            messageBoxAdvance(swText, swCaption, aCommands, swColor, function(valueReturn) {
+                if (resolve) resolve(valueReturn);
+            });
+        } catch (ex) {
+            if (reject) reject(ex);
+        }
+    });
+}

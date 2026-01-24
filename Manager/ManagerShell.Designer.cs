@@ -40,6 +40,7 @@
 			this.PageScale = 125;
 			this.Text = "Form1";
 			this.Load += new System.EventHandler(this.ManagerShell_Load);
+			this.Resize += new System.EventHandler(this.ManagerShell_Resize);
 			this.ResumeLayout(false);
 
 		}

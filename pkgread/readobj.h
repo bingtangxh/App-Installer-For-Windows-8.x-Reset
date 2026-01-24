@@ -1336,3 +1336,202 @@ class package
 	appxreader appx_reader () const { return appxreader (*(IAppxPackageReader **)&this->appx); }
 	bundlereader bundle_reader () const { return bundlereader (*(IAppxBundleReader **)&this->bundle); }
 };
+
+class appxmanifest: virtual public com_info_quote <IAppxManifestReader>
+{
+	using Base = com_info_quote <IAppxManifestReader>;
+	template <typename IComPtr, typename ReturnType, typename Fn> HRESULT get (IComPtr iptr, Fn func, ReturnType *retvalue) const { if (!iptr) return E_FAIL; return (iptr->*func) (retvalue); }
+	using Manifest = IAppxManifestReader;
+	public:
+	using Base::Base;
+	Manifest *manifest () { return pointer (); }
+	template <class IComPtr, class Func> HRESULT get_from_manifest (Func fn, _Outptr_ IComPtr *output) const
+	{
+		if (!pointer ()) return E_FAIL;
+		return get (pointer (), fn, output);
+	}
+	HRESULT get_identity (_Outptr_ IAppxManifestPackageId **output) const { return get_from_manifest <IAppxManifestPackageId *> (&Manifest::GetPackageId, output); }
+	appx_info::appx_id identity () const
+	{
+		IAppxManifestPackageId *ip = nullptr;
+		get_identity (&ip);
+		return appx_info::appx_id (ip);
+	}
+	appx_info::appx_res resources () const
+	{
+		return appx_info::appx_res (pointer ());
+	}
+	HRESULT get_properties (_Outptr_ IAppxManifestProperties **output) const { return get_from_manifest <IAppxManifestProperties *> (&Manifest::GetProperties, output); }
+	appx_info::appx_prop properties () const
+	{
+		IAppxManifestProperties *ip = nullptr;
+		HRESULT hr = get_properties (&ip);
+		return appx_info::appx_prop (ip);
+	}
+	appx_info::appx_preq prerequisites () const
+	{
+		return appx_info::appx_preq (pointer ());
+	}
+	HRESULT get_applications (_Outptr_ IAppxManifestApplicationsEnumerator **output) const { return get_from_manifest <IAppxManifestApplicationsEnumerator *> (&Manifest::GetApplications, output); }
+	appx_info::appx_apps applications () const
+	{
+		IAppxManifestApplicationsEnumerator *ip = nullptr;
+		get_applications (&ip);
+		return appx_info::appx_apps (ip);
+	}
+	HRESULT get_capabilities (_Outptr_ APPX_CAPABILITIES *output) const { return get_from_manifest <APPX_CAPABILITIES> (&Manifest::GetCapabilities, output); }
+	HRESULT get_device_capabilities (_Outptr_ IAppxManifestDeviceCapabilitiesEnumerator **output) const { return get_from_manifest <IAppxManifestDeviceCapabilitiesEnumerator *> (&Manifest::GetDeviceCapabilities, output); }
+	appx_info::appx_capabs capabilities () const
+	{
+		APPX_CAPABILITIES caps;
+		IAppxManifestDeviceCapabilitiesEnumerator *ip = nullptr;
+		if (pointer ()) pointer ()->GetDeviceCapabilities (&ip);
+		auto im = pointer ();
+		if (SUCCEEDED (get_capabilities (&caps))) return appx_info::appx_capabs (ip, caps, im);
+		return appx_info::appx_capabs (ip);
+	}
+	HRESULT get_dependencies (_Outptr_ IAppxManifestPackageDependenciesEnumerator **output) const { return get_from_manifest <IAppxManifestPackageDependenciesEnumerator *> (&Manifest::GetPackageDependencies, output); }
+	appx_info::appx_deps dependencies () const
+	{
+		IAppxManifestPackageDependenciesEnumerator *ip = nullptr;
+		get_dependencies (&ip);
+		return appx_info::appx_deps (ip);
+	}
+	PackageRole package_role () const
+	{
+		auto prop = properties ();
+		if (prop.framework ()) return PackageRole::framework;
+		try { if (prop.resource_package ()) return PackageRole::resource; }
+		catch (const std::exception &e) {}
+		auto app = applications ();
+		std::vector <std::wstring> apps;
+		if (app.app_user_model_ids (apps)) return PackageRole::application;
+		else return PackageRole::unknown;
+	}
+};
+class bundlemanifest: virtual public com_info_quote <IAppxBundleManifestReader>
+{
+	using Base = com_info_quote <IAppxBundleManifestReader>;
+	public:
+	using Base::Base;
+	template <typename IComPtr, typename ReturnType, typename Fn> HRESULT get (IComPtr iptr, Fn func, ReturnType *retvalue) const { if (!iptr) return E_FAIL; return (iptr->*func) (retvalue); }
+	using Manifest = IAppxBundleManifestReader;
+	Manifest *manifest () { return pointer (); }
+	template <class IComPtr, class Func> HRESULT get_from_manifest (Func fn, _Outptr_ IComPtr *output) const
+	{
+		if (!pointer ()) return E_FAIL;
+		return get (pointer (), fn, output);
+	}
+	HRESULT get_identity (_Outptr_ IAppxManifestPackageId **output) const { return get_from_manifest (&Manifest::GetPackageId, output); }
+	appx_info::appx_id identity () const
+	{
+		IAppxManifestPackageId *ip = nullptr;
+		get_identity (&ip);
+		return appx_info::appx_id (ip);
+	}
+	HRESULT get_package_id_items (_Outptr_ IAppxBundleManifestPackageInfoEnumerator **output) const { return get_from_manifest (&Manifest::GetPackageInfoItems, output); }
+	appx_info::appx_iditems package_id_items () const
+	{
+		IAppxBundleManifestPackageInfoEnumerator *ip = nullptr;
+		get_package_id_items (&ip);
+		return appx_info::appx_iditems (ip);
+	}
+};
+
+HRESULT GetAppxManifestReader (_In_ LPCWSTR inputPath, _Outptr_ IAppxManifestReader **manifestReader)
+{
+	if (!manifestReader) return E_POINTER;
+	*manifestReader = nullptr;
+	HRESULT hr;
+	CComPtr <IStream> stream;
+	CComPtr <IAppxFactory> factory;
+	CComPtr <IAppxPackageReader> packageReader;
+	hr = SHCreateStreamOnFileEx (
+		inputPath,
+		STGM_READ | STGM_SHARE_DENY_NONE,
+		FILE_ATTRIBUTE_NORMAL,
+		FALSE,
+		nullptr,
+		&stream
+	);
+	if (FAILED (hr)) return hr;
+	hr = CoCreateInstance (
+		__uuidof (AppxFactory),
+		nullptr,
+		CLSCTX_INPROC_SERVER,
+		IID_PPV_ARGS (&factory)
+	);
+	if (FAILED (hr)) return hr;
+	hr = factory->CreatePackageReader (stream, &packageReader);
+	if (SUCCEEDED (hr))
+	{
+		return packageReader->GetManifest (manifestReader);
+	}
+	hr = factory->CreateManifestReader (stream, manifestReader);
+	return hr;
+}
+HRESULT GetBundleManifestReader (_In_ LPCWSTR bundlePath, _Outptr_ IAppxBundleManifestReader **manifestReader)
+{
+	if (!manifestReader) return E_POINTER;
+	*manifestReader = nullptr;
+	HRESULT hr;
+	CComPtr <IStream> stream;
+	CComPtr <IAppxBundleFactory> factory;
+	CComPtr <IAppxBundleReader> bundleReader;
+	hr = SHCreateStreamOnFileEx (
+		bundlePath,
+		STGM_READ | STGM_SHARE_DENY_NONE,
+		FILE_ATTRIBUTE_NORMAL,
+		FALSE,
+		nullptr,
+		&stream
+	);
+	if (FAILED (hr)) return hr;
+	hr = CoCreateInstance (
+		__uuidof(AppxBundleFactory),
+		nullptr,
+		CLSCTX_INPROC_SERVER,
+		IID_PPV_ARGS (&factory)
+	);
+	if (FAILED (hr)) return hr;
+	hr = factory->CreateBundleReader (stream, &bundleReader);
+	if (FAILED (hr)) return hr;
+	hr = bundleReader->GetManifest (manifestReader);
+	if (FAILED (hr)) return hr = factory->CreateBundleManifestReader (stream, manifestReader);
+	return hr;
+}
+
+class manifest
+{
+	IAppxManifestReader *appx = nullptr;
+	IAppxBundleManifestReader *bundle = nullptr;
+	public:
+	~manifest () { destroy (); }
+	manifest (const std::wstring &filepath = L"") { create (filepath); }
+	void destroy ()
+	{
+		if (appx) { appx->Release (); appx = nullptr; }
+		if (bundle) { bundle->Release (); bundle = nullptr; }
+	}
+	bool create (const std::wstring &filepath)
+	{
+		destroy ();
+		if (!IsFileExists (filepath)) return false;
+		HRESULT hr = GetBundleManifestReader (filepath.c_str (), &bundle);
+		if (SUCCEEDED (hr)) return true;
+		if (bundle) { bundle->Release (); bundle = nullptr; }
+		hr = GetAppxManifestReader (filepath.c_str (), &appx);
+		if (SUCCEEDED (hr)) return true;
+		if (appx) { appx->Release (); appx = nullptr; }
+		return false;
+	}
+	bool valid () const { return (bool)appx ^ (bool)bundle; }
+	PackageType type () const
+	{
+		if (appx) return PackageType::single;
+		if (bundle) return PackageType::bundle;
+		return PackageType::unknown;
+	}
+	appxmanifest appx_reader () const { return appxmanifest (*(IAppxManifestReader **)&this->appx); }
+	bundlemanifest bundle_reader () const { return bundlemanifest (*(IAppxBundleManifestReader **)&this->bundle); }
+};

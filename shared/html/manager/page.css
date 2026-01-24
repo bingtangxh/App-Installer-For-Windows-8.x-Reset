@@ -168,6 +168,7 @@ aside>nav ul li {
 
 .page.fold>aside>nav ul li {
     padding: 0;
+    cursor: pointer;
 }
 
 aside>nav ul li div[role=img] {
@@ -187,6 +188,33 @@ aside>nav ul li div[role=img] {
     -ms-flex-align: center;
     -ms-flex-line-pack: center;
     text-align: center;
+}
+
+.page>aside>nav ul li.selected {
+    background-color: #159d9d;
+}
+
+.page>aside>nav ul li.selected:hover {
+    background-color: rgb(23, 187, 187);
+}
+
+.page>aside>nav ul li.selected:active {
+    background-color: rgb(29, 224, 224);
+}
+
+.page>aside>nav ul li.subitem {
+    opacity: 0;
+    height: 0;
+    min-height: 0;
+}
+
+.page>aside>nav ul li.subitem.selected {
+    opacity: 1;
+    height: 50px;
+}
+
+.page.fold>aside>nav ul li * {
+    pointer-events: none;
 }
 
 .page.fold>aside>nav ul li div[role=img] {
@@ -213,7 +241,8 @@ aside>nav ul li div[role=img] {
 
 .page>aside>nav ul li div[role=img] {
     font-size: 15pt;
-    margin-right: 5px;
+    margin-right: 10px;
+    width: 1em;
 }
 
 .page>aside>nav ul li.title div[role=img] {
@@ -256,7 +285,7 @@ aside>nav ul li div[role=img] {
 
 .page.fold>aside>nav ul li:hover div[role=img] {
     min-width: 0;
-    width: auto;
+    width: 1em;
 }
 
 .page.fold>aside>nav ul li:hover span {
@@ -292,6 +321,10 @@ aside>nav ul li div[role=img] {
     overflow-y: visible;
 }
 
+.main {
+    transition: all 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+
 .main.padding {
     padding: 44px 60px;
 }
@@ -307,12 +340,18 @@ aside>nav ul li div[role=img] {
     top: 0px;
     left: 0px;
     background-color: white;
+    transition: all 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
 }
 
 .section.padding {
     padding: 44px 60px;
 }
 
-.section.padding .bottom-compensate {
+.bottom-compensate {
     padding-bottom: 44px;
+}
+
+.ispage {
+    opacity: 1;
+    transition: all 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
 }

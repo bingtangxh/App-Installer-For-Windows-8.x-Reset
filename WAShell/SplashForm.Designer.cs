@@ -38,6 +38,7 @@
 			// 
 			this.picbox.Anchor = System.Windows.Forms.AnchorStyles.None;
 			this.picbox.BackColor = System.Drawing.Color.Transparent;
+			this.picbox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
 			this.picbox.Location = new System.Drawing.Point(6, 47);
 			this.picbox.Name = "picbox";
 			this.picbox.Size = new System.Drawing.Size(620, 300);

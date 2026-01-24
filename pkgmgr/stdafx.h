@@ -32,3 +32,5 @@
 using namespace Platform;
 using namespace Windows::Foundation;
 using namespace Windows::Management::Deployment;
+using namespace Windows::Management::Core;
+using namespace Windows::Storage;

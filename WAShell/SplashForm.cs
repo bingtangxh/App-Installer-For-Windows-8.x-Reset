@@ -87,9 +87,9 @@ namespace WAShell
 			set
 			{
 				splashImage = value;
-				if (picbox != null && picbox.IsHandleCreated)
+				if (picbox != null)
 				{
-					picbox.Image = splashImage;
+					try { picbox.Image = splashImage; } catch { }
 				}
 			}
 		}

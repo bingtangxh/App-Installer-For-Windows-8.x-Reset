@@ -1,0 +1,49 @@
+.win-bottom {
+    position: absolute;
+    bottom: 0;
+    top: auto;
+    left: 0;
+    right: 0;
+}
+
+.appbar {
+    -ms-transform: translateY(100%);
+    transform: translateY(100%);
+    transition: all 0.5s cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+
+.appbar.show {
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+}
+
+.appbar.win-ui-dark .win-label {
+    color: white;
+}
+
+.appbar-touchhide {
+    background-color: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 88px;
+}
+
+.appbar button.win-command,
+.win-appbar .win-commandlayout button.win-command {
+    box-sizing: border-box;
+    /* 含 padding/border 计算宽度 */
+    min-width: 100px;
+    /* 强制最小宽度 100px */
+}
+
+
+/* 同时覆盖在窄屏 media query 中的行为（确保在 @media (max-width:1023px) 之后或在文件末尾定义） */
+
+@media (max-width: 1023px) {
+    .appbar button.win-command,
+    .win-appbar .win-commandlayout button.win-command {
+        min-width: 100px;
+    }
+}

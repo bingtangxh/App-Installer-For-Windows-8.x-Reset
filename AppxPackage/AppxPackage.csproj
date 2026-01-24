@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataInterface.cs" />
+    <Compile Include="ManifestReader.cs" />
     <Compile Include="PackageManager.cs" />
     <Compile Include="PackageReader.cs" />
     <Compile Include="PkgMgrNative.cs" />

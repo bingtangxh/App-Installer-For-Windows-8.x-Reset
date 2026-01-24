@@ -210,7 +210,8 @@ namespace NativeWrappers
 			string s = Marshal.PtrToStringUni (nativePtr);
 			try
 			{
-				crt_free (nativePtr);
+				PackageReaderFreeString (nativePtr);
+				nativePtr = IntPtr.Zero;
 			}
 			catch
 			{
@@ -303,5 +304,103 @@ namespace NativeWrappers
 			{
 			}
 		}
+		// ================= Manifest Reader =================
+
+		[DllImport (DllName, CallingConvention = CallConv, CharSet = CharSet.Unicode)]
+		public static extern IntPtr CreateManifestReader ();
+
+		[DllImport (DllName, CallingConvention = CallConv, CharSet = CharSet.Unicode)]
+		[return: MarshalAs (UnmanagedType.Bool)]
+		public static extern bool LoadManifestFromFile (
+			IntPtr hReader,
+			string lpFilePath
+		);
+
+		[DllImport (DllName, CallingConvention = CallConv, CharSet = CharSet.Unicode)]
+		public static extern void DestroyManifestReader (IntPtr hReader);
+
+		[DllImport (DllName, CallingConvention = CallConv)]
+		public static extern ushort GetManifestType (IntPtr hReader);
+
+		[DllImport (DllName, CallingConvention = CallConv)]
+		[return: MarshalAs (UnmanagedType.Bool)]
+		public static extern bool IsManifestValid (IntPtr hReader);
+
+		[DllImport (DllName, CallingConvention = CallConv)]
+		public static extern ushort GetManifestRole (IntPtr hReader);
+		[DllImport (DllName, CallingConvention = CallConv, CharSet = CharSet.Unicode)]
+		public static extern IntPtr GetManifestIdentityStringValue (
+			IntPtr hReader,
+			uint dwName
+		);
+
+		[DllImport (DllName, CallingConvention = CallConv)]
+		[return: MarshalAs (UnmanagedType.Bool)]
+		public static extern bool GetManifestIdentityVersion (
+			IntPtr hReader,
+			out VERSION pVersion
+		);
+
+		[DllImport (DllName, CallingConvention = CallConv)]
+		[return: MarshalAs (UnmanagedType.Bool)]
+		public static extern bool GetManifestIdentityArchitecture (
+			IntPtr hReader,
+			out DWORD pdwArchi
+		);
+		[DllImport (DllName, CallingConvention = CallConv, CharSet = CharSet.Unicode)]
+		public static extern IntPtr GetManifestPropertiesStringValue (
+			IntPtr hReader,
+			string lpName
+		);
+
+		[DllImport (DllName, CallingConvention = CallConv, CharSet = CharSet.Unicode)]
+		public static extern HRESULT GetManifestPropertiesBoolValue (
+			IntPtr hReader,
+			string lpName,
+			out BOOL pRet
+		);
+		[DllImport (DllName, CallingConvention = CallConv, CharSet = CharSet.Unicode)]
+		[return: MarshalAs (UnmanagedType.Bool)]
+		public static extern bool AddManifestApplicationItemGetName (string lpName);
+
+		[DllImport (DllName, CallingConvention = CallConv, CharSet = CharSet.Unicode)]
+		[return: MarshalAs (UnmanagedType.Bool)]
+		public static extern bool RemoveManifestApplicationItemGetName (string lpName);
+
+		[DllImport (DllName, CallingConvention = CallConv)]
+		public static extern IntPtr GetManifestApplications (IntPtr hReader);
+
+		[DllImport (DllName, CallingConvention = CallConv)]
+		public static extern void DestroyManifestApplications (IntPtr hEnumerator);
+		[DllImport (DllName, CallingConvention = CallConv)]
+		public static extern IntPtr GetManifestResourcesLanguages (IntPtr hReader);
+
+		[DllImport (DllName, CallingConvention = CallConv)]
+		public static extern IntPtr GetManifestResourcesLanguagesToLcid (IntPtr hReader);
+
+		[DllImport (DllName, CallingConvention = CallConv)]
+		public static extern IntPtr GetManifestResourcesScales (IntPtr hReader);
+
+		[DllImport (DllName, CallingConvention = CallConv)]
+		public static extern DWORD GetManifestResourcesDxFeatureLevels (IntPtr hReader);
+		[DllImport (DllName, CallingConvention = CallConv)]
+		public static extern IntPtr GetManifestDependencesInfoList (IntPtr hReader);
+
+		[DllImport (DllName, CallingConvention = CallConv)]
+		public static extern IntPtr GetManifestCapabilitiesList (IntPtr hReader);
+
+		[DllImport (DllName, CallingConvention = CallConv)]
+		public static extern IntPtr GetManifestDeviceCapabilitiesList (IntPtr hReader);
+
+		[DllImport (DllName, CallingConvention = CallConv, CharSet = CharSet.Unicode)]
+		[return: MarshalAs (UnmanagedType.Bool)]
+		public static extern bool GetManifestPrerequisite (
+			IntPtr hReader,
+			string lpName,
+			out VERSION pVerRet
+		);
+		[DllImport (DllName, CallingConvention = CallConv)]
+		public static extern void PackageReaderFreeString (IntPtr p);
+
 	}
 }

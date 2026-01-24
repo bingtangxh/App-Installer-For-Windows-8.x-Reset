@@ -57,11 +57,13 @@ namespace AppxPackage
 		[DllImport (DLL, CallingConvention = CallingConvention.Cdecl)]
 		[return: MarshalAs (UnmanagedType.Bool)]
 		public static extern bool IsMsResourceUri ([MarshalAs (UnmanagedType.LPWStr)] string pResUri);
+		[DllImport (DLL, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void PriFormatFreeString (IntPtr ptr);
 		public static string PtrToString (IntPtr ptr)
 		{
 			if (ptr == IntPtr.Zero) return null;
 			string s = Marshal.PtrToStringUni (ptr);
-			Marshal.FreeHGlobal (ptr); // 如果 DLL 返回的内存要求 free
+			PriFormatFreeString (ptr); // 如果 DLL 返回的内存要求 free
 			return s;
 		}
 		[DllImport (DLL, CallingConvention = CallingConvention.Cdecl)]

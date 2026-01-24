@@ -186,17 +186,6 @@ namespace DataUtils
 			if (string.IsNullOrWhiteSpace (colorStr)) return Color.Transparent;
 			string s = colorStr.Trim ();
 
-			// Named color
-			try
-			{
-				Color byName = Color.FromName (s);
-				if (byName.IsKnownColor || byName.IsNamedColor)
-				{
-					return byName;
-				}
-			}
-			catch { /* ignore */ }
-
 			// Hex: #RGB, #RRGGBB, #AARRGGBB
 			if (s.StartsWith ("#"))
 			{
@@ -320,6 +309,17 @@ namespace DataUtils
 					}
 				}
 			}
+
+			// Named color
+			try
+			{
+				Color byName = Color.FromName (s);
+				if (byName.IsKnownColor || byName.IsNamedColor)
+				{
+					return byName;
+				}
+			}
+			catch { /* ignore */ }
 
 			// fallback: try parse as known color again (case-insensitive)
 			try

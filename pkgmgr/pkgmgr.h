@@ -194,6 +194,15 @@ extern "C"
 	PKGMGR_API HRESULT FindAppxPackagesByFamilyName (LPCWSTR lpPkgFamilyName, PKGMGR_FINDENUMCALLBACK pfCallback, void *pCustom _DEFAULT_INIT_VALUE_FORFUNC_ (NULL), LPWSTR *pErrorCode _DEFAULT_INIT_VALUE_FORFUNC_ (NULL), LPWSTR *pDetailMsg _DEFAULT_INIT_VALUE_FORFUNC_ (NULL));
 	// 释放由 pkgmgr.dll 返回的动态字符串。
 	PKGMGR_API void PackageManagerFreeString (LPWSTR lpString);
+#ifndef  TEMPLATE_STRUCT
+#define TEMPLATE_STRUCT(_typename_) typedef struct _typename_##__ _typename_
+#endif // ! TEMPLATE_STRUCT
+	TEMPLATE_STRUCT (WRTAPPDATA);
+	typedef WRTAPPDATA *HWRTAPPDATA;
+	// 创建应用数据管理器。通过 Package Family Name
+	PKGMGR_API HRESULT CreateAppDataManager (LPCWSTR lpFamilyName, HWRTAPPDATA *ppApplicationData, LPWSTR *pErrorCode, LPWSTR *pDetailMsg);
+	// 从本地、漫游和临时应用数据存储中删除所有应用程序数据。
+	PKGMGR_API HRESULT WRTAppDataClearAll (HWRTAPPDATA hAppData, LPWSTR *pErrorCode, LPWSTR *pDetailMsg);
 #ifdef _DEFAULT_INIT_VALUE_
 #undef _DEFAULT_INIT_VALUE_
 #endif

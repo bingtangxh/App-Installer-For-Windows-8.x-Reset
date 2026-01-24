@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace DataUtils
 {
-	internal static class VisualElementsStore
+	public static class VisualElementsStore
 	{
 		// Publicly accessible instances for internal use
 		public static readonly VisualElementManifest Vemanifest;

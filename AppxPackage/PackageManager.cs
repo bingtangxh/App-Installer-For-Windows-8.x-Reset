@@ -77,7 +77,8 @@ namespace AppxPackage
 		private string familyName = "";
 		private string fullName = "";
 		private string resourceId = "";
-		public PMIdentity (string _name, string _publisher, DataUtils.Version _ver, IEnumerable<Architecture> _archs, string _family, string _full, string _resid)
+		private string publisherId = "";
+		public PMIdentity (string _name, string _publisher, DataUtils.Version _ver, IEnumerable<Architecture> _archs, string _family, string _full, string _resid, string _publisherId)
 		{
 			name = _name;
 			publisher = _publisher;
@@ -86,6 +87,7 @@ namespace AppxPackage
 			familyName = _family;
 			fullName = _full;
 			resourceId = _resid;
+			publisherId = _publisherId;
 		}
 		public PMIdentity (PackageManageHelper.FIND_PACKAGE_ID pkgId) :
 			this (
@@ -95,7 +97,8 @@ namespace AppxPackage
 				new Architecture [] { (Architecture)pkgId.wProcessArchitecture },
 				Marshal.PtrToStringUni (pkgId.lpFamilyName),
 				Marshal.PtrToStringUni (pkgId.lpFullName),
-				Marshal.PtrToStringUni (pkgId.lpResourceId)
+				Marshal.PtrToStringUni (pkgId.lpResourceId),
+				Marshal.PtrToStringUni (pkgId.lpPublisherId)
 				)
 		{ }
 		public string FamilyName => familyName;
@@ -103,8 +106,9 @@ namespace AppxPackage
 		public string Name => name;
 		public List<Architecture> ProcessArchitecture => archs.ToList ();
 		public string Publisher => publisher;
+		public string PublisherId => publisherId;
 		public string ResourceId => resourceId;
-		DataUtils.Version IIdentity.Version => version;
+		public DataUtils.Version Version => version;
 	}
 	[ComVisible (true)]
 	[ClassInterface (ClassInterfaceType.AutoDual)]

@@ -170,7 +170,7 @@
             element.style.animation = generateAnimeString(swKeyFrames, uMillisecond, swTimingFunc, uDelayMs, swIteration, swDirection, swFillMode, swPlayState);
             element.addEventListener("animationend", function() {
                 element.style.animation = "";
-                complete();
+                complete(element);
             });
         });
     }

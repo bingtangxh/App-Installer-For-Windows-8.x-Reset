@@ -104,10 +104,10 @@ namespace AppxPackage
 	[ClassInterface (ClassInterfaceType.AutoDual)]
 	public class BaseInfoSectWithPRI: BaseInfoSection
 	{
-		protected Ref<PackageReader> m_reader = null;
-		protected Ref<PriReaderBundle> m_priBundle = null;
-		protected Ref<bool> m_usePri = false;
-		protected Ref<bool> m_enablePri = false;
+		protected Ref<PackageReader> m_reader = new Ref<PackageReader> (null);
+		protected Ref<PriReaderBundle> m_priBundle = new Ref<PriReaderBundle> (null);
+		protected Ref<bool> m_usePri = new Ref<bool> (false);
+		protected Ref<bool> m_enablePri = new Ref<bool> (false);
 		public BaseInfoSectWithPRI (ref IntPtr hReader, PackageReader reader, ref PriReaderBundle priBundle, ref bool usePri, ref bool enablePri) : base (ref hReader)
 		{
 			m_reader.Set (reader);
@@ -1168,7 +1168,7 @@ namespace AppxPackage
 		public PackageReader (string filePath) { FilePath = filePath; }
 		public PackageReader () { }
 		public string JSONText { get { return BuildJsonText (); } }
-		private string BuildJsonText ()
+		public string BuildJsonText ()
 		{
 			var obj = BuildJsonObject ();
 			return Newtonsoft.Json.JsonConvert.SerializeObject (

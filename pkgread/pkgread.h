@@ -87,7 +87,7 @@ extern "C"
 #define PKGROLE_APPLICATION   1
 #define PKGROLE_FRAMEWORK     2
 #define PKGROLE_RESOURCE      3
-// 创建包读取器
+	// 创建包读取器
 	PKGREAD_API HPKGREAD CreatePackageReader ();
 	// 通过包读取器打开包
 	PKGREAD_API BOOL LoadPackageFromFile (_In_ HPKGREAD hReader, _In_ LPCWSTR lpFilePath);
@@ -286,6 +286,155 @@ extern "C"
 	// 获取功能名的显示名，如 internetClient 对应“访问您的 Internet 连接”。返回的是适应于系统区域语言的文本。
 	// 注意：返回的字符串一定要通过 free 释放。
 	PKGREAD_API LPWSTR GetPackageCapabilityDisplayName (LPCWSTR lpCapabilityName);
+	// 释放从本库中返回的字符串
+	// 其实通过 free 释放即可，但考虑到环境问题，那么另写了个函数
+	PKGREAD_API void PackageReaderFreeString (LPWSTR lpStrFromThisDll);
+
+	// ========= 以下是针对于应用清单的读取器，一些常量和类型等是复用的 =========
+
+	TEMPLATE_STRUCT (PKGMANIFESTREAD);
+	typedef PKGMANIFESTREAD *HPKGMANIFESTREAD;
+	// 创建 Manifest 读取器。
+	// 返回一个 Manifest Reader 句柄，初始状态未加载任何文件。
+	PKGREAD_API HPKGMANIFESTREAD CreateManifestReader ();
+	// 从文件加载 Manifest。
+	// 支持的输入：
+	//  - AppxManifest.xml
+	//  - .appx / .msix
+	//  - .appxbundle / .msixbundle
+	// 加载成功后，读取器会自动识别 Manifest 类型。
+	PKGREAD_API BOOL LoadManifestFromFile (_In_ HPKGMANIFESTREAD hReader, _In_ LPCWSTR lpFilePath);
+	// 从文件加载 Manifest。
+	// 支持的输入：
+	//  - AppxManifest.xml
+	//  - .appx / .msix
+	//  - .appxbundle / .msixbundle
+	// 加载成功后，读取器会自动识别 Manifest 类型。
+	PKGREAD_API BOOL LoadManifestFromFile (_In_ HPKGMANIFESTREAD hReader, _In_ LPCWSTR lpFilePath);
+	// 销毁 Manifest 读取器（必须调用）。
+	// 释放内部所有资源，句柄在此之后不可再使用。
+	PKGREAD_API void DestroyManifestReader (_In_ HPKGMANIFESTREAD hReader);
+	// 获取 Manifest 的类型。
+	// 返回值：
+	//  - PKGTYPE_APPX      ：单一 Appx / Msix 包
+	//  - PKGTYPE_BUNDLE    ：AppxBundle / MsixBundle
+	//  - PKGTYPE_UNKNOWN   ：未知或未加载
+	PKGREAD_API WORD GetManifestType (_In_ HPKGMANIFESTREAD hReader);
+	// 获取 Manifest 的类型。
+	// 返回值：
+	//  - PKGTYPE_APPX      ：单一 Appx / Msix 包
+	//  - PKGTYPE_BUNDLE    ：AppxBundle / MsixBundle
+	//  - PKGTYPE_UNKNOWN   ：未知或未加载
+	PKGREAD_API WORD GetManifestType (_In_ HPKGMANIFESTREAD hReader);
+	// 判断 Manifest 是否有效。
+	// 如果 Manifest 解析失败、结构非法或未加载，返回 FALSE。
+	PKGREAD_API BOOL IsManifestValid (_In_ HPKGMANIFESTREAD hReader);
+	// 获取 Manifest 所表示包的角色。
+	// 返回值：
+	//  - PKGROLE_APPLICATION ：应用包
+	//  - PKGROLE_FRAMEWORK   ：框架包
+	//  - PKGROLE_RESOURCE    ：资源包
+	//  - PKGROLE_UNKNOWN     ：未知
+	//
+	// 说明：
+	//  - 对于 AppxBundle，永远返回 PKGROLE_APPLICATION。
+	PKGREAD_API WORD GetManifestRole (_In_ HPKGMANIFESTREAD hReader);
+	// 获取 Identity 的字符串字段。
+	// dwName 可取值：
+	//  - PKG_IDENTITY_NAME
+	//  - PKG_IDENTITY_PUBLISHER
+	//  - PKG_IDENTITY_PACKAGEFAMILYNAME
+	//  - PKG_IDENTITY_PACKAGEFULLNAME
+	//  - PKG_IDENTITY_RESOURCEID
+	//
+	// 返回值：
+	//  - 成功：返回新分配的字符串（调用者负责释放）
+	//  - 失败：返回 NULL
+	PKGREAD_API LPWSTR GetManifestIdentityStringValue (_In_ HPKGMANIFESTREAD hReader, _In_ DWORD dwName);
+#define GetManifestIdentityName(_In_hReader_) GetManifestIdentityStringValue (_In_hReader_, PKG_IDENTITY_NAME)
+#define GetManifestIdentityPublisher(_In_hReader_) GetManifestIdentityStringValue (_In_hReader_, PKG_IDENTITY_PUBLISHER)
+#define GetManifestIdentityPackageFamilyName(_In_hReader_) GetManifestIdentityStringValue (_In_hReader_, PKG_IDENTITY_PACKAGEFAMILYNAME)
+#define GetManifestIdentityPackageFullName(_In_hReader_) GetManifestIdentityStringValue (_In_hReader_, PKG_IDENTITY_PACKAGEFULLNAME)
+#define GetManifestIdentityResourceId(_In_hReader_) GetManifestIdentityStringValue (_In_hReader_, PKG_IDENTITY_RESOURCEID)
+	// 获取 Identity 的版本号。
+	//
+	// pVersion 返回格式化后的 VERSION 结构。
+	// 返回值：
+	//  - TRUE  ：成功
+	//  - FALSE ：失败或版本不存在
+	PKGREAD_API BOOL GetManifestIdentityVersion (_In_ HPKGMANIFESTREAD hReader, _Out_ VERSION *pVersion);
+	// 获取包支持的架构信息。
+	// 对于单一 Appx 包，返回单一架构；
+	// 对于 Bundle，返回所有子包架构的组合（按位或）。
+	//
+	// 返回值通过 pdwArchi 输出，取值为 PKG_ARCHITECTURE_* 宏。
+	PKGREAD_API BOOL GetManifestIdentityArchitecture (_In_ HPKGMANIFESTREAD hReader, _Out_ DWORD *pdwArchi);
+	// 获取 Properties 中的字符串值。
+	// lpName 为属性名（如 "DisplayName"）。
+	// 返回值：
+	//  - 成功：返回新分配的字符串（调用者负责释放）
+	//  - 失败：返回 NULL
+	//
+	// 说明：
+	//  - 仅适用于单一 Appx 包。
+	PKGREAD_API LPWSTR GetManifestPropertiesStringValue (_In_ HPKGMANIFESTREAD hReader, _In_ LPCWSTR lpName);
+	// 获取 Properties 中的布尔值。
+	//
+	// pRet 返回布尔结果。
+	// 返回 HRESULT，便于区分失败原因。
+	//
+	// 说明：
+	//  - 仅适用于单一 Appx 包。
+	PKGREAD_API HRESULT GetManifestPropertiesBoolValue (_In_ HPKGMANIFESTREAD hReader, _In_ LPCWSTR lpName, _Outptr_ BOOL *pRet);
+	// 向应用枚举器中添加需要读取的 Application 属性名。
+	// 返回 FALSE 表示属性名非法或重复。
+	PKGREAD_API BOOL AddManifestApplicationItemGetName (_In_ LPCWSTR lpName);
+	// 从应用枚举器中移除指定的 Application 属性名。
+	PKGREAD_API BOOL RemoveManifestApplicationItemGetName (_In_ LPCWSTR lpName);
+	// 获取 Applications 枚举器。
+	// 返回一个应用枚举器句柄，调用者需手动销毁。
+	//
+	// 说明：
+	//  - 仅适用于单一 Appx 包。
+	PKGREAD_API HAPPENUMERATOR GetManifestApplications (_In_ HPKGMANIFESTREAD hReader);
+	// 销毁 Applications 枚举器。
+	PKGREAD_API void DestroyManifestApplications (_In_ HAPPENUMERATOR hEnumerator);
+	// 获取资源支持的语言列表（字符串形式）。
+	// 返回 HLIST_PVOID，内部元素为 LPWSTR。
+	PKGREAD_API HLIST_PVOID GetManifestResourcesLanguages (_In_ HPKGMANIFESTREAD hReader);
+	// 获取资源支持的语言列表（LCID 形式）。
+	// 返回 HLIST_LCID。
+	PKGREAD_API HLIST_LCID GetManifestResourcesLanguagesToLcid (_In_ HPKGMANIFESTREAD hReader);
+	// 获取资源支持的缩放比例（Scale）。
+	// 返回 HLIST_UINT32。
+	PKGREAD_API HLIST_UINT32 GetManifestResourcesScales (_In_ HPKGMANIFESTREAD hReader);
+	// 获取资源支持的 DirectX Feature Level。
+	// 返回值为 PKG_RESOURCES_DXFEATURE_LEVEL* 位掩码组合。
+	PKGREAD_API DWORD GetManifestResourcesDxFeatureLevels (_In_ HPKGMANIFESTREAD hReader);
+	// 获取依赖包信息列表。
+	// 返回 HLIST_DEPINFO，其中包含名称、发布者及最低版本。
+	//
+	// 说明：
+	//  - 仅适用于单一 Appx 包。
+	PKGREAD_API HLIST_DEPINFO GetManifestDependencesInfoList (_In_ HPKGMANIFESTREAD hReader);
+	// 获取 Capability 列表（Capability）。
+	// 返回的列表元素为 LPWSTR。
+	//
+	// 说明：
+	//  - 仅适用于单一 Appx 包。
+	PKGREAD_API HLIST_PVOID GetManifestCapabilitiesList (_In_ HPKGMANIFESTREAD hReader);
+	// 获取 Device Capability 列表。
+	// 返回的列表元素为 LPWSTR。
+	//
+	// 说明：
+	//  - 仅适用于单一 Appx 包。
+	PKGREAD_API HLIST_PVOID GetManifestDeviceCapabilitiesList (_In_ HPKGMANIFESTREAD hReader);
+	// 获取指定前置条件的最低版本要求。
+	// lpName 为前置组件名称。
+	// pVerRet 返回版本结构。
+	// 返回 TRUE 表示存在该前置条件。
+	PKGREAD_API BOOL GetManifestPrerequisite (_In_ HPKGMANIFESTREAD hReader, _In_ LPCWSTR lpName, _Outptr_ VERSION *pVerRet);
+
 #ifdef _DEFAULT_INIT_VALUE_
 #undef _DEFAULT_INIT_VALUE_
 #endif

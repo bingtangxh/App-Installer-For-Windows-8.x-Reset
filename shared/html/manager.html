@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="text/javascript" src="js/module.js"></script>
     <script type="text/javascript" src="js/polyfill-ie.js"></script>
+    <link rel="stylesheet" href="libs/winjs/1.0/css/ui-light.css" id="winjs-style-1">
     <link rel="stylesheet" href="libs/winjs/2.0/css/ui-light.css" id="winjs-style">
     <script type="text/javascript" src="libs/winjs/1.0/js/base.js"></script>
     <script type="text/javascript" src="libs/winjs/1.0/js/ui.js"></script>
@@ -21,38 +22,77 @@
     <link rel="stylesheet" href="fonts/segx.css">
     <link rel="stylesheet" href="manager/page.css">
     <link rel="stylesheet" href="manager/appitem.css">
+    <link rel="stylesheet" href="manager/appbar.css">
     <script type="text/javascript" src="js/event.js"></script>
     <script type="text/javascript" src="js/tileback.js"></script>
     <script type="text/javascript" src="js/load.js"></script>
     <link rel="stylesheet" type="text/css" href="libs/msgbox/msgbox.css">
     <script type="text/javascript" src="libs/msgbox/msgbox.js"></script>
     <script type="text/javascript" src="js/init.js"></script>
+    <script type="text/javascript" src="js/pkginfo.js"></script>
+    <script type="text/javascript" src="js/datasrc.js"></script>
+    <script type="text/javascript" src="js/appbar.js"></script>
+    <script type="text/javascript" src="js/pagemgr.js"></script>
+    <script type="text/javascript" src="js/manager/pages.js"></script>
+    <script type="text/javascript" src="js/mgrinit.js"></script>
 </head>
 
 <body>
-    <div id="settingpage" class="pagecontainer full">
+    <div id="managerpage" class="pagecontainer full">
         <div class="page full guide fold">
             <main class="main padding">
-                <div id="page-manager">
+                <div id="page-manager" style="display: none;" class="ispage">
                     <h2>应用</h2>
                     <p>在这里，可以对安装的 Windows 商店应用进行管理。</p>
                     <h3>安装的应用</h3>
-                    <template id="appitem-template">
-                       
-                    </template>
-                    <div class="appitem selected">
-                        <div role="img">
-                            <img width="24" height="24" src="images/applogo.default.png" />
+                    <br>
+                    <div class="app-loading" id="applist-loading" style="display: none;">
+                        <progress class="win-ring"></progress>
+                        <span class="win-label title">正在加载应用...</span>
+                        <br>
+                    </div>
+                    <div class="appitem" id="appitem-template" style="display: none;">
+                        <div role="img" style="pointer-events: none;">
+                            <img width="" height="" src="images/applogo.default.png" />
                         </div>
-                        <div role="divide"></div>
+                        <div role="divide" style="pointer-events: none;"></div>
                         <div role="excepticon">
-                            <div role="title" class="win-type-x-small"><span>App Name</span></div>
-                            <div role="control"><button>卸载</button></div>
+                            <div role="title" class="win-type-x-small" style="pointer-events: none;">
+                                <span class="displayName">App Name</span><br>
+                                <span class="publisher">Publisher</span>
+                            </div>
+                            <div role="advance">
+                                <a>高级选项</a>
+                            </div>
+                            <div role="control">
+                                <button name="uninstall">卸载</button>
+                            </div>
                         </div>
                     </div>
-                    <ul>
-                        <li></li>
-                    </ul>
+                    <div id="applist" class="appitem-list" style="width: 100%; height: auto;">
+                    </div>
+                    <div class="bottom-compensate"></div>
+                </div>
+                <div id="page-appinfo" class="ispage app-detailpage">
+                    <header>
+                        <button class="win-backbutton"></button>
+                        <h2 class="display-name">App DisplayName</h2>
+                    </header>
+                    <span class="publisher-display-name">App PublisherDisplayName</span><br>
+                    <span class="version">App Version</span><br>
+                    <span class="description">App Description</span>
+                    <p><strong>应用身份</strong></p>
+                    <div class="identity win-type-body" style="width: 100%; max-width: 100%; box-sizing: border-box; -ms-user-select: element;">
+                        <span style="font-weight: bold;">名称</span><span>: </span><span class="name"></span><br>
+                        <span style="font-weight: bold;">发布者</span><span>: </span><span class="publisher"></span><br>
+                        <span style="font-weight: bold;">发布者 ID</span><span>: </span><span class="publisher-id"></span><br>
+                        <span style="font-weight: bold;">系列名</span><span>: </span><span class="family-name"></span><br>
+                        <span style="font-weight: bold;">全名</span><span>: </span><span class="full-name"></span><br>
+                        <span style="font-weight: bold;">支持的处理器架构</span><span>: </span><span class="architecture"></span><br>
+                    </div>
+                    <p><strong>卸载</strong></p>
+                    <p>卸载此应用及其设置。</p>
+                    <button id="detail-uninstall-btn" data-app-fullname="">卸载</button>
                 </div>
             </main>
             <aside class="win-ui-dark">
@@ -75,9 +115,13 @@
                     </ul>
                     <hr>
                     <ul class="list">
-                        <li>
+                        <li id="tag-manager">
                             <div role="img">&#57587;</div>
                             <span class="win-type-base">管理</span>
+                        </li>
+                        <li id="tag-appinfo" class="subitem">
+                            <div role="img">&#57650;</div>
+                            <span class="win-type-base">应用信息</span>
                         </li>
                         <li>
                             <div role="img">&#57587;</div>
@@ -87,6 +131,8 @@
                 </nav>
             </aside>
         </div>
+    </div>
+    <div class="win-overlay win-commandlayout win-appbar win-bottom appbar win-ui-dark" id="appBar" role="menubar">
     </div>
 </body>
 

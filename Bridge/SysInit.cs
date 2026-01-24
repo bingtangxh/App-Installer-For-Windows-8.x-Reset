@@ -496,6 +496,8 @@ namespace Bridge
 	{
 		public AppxPackage.PackageReader Reader (string packagePath) { return new AppxPackage.PackageReader (packagePath); }
 		public _I_PackageManager Manager => new _I_PackageManager ();
+		public AppxPackage.ManifestReader Manifest (string manifestPath) { return new AppxPackage.ManifestReader (manifestPath); }
+		public AppxPackage.ManifestReader FromInstallLocation (string installLocation) { return Manifest (Path.Combine (installLocation, "AppxManifest.xml")); }
 	}
 	[ComVisible (true)]
 	[ClassInterface (ClassInterfaceType.AutoDual)]

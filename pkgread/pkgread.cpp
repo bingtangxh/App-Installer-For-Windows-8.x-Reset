@@ -1214,3 +1214,543 @@ LPWSTR GetPackageCapabilityDisplayName (LPCWSTR lpCapabilityName)
 	if (IsNormalizeStringEmpty (ret)) return nullptr;
 	else return _wcsdup (ret.c_str ());
 }
+
+void PackageReaderFreeString (LPWSTR lpStrFromThisDll)
+{
+	if (!lpStrFromThisDll) return;
+	free (lpStrFromThisDll);
+}
+
+// ========== 以下是对清单文件的读取 ==========
+#define ToHandleMRead(_cpp_ptr_) reinterpret_cast <HPKGMANIFESTREAD> (_cpp_ptr_) 
+#define ToPtrManifest(_cpp_ptr_) reinterpret_cast <manifest *> (_cpp_ptr_)
+HPKGMANIFESTREAD CreateManifestReader () { return ToHandleMRead (new manifest ()); }
+BOOL LoadManifestFromFile (_In_ HPKGMANIFESTREAD hReader, _In_ LPCWSTR lpFilePath)
+{
+	auto ptr = ToPtrManifest (hReader);
+	if (!ptr) return false;
+	return ptr->create (lpFilePath);
+}
+void DestroyManifestReader (_In_ HPKGMANIFESTREAD hReader)
+{
+	auto ptr = ToPtrManifest (hReader);
+	if (!ptr) return;
+	return delete ptr;
+}
+WORD GetManifestType (_In_ HPKGMANIFESTREAD hReader)
+{
+	auto ptr = ToPtrManifest (hReader);
+	if (!ptr) return PKGTYPE_UNKNOWN;
+	switch (ptr->type ())
+	{
+		case PackageType::unknown: return PKGTYPE_UNKNOWN;
+		case PackageType::single: return PKGTYPE_APPX;
+		case PackageType::bundle: return PKGTYPE_BUNDLE;
+	}
+	return PKGTYPE_UNKNOWN;
+}
+BOOL IsManifestValid (_In_ HPKGMANIFESTREAD hReader)
+{
+	auto ptr = ToPtrManifest (hReader);
+	if (!ptr) return false;
+	return ptr->valid ();
+}
+WORD GetManifestRole (_In_ HPKGMANIFESTREAD hReader)
+{
+	auto ptr = ToPtrManifest (hReader);
+	if (!ptr) return PKGROLE_UNKNOWN;
+	switch (ptr->type ())
+	{
+		case PackageType::unknown: return PKGROLE_UNKNOWN;
+		case PackageType::bundle: return PKGROLE_APPLICATION;
+		case PackageType::single: {
+			auto ar = ptr->appx_reader ();
+			switch (ar.package_role ())
+			{
+				case PackageRole::unknown: return PKGROLE_UNKNOWN;
+				case PackageRole::application: return PKGROLE_APPLICATION;
+				case PackageRole::framework: return PKGROLE_FRAMEWORK;
+				case PackageRole::resource: return PKGROLE_RESOURCE;
+			}
+		} break;
+	}
+	return PKGROLE_UNKNOWN;
+}
+// Identity
+LPWSTR GetManifestIdentityStringValue (_In_ HPKGMANIFESTREAD hReader, _In_ DWORD dwName)
+{
+	auto ptr = ToPtrManifest (hReader);
+	if (!ptr) return nullptr;
+	switch (ptr->type ())
+	{
+		case PackageType::single: {
+			auto reader = ptr->appx_reader ();
+			auto id = reader.identity ();
+			switch (LOWORD (dwName))
+			{
+				case PKG_IDENTITY_NAME: return _wcsdup (id.name ().c_str ());
+				case PKG_IDENTITY_PUBLISHER: return _wcsdup (id.publisher ().c_str ());
+				case PKG_IDENTITY_PACKAGEFAMILYNAME: return _wcsdup (id.package_family_name ().c_str ());
+				case PKG_IDENTITY_PACKAGEFULLNAME: return _wcsdup (id.package_full_name ().c_str ());
+				case PKG_IDENTITY_RESOURCEID: return _wcsdup (id.resource_id ().c_str ());
+			}
+		} break;
+		case PackageType::bundle: {
+			auto reader = ptr->bundle_reader ();
+			auto id = reader.identity ();
+			{
+				switch (LOWORD (dwName))
+				{
+					case PKG_IDENTITY_NAME: return _wcsdup (id.name ().c_str ());
+					case PKG_IDENTITY_PUBLISHER: return _wcsdup (id.publisher ().c_str ());
+					case PKG_IDENTITY_PACKAGEFAMILYNAME: return _wcsdup (id.package_family_name ().c_str ());
+					case PKG_IDENTITY_PACKAGEFULLNAME: return _wcsdup (id.package_full_name ().c_str ());
+					case PKG_IDENTITY_RESOURCEID: return _wcsdup (id.resource_id ().c_str ());
+				}
+			}
+		} break;
+	}
+	return nullptr;
+}
+BOOL GetManifestIdentityVersion (_In_ HPKGMANIFESTREAD hReader, _Out_ VERSION *pVersion)
+{
+	auto ptr = ToPtrManifest (hReader);
+	if (!ptr) return FALSE;
+	if (!pVersion) return FALSE;
+	switch (ptr->type ())
+	{
+		case PackageType::single: {
+			auto reader = ptr->appx_reader ();
+			auto id = reader.identity ();
+			auto ver = id.version ();
+			*pVersion = VersionClassToStruct (ver);
+			return !ver.empty ();
+		} break;
+		case PackageType::bundle: {
+			auto reader = ptr->bundle_reader ();
+			auto id = reader.identity ();
+			{
+				auto ver = id.version ();
+				*pVersion = VersionClassToStruct (ver);
+				return !ver.empty ();
+			}
+		} break;
+	}
+	return FALSE;
+}
+BOOL GetManifestIdentityArchitecture (_In_ HPKGMANIFESTREAD hReader, _Out_ DWORD *pdwArchi)
+{
+	auto ptr = ToPtrManifest (hReader);
+	if (!ptr) return FALSE;
+	if (!pdwArchi) return FALSE;
+	switch (ptr->type ())
+	{
+		case PackageType::single: {
+			auto reader = ptr->appx_reader ();
+			auto id = reader.identity ();
+			auto archi = id.architecture ();
+			DWORD ret = 0;
+			switch (archi)
+			{
+				case APPX_PACKAGE_ARCHITECTURE::APPX_PACKAGE_ARCHITECTURE_X86:
+					ret = PKG_ARCHITECTURE_X86; break;
+				case APPX_PACKAGE_ARCHITECTURE::APPX_PACKAGE_ARCHITECTURE_ARM:
+					ret = PKG_ARCHITECTURE_ARM; break;
+				case APPX_PACKAGE_ARCHITECTURE::APPX_PACKAGE_ARCHITECTURE_X64:
+					ret = PKG_ARCHITECTURE_X64; break;
+				case APPX_PACKAGE_ARCHITECTURE::APPX_PACKAGE_ARCHITECTURE_NEUTRAL:
+					ret = PKG_ARCHITECTURE_NEUTRAL; break;
+				case (APPX_PACKAGE_ARCHITECTURE)12: // ARM64
+					ret = PKG_ARCHITECTURE_ARM64; break;
+			}
+			*pdwArchi = ret;
+			return ret != PKG_ARCHITECTURE_UNKNOWN;
+		} break;
+		case PackageType::bundle: {
+			auto reader = ptr->bundle_reader ();
+			auto ids = reader.package_id_items ();
+			std::vector <appx_info::appx_iditem> apps;
+			ids.application_packages (apps);
+			DWORD ret = 0;
+			for (auto &it : apps)
+			{
+				auto id = it.identity ();
+				auto archi = id.architecture ();
+				switch (archi)
+				{
+					case APPX_PACKAGE_ARCHITECTURE::APPX_PACKAGE_ARCHITECTURE_X86:
+						ret |= PKG_ARCHITECTURE_X86; break;
+					case APPX_PACKAGE_ARCHITECTURE::APPX_PACKAGE_ARCHITECTURE_ARM:
+						ret |= PKG_ARCHITECTURE_ARM; break;
+					case APPX_PACKAGE_ARCHITECTURE::APPX_PACKAGE_ARCHITECTURE_X64:
+						ret |= PKG_ARCHITECTURE_X64; break;
+					case APPX_PACKAGE_ARCHITECTURE::APPX_PACKAGE_ARCHITECTURE_NEUTRAL:
+						ret |= PKG_ARCHITECTURE_NEUTRAL; break;
+					case (APPX_PACKAGE_ARCHITECTURE)12: // ARM64
+						ret |= PKG_ARCHITECTURE_ARM64; break;
+				}
+			}
+			*pdwArchi = ret;
+			return ret != PKG_ARCHITECTURE_UNKNOWN;
+		} break;
+	}
+	return FALSE;
+}
+// Properties
+LPWSTR GetManifestPropertiesStringValue (_In_ HPKGMANIFESTREAD hReader, _In_ LPCWSTR lpName)
+{
+	auto ptr = ToPtrManifest (hReader);
+	if (!ptr) return nullptr;
+	switch (ptr->type ())
+	{
+		case PackageType::single: {
+			auto reader = ptr->appx_reader ();
+			auto prop = reader.properties ();
+			return _wcsdup (prop.string_value (lpName ? lpName : L"").c_str ());
+		} break;
+	}
+	return nullptr;
+}
+HRESULT GetManifestPropertiesBoolValue (_In_ HPKGMANIFESTREAD hReader, _In_ LPCWSTR lpName, _Outptr_ BOOL *pRet)
+{
+	auto ptr = ToPtrManifest (hReader);
+	if (!ptr) return E_INVALIDARG;
+	if (!pRet) return E_INVALIDARG;
+	*pRet = FALSE;
+	switch (ptr->type ())
+	{
+		case PackageType::single: {
+			auto reader = ptr->appx_reader ();
+			IAppxManifestReader *m = reader.manifest ();
+			if (!m) return E_FAIL;
+			CComPtr <IAppxManifestProperties> p;
+			HRESULT hr = m->GetProperties (&p);
+			if (FAILED (hr)) return hr;
+			return p->GetBoolValue (lpName, pRet);
+		} break;
+	}
+	return E_FAIL;
+}
+// Applications
+BOOL AddManifestApplicationItemGetName (_In_ LPCWSTR lpName)
+{
+	if (std::wnstring (lpName ? lpName : L"").empty ()) return FALSE;
+	return PushApplicationAttributeItem (lpName);
+}
+BOOL RemoveManifestApplicationItemGetName (_In_ LPCWSTR lpName)
+{
+	if (std::wnstring (lpName ? lpName : L"").empty ()) return FALSE;
+	return RemoveApplicationAttributeItem (lpName);
+}
+HAPPENUMERATOR GetManifestApplications (_In_ HPKGMANIFESTREAD hReader)
+{
+	auto ptr = ToPtrManifest (hReader);
+	if (!ptr) return nullptr;
+	switch (ptr->type ())
+	{
+		case PackageType::single: {
+			auto reader = ptr->appx_reader ();
+			auto app = reader.applications ();
+			auto appvec = new app_enumerator ();
+			app.applications (*appvec);
+			return ToHandleAppEnumerator (appvec);
+		} break;
+	}
+	return nullptr;
+}
+void DestroyManifestApplications (_In_ HAPPENUMERATOR hEnumerator)
+{
+	auto ptr = ToPtrAppxApps (hEnumerator);
+	if (ptr) delete ptr;
+}
+// Resources
+HLIST_PVOID GetManifestResourcesLanguages (_In_ HPKGMANIFESTREAD hReader)
+{
+	auto ptr = ToPtrManifest (hReader);
+	if (!ptr) return nullptr;
+	std::vector <std::wnstring> langs;
+	switch (ptr->type ())
+	{
+		case PackageType::single:
+		{
+			auto reader = ptr->appx_reader ();
+			auto res = reader.resources ();
+			res.languages (langs);
+			break;
+		}
+		case PackageType::bundle:
+		{
+			auto br = ptr->bundle_reader ();
+			auto res = br.package_id_items ();
+			res.enumerate ([&langs] (IAppxBundleManifestPackageInfo *inf) {
+				auto item = appx_info::appx_iditem (inf);
+				std::vector <std::wnstring> l;
+				auto qr = item.qualified_resources ();
+				qr.languages (l);
+				for (auto &it : l) push_unique <std::wnstring> (langs, it);
+			});
+			break;
+		}
+		default: return nullptr;
+	}
+	if (langs.empty ()) return nullptr;
+	size_t count = langs.size ();
+	size_t bytes = sizeof (LIST_PVOID) + sizeof (LPWSTR) * (count - 1);
+	auto list = (HLIST_PVOID)malloc (bytes);
+	ZeroMemory (list, bytes);
+	if (!list) return nullptr;
+	list->dwSize = 0;
+	for (auto &it : langs) list->alpVoid [list->dwSize ++] = _wcsdup (it.c_str ());
+	return list;
+}
+HLIST_LCID GetManifestResourcesLanguagesToLcid (_In_ HPKGMANIFESTREAD hReader)
+{
+	auto ptr = ToPtrManifest (hReader);
+	if (!ptr) return nullptr;
+	std::vector <std::wnstring> langs;
+	switch (ptr->type ())
+	{
+		case PackageType::single:
+		{
+			auto reader = ptr->appx_reader ();
+			auto res = reader.resources ();
+			res.languages (langs);
+			break;
+		}
+		case PackageType::bundle:
+		{
+			auto br = ptr->bundle_reader ();
+			auto res = br.package_id_items ();
+			res.enumerate ([&langs] (IAppxBundleManifestPackageInfo *inf) {
+				auto item = appx_info::appx_iditem (inf);
+				std::vector <std::wnstring> l;
+				auto qr = item.qualified_resources ();
+				qr.languages (l);
+				for (auto &it : l) push_unique <std::wnstring> (langs, it);
+			});
+			break;
+		}
+		default: return nullptr;
+	}
+	if (langs.empty ()) return nullptr;
+	size_t len = sizeof (LIST_LCID) + sizeof (LCID) * langs.size ();
+	HLIST_LCID hList = (HLIST_LCID)malloc (len);
+	ZeroMemory (hList, len);
+	hList->dwSize = 0;
+	for (auto &it : langs)
+	{
+		LCID lcid = LocaleCodeToLcid (it);
+		if (lcid)
+		{
+			hList->aLcid [hList->dwSize ++] = lcid;
+		}
+	}
+	return hList;
+}
+HLIST_UINT32 GetManifestResourcesScales (_In_ HPKGMANIFESTREAD hReader)
+
+{
+	auto ptr = ToPtrManifest (hReader);
+	if (!ptr) return nullptr;
+	std::vector <UINT32> scales;
+	switch (ptr->type ())
+	{
+		case PackageType::single:
+		{
+			auto reader = ptr->appx_reader ();
+			auto res = reader.resources ();
+			res.scales (scales);
+			break;
+		}
+		case PackageType::bundle:
+		{
+			auto br = ptr->bundle_reader ();
+			auto res = br.package_id_items ();
+			res.enumerate ([&scales] (IAppxBundleManifestPackageInfo *inf) {
+				auto item = appx_info::appx_iditem (inf);
+				std::vector <UINT32> s;
+				auto qr = item.qualified_resources ();
+				qr.scales (s);
+				for (auto &it : s) push_unique (scales, it);
+			});
+			break;
+		}
+		default: return nullptr;
+	}
+	if (scales.empty ()) return nullptr;
+	size_t len = sizeof (LIST_UINT32) + sizeof (UINT32) * scales.size ();
+	HLIST_UINT32 hList = (HLIST_UINT32)malloc (len);
+	ZeroMemory (hList, len);
+	hList->dwSize = 0;
+	for (auto &it : scales)
+	{
+		if (!it) continue;
+		hList->aUI32 [hList->dwSize ++] = it;
+	}
+	return hList;
+}
+DWORD GetManifestResourcesDxFeatureLevels (_In_ HPKGMANIFESTREAD hReader)
+
+{
+	auto ptr = ToPtrManifest (hReader);
+	if (!ptr) return 0;
+	DWORD dwFlags = 0;
+	switch (ptr->type ())
+	{
+		case PackageType::single:
+		{
+			auto reader = ptr->appx_reader ();
+			auto res = reader.resources ();
+			std::vector <DX_FEATURE_LEVEL> dxlevels;
+			res.dx_feature_level (dxlevels);
+			for (auto &it : dxlevels)
+			{
+				switch (it)
+				{
+					case DX_FEATURE_LEVEL::DX_FEATURE_LEVEL_9:
+						dwFlags |= PKG_RESOURCES_DXFEATURE_LEVEL9; break;
+					case DX_FEATURE_LEVEL::DX_FEATURE_LEVEL_10:
+						dwFlags |= PKG_RESOURCES_DXFEATURE_LEVEL10; break;
+					case DX_FEATURE_LEVEL::DX_FEATURE_LEVEL_11:
+						dwFlags |= PKG_RESOURCES_DXFEATURE_LEVEL11; break;
+					case (DX_FEATURE_LEVEL)4:
+						dwFlags |= PKG_RESOURCES_DXFEATURE_LEVEL12; break;
+				}
+			}
+			break;
+		}
+		case PackageType::bundle:
+		{
+			auto br = ptr->bundle_reader ();
+			auto res = br.package_id_items ();
+			res.enumerate ([&dwFlags] (IAppxBundleManifestPackageInfo *inf) {
+				auto item = appx_info::appx_iditem (inf);
+				std::vector <DX_FEATURE_LEVEL> dxlevels;
+				auto qr = item.qualified_resources ();
+				qr.dx_feature_level (dxlevels);
+				for (auto &it : dxlevels)
+				{
+					switch (it)
+					{
+						case DX_FEATURE_LEVEL::DX_FEATURE_LEVEL_9:
+							dwFlags |= PKG_RESOURCES_DXFEATURE_LEVEL9; break;
+						case DX_FEATURE_LEVEL::DX_FEATURE_LEVEL_10:
+							dwFlags |= PKG_RESOURCES_DXFEATURE_LEVEL10; break;
+						case DX_FEATURE_LEVEL::DX_FEATURE_LEVEL_11:
+							dwFlags |= PKG_RESOURCES_DXFEATURE_LEVEL11; break;
+						case (DX_FEATURE_LEVEL)4:
+							dwFlags |= PKG_RESOURCES_DXFEATURE_LEVEL12; break;
+					}
+				}
+			});
+			break;
+		}
+		default: return 0;
+	}
+	return dwFlags;
+}
+// Dependencies
+HLIST_DEPINFO GetManifestDependencesInfoList (_In_ HPKGMANIFESTREAD hReader)
+{
+	auto ptr = ToPtrManifest (hReader);
+	if (!ptr) return nullptr;
+	std::vector <dep_info> vec;
+	switch (ptr->type ())
+	{
+		case PackageType::single: {
+			auto reader = ptr->appx_reader ();
+			auto deps = reader.dependencies ();
+			deps.dependencies (vec);
+		} break;
+	}
+	size_t len = sizeof (LIST_DEPINFO) + sizeof (DEPENDENCY_INFO) * vec.size ();
+	HLIST_DEPINFO hList = (HLIST_DEPINFO)malloc (len);
+	ZeroMemory (hList, len);
+	hList->dwSize = 0;
+	for (auto &it : vec)
+	{
+		auto &dep = hList->aDepInfo [hList->dwSize ++];
+		dep.lpName = _wcsdup (it.name.c_str ());
+		dep.lpPublisher = _wcsdup (it.publisher.c_str ());
+		dep.verMin = VersionClassToStruct (it.minversion);
+	}
+	return hList;
+}
+// Capabilities
+HLIST_PVOID GetManifestCapabilitiesList (_In_ HPKGMANIFESTREAD hReader)
+{
+	auto ptr = ToPtrManifest (hReader);
+	if (!ptr) return nullptr;
+	std::vector <std::wnstring> caps;
+	switch (ptr->type ())
+	{
+		case PackageType::single: {
+			auto reader = ptr->appx_reader ();
+			auto cap = reader.capabilities ();
+			std::vector <std::wstring> vec;
+			cap.capabilities_names (vec);
+			for (auto &it : vec)
+			{
+				auto cname = std::wnstring (it.c_str ());
+				if (cname.empty ()) continue;
+				push_unique (caps, cname);
+			}
+		} break;
+	}
+	size_t len = sizeof (LIST_PVOID) + sizeof (LPWSTR) * caps.size ();
+	HLIST_PVOID hList = (HLIST_PVOID)malloc (len);
+	ZeroMemory (hList, len);
+	hList->dwSize = 0;
+	for (auto &it : caps)
+	{
+		hList->alpVoid [hList->dwSize ++] = (LPVOID)_wcsdup (it.c_str ());
+	}
+	return hList;
+}
+HLIST_PVOID GetManifestDeviceCapabilitiesList (_In_ HPKGMANIFESTREAD hReader)
+{
+	auto ptr = ToPtrManifest (hReader);
+	if (!ptr) return nullptr;
+	std::vector <std::wnstring> caps;
+	switch (ptr->type ())
+	{
+		case PackageType::single: {
+			auto reader = ptr->appx_reader ();
+			auto cap = reader.capabilities ();
+			std::vector <std::wstring> vec;
+			cap.device_capabilities (vec);
+			for (auto &it : vec)
+			{
+				auto cname = std::wnstring (it.c_str ());
+				if (cname.empty ()) continue;
+				push_unique (caps, cname);
+			}
+		} break;
+	}
+	size_t len = sizeof (LIST_PVOID) + sizeof (LPWSTR) * caps.size ();
+	HLIST_PVOID hList = (HLIST_PVOID)malloc (len);
+	ZeroMemory (hList, len);
+	hList->dwSize = 0;
+	for (auto &it : caps)
+	{
+		hList->alpVoid [hList->dwSize ++] = (LPVOID)_wcsdup (it.c_str ());
+	}
+	return hList;
+}
+// Prerequisite
+BOOL GetManifestPrerequisite (_In_ HPKGMANIFESTREAD hReader, _In_ LPCWSTR lpName, _Outptr_ VERSION *pVerRet)
+{
+	auto ptr = ToPtrManifest (hReader);
+	if (!ptr) return FALSE;
+	switch (ptr->type ())
+	{
+		case PackageType::single: {
+			auto reader = ptr->appx_reader ();
+			auto pre = reader.prerequisites ();
+			auto ver = pre.get_version (lpName ? lpName : L"");
+			*pVerRet = VersionClassToStruct (ver);
+			return !ver.empty ();
+		} break;
+	}
+	return FALSE;
+}

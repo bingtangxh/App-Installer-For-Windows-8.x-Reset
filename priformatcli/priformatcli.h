@@ -73,6 +73,8 @@ extern "C" {
 	PRIFORMATCLI_API BOOL IsMsResourceUriFull (LPCWSTR pResUri);
 	// 工具函数，用于判断是否为 MS-Resource URI
 	PRIFORMATCLI_API BOOL IsMsResourceUri (LPCWSTR pResUri);
+	// 工具函数，用于释放本地 DLL 返回的字符串
+	PRIFORMATCLI_API void PriFormatFreeString (LPWSTR lpStrFromThisDll);
 #ifdef _DEFAULT_VALUE_SET
 #undef _DEFAULT_VALUE_SET
 #endif

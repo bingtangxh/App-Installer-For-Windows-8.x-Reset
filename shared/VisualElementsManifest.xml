@@ -12,6 +12,18 @@
         DarkModeBackgroundColor='#001629' />
     </VisualElements>
   </Application>
+  <Application Id='Manager'>
+    <VisualElements
+      DisplayName='Package Manager'
+      Logo='Settings.Assets\Logo.png'
+      SmallLogo='Settings.Assets\SmallLogo.png'
+      ForegroundText='light'
+      BackgroundColor='#159d9d'>
+      <DefaultTile ShowName='allLogos' />
+      <SplashScreen Image="VisualElements\splash\settings\splashscreen.png"
+        BackgroundColor="#159d9d" DarkModeBackgroundColor='#2e1e5c' />
+    </VisualElements>
+  </Application>
   <Application Id='Settings'>
     <VisualElements
       DisplayName='Settings'

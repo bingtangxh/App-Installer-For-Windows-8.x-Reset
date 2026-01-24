@@ -298,10 +298,10 @@ struct pkg_info
 					pi.users += sid;
 				}
 				{
-					std::wstring sid;
-					WAPParseSetStringValue (sid, it->UserSecurityId);
+					std::wstring sid2;
+					WAPParseSetStringValue (sid2, it->UserSecurityId);
 					if (i) pi.sids += L';';
-					pi.sids += sid;
+					pi.sids += sid2;
 				}
 				i ++;
 			}
@@ -857,4 +857,149 @@ HRESULT FindAppxPackagesByFamilyName (LPCWSTR lpPkgFamilyName, PKGMGR_FINDENUMCA
 void PackageManagerFreeString (LPWSTR lpString) 
 { 
 	if (lpString) free (lpString); 
+}
+[STAThread]
+HRESULT CreateAppDataManager (LPCWSTR lpFamilyName, HWRTAPPDATA *ppApplicationData, LPWSTR *pErrorCode, LPWSTR *pDetailMsg)
+{
+	g_swExceptionCode = L"";
+	g_swExceptionDetail = L"";
+	try
+	{
+		auto adm = ApplicationDataManager::CreateForPackageFamily (ref new String (lpFamilyName ? lpFamilyName : L""));
+		auto insp = reinterpret_cast <IInspectable *> (adm);
+		insp->AddRef ();
+		if (ppApplicationData) *ppApplicationData = (HWRTAPPDATA)insp;
+		return S_OK;
+	}
+	catch (AccessDeniedException ^e)
+	{
+		g_swExceptionDetail = e->ToString ()->Data ();
+		if (pDetailMsg) *pDetailMsg = _wcsdup (g_swExceptionDetail.c_str ());
+		return (SUCCEEDED ((HRESULT)e->HResult) ? E_FAIL : (HRESULT)e->HResult);
+	}
+	catch (Exception ^e)
+	{
+		g_swExceptionDetail = e->ToString ()->Data ();
+		if (pDetailMsg) *pDetailMsg = _wcsdup (g_swExceptionDetail.c_str ());
+		return (SUCCEEDED ((HRESULT)e->HResult) ? E_FAIL : (HRESULT)e->HResult);
+	}
+	catch (const std::exception &e)
+	{
+		g_swExceptionDetail = StringToWString (e.what () ? e.what () : "Unknown exception.");
+		if (pDetailMsg) *pDetailMsg = _wcsdup (g_swExceptionDetail.c_str ());
+		return E_FAIL;
+	}
+	catch (...)
+	{
+		g_swExceptionDetail = L"Unknown exception";
+		if (pDetailMsg) *pDetailMsg = _wcsdup (g_swExceptionDetail.c_str ());
+		return E_FAIL;
+	}
+	return E_FAIL;
+}
+HRESULT RunAsyncActionOperation (Windows::Foundation::IAsyncAction ^asyncAction, LPWSTR *pErrorCode, LPWSTR *pDetailMsg)
+{
+	g_swExceptionCode.clear ();
+	g_swExceptionDetail.clear ();
+	if (pErrorCode) *pErrorCode = nullptr;
+	if (pDetailMsg) *pDetailMsg = nullptr;
+	if (!asyncAction) return E_POINTER;
+	HANDLE hCompEvt = CreateEventExW (
+		nullptr,
+		nullptr,
+		CREATE_EVENT_MANUAL_RESET,
+		EVENT_ALL_ACCESS
+	);
+	if (!hCompEvt) return HRESULT_FROM_WIN32 (GetLastError ());
+	auto closeEvt = destruct ([&] () {
+		CloseHandle (hCompEvt);
+	});
+	try
+	{
+		asyncAction->Completed =
+			ref new Windows::Foundation::AsyncActionCompletedHandler (
+				[&hCompEvt] (
+					Windows::Foundation::IAsyncAction^,
+					Windows::Foundation::AsyncStatus)
+		{
+			SetEvent (hCompEvt);
+		});
+		WaitForSingleObject (hCompEvt, INFINITE);
+		switch (asyncAction->Status)
+		{
+			case Windows::Foundation::AsyncStatus::Completed: return S_OK;
+			case Windows::Foundation::AsyncStatus::Canceled:
+				g_swExceptionDetail = L"Async action was canceled.";
+				if (pDetailMsg) *pDetailMsg = _wcsdup (g_swExceptionDetail.c_str ());
+				return E_ABORT;
+			case Windows::Foundation::AsyncStatus::Error:
+			{
+				auto err = asyncAction->ErrorCode;
+				HRESULT hr = (HRESULT)err.Value;
+				auto errStr = Platform::Exception::CreateException (err.Value)->ToString ();
+				if (errStr && errStr->Data ()) g_swExceptionCode = errStr->Data ();
+				if (pErrorCode) *pErrorCode = _wcsdup (g_swExceptionCode.c_str ());
+				if (pDetailMsg) *pDetailMsg = _wcsdup (g_swExceptionDetail.c_str ());
+				return hr;
+			}
+			default: return E_FAIL;
+		}
+	}
+	catch (Platform::Exception^ e)
+	{
+		g_swExceptionDetail = e->ToString ()->Data ();
+		if (pDetailMsg) *pDetailMsg = _wcsdup (g_swExceptionDetail.c_str ());
+		return e->HResult;
+	}
+	catch (const std::exception& e)
+	{
+		g_swExceptionDetail = StringToWString (e.what () ? e.what () : "Unknown exception.");
+		if (pDetailMsg) *pDetailMsg = _wcsdup (g_swExceptionDetail.c_str ());
+		return E_FAIL;
+	}
+	catch (...)
+	{
+		g_swExceptionDetail = L"Unknown exception.";
+		if (pDetailMsg) *pDetailMsg = _wcsdup (g_swExceptionDetail.c_str ());
+		return E_FAIL;
+	}
+}
+#define HWRTAppDataToAppData(pInspectable) \
+    safe_cast <Windows::Storage::ApplicationData ^> (reinterpret_cast <Platform::Object ^>(pInspectable))
+[MTAThread]
+HRESULT WRTAppDataClearAll (HWRTAPPDATA hAppData, LPWSTR *pErrorCode, LPWSTR *pDetailMsg)
+{
+	g_swExceptionCode = L"";
+	g_swExceptionDetail = L"";
+	try
+	{
+		ApplicationData ^appData = HWRTAppDataToAppData (hAppData, appData, pErrorCode, pDetailMsg);
+		if (appData == nullptr) return E_FAIL;
+		return RunAsyncActionOperation (appData->ClearAsync (), pErrorCode, pDetailMsg);
+	}
+	catch (AccessDeniedException ^e)
+	{
+		g_swExceptionDetail = e->ToString ()->Data ();
+		if (pDetailMsg) *pDetailMsg = _wcsdup (g_swExceptionDetail.c_str ());
+		return (SUCCEEDED ((HRESULT)e->HResult) ? E_FAIL : (HRESULT)e->HResult);
+	}
+	catch (Exception ^e)
+	{
+		g_swExceptionDetail = e->ToString ()->Data ();
+		if (pDetailMsg) *pDetailMsg = _wcsdup (g_swExceptionDetail.c_str ());
+		return (SUCCEEDED ((HRESULT)e->HResult) ? E_FAIL : (HRESULT)e->HResult);
+	}
+	catch (const std::exception &e)
+	{
+		g_swExceptionDetail = StringToWString (e.what () ? e.what () : "Unknown exception.");
+		if (pDetailMsg) *pDetailMsg = _wcsdup (g_swExceptionDetail.c_str ());
+		return E_FAIL;
+	}
+	catch (...)
+	{
+		g_swExceptionDetail = L"Unknown exception";
+		if (pDetailMsg) *pDetailMsg = _wcsdup (g_swExceptionDetail.c_str ());
+		return E_FAIL;
+	}
+	return E_FAIL;
 }

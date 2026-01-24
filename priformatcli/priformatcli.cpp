@@ -916,3 +916,9 @@ BOOL IsMsResourceUri (LPCWSTR pResUri)
 	catch (Exception ^e) { return false; }
 	return true;
 }
+
+void PriFormatFreeString (LPWSTR lpStrFromThisDll)
+{
+	if (!lpStrFromThisDll) return;
+	free (lpStrFromThisDll);
+}

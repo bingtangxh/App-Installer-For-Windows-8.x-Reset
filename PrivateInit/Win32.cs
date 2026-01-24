@@ -186,7 +186,7 @@ namespace Win32
 		public object Get (string section, string key, object dflt) => GetKey (section, key).Get (dflt);
 		public object Get (string section, string key) => GetKey (section, key).Get ();
 		public bool Set (string section, string key, object value) => GetKey (section, key).Set (value);
-		public object this [string key] => GetSection (key);
+		public InitSection this [string key] => GetSection (key);
 		public string [] GetAllSections ()
 		{
 			var sections = new System.Collections.Generic.List<string> ();
