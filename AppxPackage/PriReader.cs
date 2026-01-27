@@ -1,9 +1,11 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices.ComTypes;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace AppxPackage
 {
@@ -75,17 +77,20 @@ namespace AppxPackage
 		public void AddSearch (string uri) { AddSearch (new string [] { uri }); }
 		public string Resource (string resName)
 		{
-			IntPtr ret = IntPtr.Zero;
-			try
-			{
-				ret = PriFileHelper.GetPriResource (m_hPriFile, resName);
-				if (ret == IntPtr.Zero) return string.Empty;
-				return PriFileHelper.PtrToString (ret);
-			}
-			finally
-			{
-				if (ret != IntPtr.Zero) PriFileHelper.FreePriString (ret);
-			}
+			var task = Task.Factory.StartNew (() => {
+				IntPtr ret = IntPtr.Zero;
+				try
+				{
+					ret = PriFileHelper.GetPriResource (m_hPriFile, resName);
+					if (ret == IntPtr.Zero) return string.Empty;
+					return PriFileHelper.PtrToString (ret);
+				}
+				finally
+				{
+					//if (ret != IntPtr.Zero) PriFileHelper.FreePriString(ret);
+				}
+			});
+			return task.Result;
 		}
 		public Dictionary<string, string> Resources (IEnumerable<string> resnames)
 		{

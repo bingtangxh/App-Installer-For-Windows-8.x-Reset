@@ -12,6 +12,7 @@ using System.Drawing;
 using Newtonsoft.Json;
 using AppxPackage;
 using ModernNotice;
+using System.Threading;
 
 namespace Bridge
 {
@@ -494,10 +495,183 @@ namespace Bridge
 	[ClassInterface (ClassInterfaceType.AutoDual)]
 	public class _I_Package
 	{
+		private static void CallJS (object jsFunc, params object [] args)
+		{
+			if (jsFunc == null) return;
+			try
+			{
+				// 这里固定第一个参数为 thisArg（比如 1）
+				object [] realArgs = new object [args.Length + 1];
+				realArgs [0] = jsFunc;     // thisArg
+				Array.Copy (args, 0, realArgs, 1, args.Length);
+
+				jsFunc.GetType ().InvokeMember (
+					"call",
+					BindingFlags.InvokeMethod,
+					null,
+					jsFunc,
+					realArgs
+				);
+			}
+			catch
+			{
+				// ignore errors in callback invocation
+			}
+		}
 		public AppxPackage.PackageReader Reader (string packagePath) { return new AppxPackage.PackageReader (packagePath); }
 		public _I_PackageManager Manager => new _I_PackageManager ();
 		public AppxPackage.ManifestReader Manifest (string manifestPath) { return new AppxPackage.ManifestReader (manifestPath); }
 		public AppxPackage.ManifestReader FromInstallLocation (string installLocation) { return Manifest (Path.Combine (installLocation, "AppxManifest.xml")); }
+		public void ReadFromPackageAsync (string packagePath, bool enablePri, object successCallback, object failedCallback)
+		{
+			Thread thread = new Thread (() => {
+				try
+				{
+					using (var reader = Reader (packagePath))
+					{
+						if (enablePri)
+						{
+							reader.EnablePri = true;
+							reader.UsePri = true;
+						}
+						if (!reader.IsValid)
+						{
+							var failObj = new
+							{
+								status = false,
+								message = "Reader invalid",
+								jsontext = ""
+							};
+							string failJson = Newtonsoft.Json.JsonConvert.SerializeObject (failObj);
+							if (failedCallback != null) CallJS (failedCallback, failJson);
+							return;
+						}
+						var obj = new
+						{
+							status = true,
+							message = "ok",
+							jsontext = reader.BuildJsonText ()   // 你之前写好的函数
+						};
+						string json = Newtonsoft.Json.JsonConvert.SerializeObject (obj);
+						if (successCallback != null) CallJS (successCallback, json);
+					}
+				}
+				catch (Exception ex)
+				{
+					var errObj = new
+					{
+						status = false,
+						message = ex.Message,
+						jsontext = ""
+					};
+					string errJson = Newtonsoft.Json.JsonConvert.SerializeObject (errObj);
+					if (failedCallback != null) CallJS (failedCallback, errJson);
+				}
+			});
+			thread.IsBackground = true;
+			thread.SetApartmentState (ApartmentState.MTA);
+			thread.Start ();
+		}
+		public void ReadFromManifestAsync (string manifestPath, bool enablePri, object successCallback, object failedCallback)
+		{
+			Thread thread = new Thread (() => {
+				try
+				{
+					using (var reader = Manifest (manifestPath))
+					{
+						if (enablePri)
+						{
+							reader.EnablePri = true;
+							reader.UsePri = true;
+						}
+						if (!reader.IsValid)
+						{
+							var failObj = new
+							{
+								status = false,
+								message = "Reader invalid",
+								jsontext = ""
+							};
+							string failJson = Newtonsoft.Json.JsonConvert.SerializeObject (failObj);
+							if (failedCallback != null) CallJS (failedCallback, failJson);
+							return;
+						}
+						var obj = new
+						{
+							status = true,
+							message = "ok",
+							jsontext = reader.BuildJsonText ()   // 你之前写好的函数
+						};
+						string json = Newtonsoft.Json.JsonConvert.SerializeObject (obj);
+						if (successCallback != null) CallJS (successCallback, json);
+					}
+				}
+				catch (Exception ex)
+				{
+					var errObj = new
+					{
+						status = false,
+						message = ex.Message,
+						jsontext = ""
+					};
+					string errJson = Newtonsoft.Json.JsonConvert.SerializeObject (errObj);
+					if (failedCallback != null) CallJS (failedCallback, errJson);
+				}
+			});
+			thread.IsBackground = true;
+			thread.SetApartmentState (ApartmentState.MTA);
+			thread.Start ();
+		}
+		public void ReadFromInstallLocationAsync (string installLocation, bool enablePri, object successCallback, object failedCallback)
+		{
+			Thread thread = new Thread (() => {
+				try
+				{
+					using (var reader = FromInstallLocation (installLocation))
+					{
+						if (enablePri)
+						{
+							reader.EnablePri = true;
+							reader.UsePri = true;
+						}
+						if (!reader.IsValid)
+						{
+							var failObj = new
+							{
+								status = false,
+								message = "Reader invalid",
+								jsontext = ""
+							};
+							string failJson = Newtonsoft.Json.JsonConvert.SerializeObject (failObj);
+							if (failedCallback != null) CallJS (failedCallback, failJson);
+							return;
+						}
+						var obj = new
+						{
+							status = true,
+							message = "ok",
+							jsontext = reader.BuildJsonText ()   // 你之前写好的函数
+						};
+						string json = Newtonsoft.Json.JsonConvert.SerializeObject (obj);
+						if (successCallback != null) CallJS (successCallback, json);
+					}
+				}
+				catch (Exception ex)
+				{
+					var errObj = new
+					{
+						status = false,
+						message = ex.Message,
+						jsontext = ""
+					};
+					string errJson = Newtonsoft.Json.JsonConvert.SerializeObject (errObj);
+					if (failedCallback != null) CallJS (failedCallback, errJson);
+				}
+			});
+			thread.IsBackground = true;
+			thread.SetApartmentState (ApartmentState.MTA);
+			thread.Start ();
+		}
 	}
 	[ComVisible (true)]
 	[ClassInterface (ClassInterfaceType.AutoDual)]

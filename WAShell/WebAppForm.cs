@@ -97,5 +97,9 @@ namespace WAShell
 		{
 			webui.ObjectForScripting = null;
 		}
+		private void webui_PreviewKeyDown (object sender, PreviewKeyDownEventArgs e)
+		{
+			if (e.KeyCode == Keys.F5) e.IsInputKey = true;
+		}
 	}
 }

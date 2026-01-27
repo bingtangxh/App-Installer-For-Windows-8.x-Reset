@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using AppxPackage.Info;
 using NativeWrappers;
+//using PriFormat;
 namespace AppxPackage
 {
 	internal static partial class ConstData
@@ -220,6 +222,9 @@ namespace AppxPackage
 			if (hr.Succeeded) return ret != 0;
 			else return defaultValue;
 		}
+#if DEBUG
+		public string Debug_StringValue (string attr) => StringValue (attr);
+#endif
 		protected string StringResValue (string attr)
 		{
 			var res = StringValue (attr);
@@ -237,6 +242,7 @@ namespace AppxPackage
 		protected string PathResValue (string attr)
 		{
 			var res = StringValue (attr);
+			//var id = new PriFormat.PriResourceIdentifier (res);
 			try
 			{
 				if (m_usePri && m_enablePri)
@@ -267,7 +273,7 @@ namespace AppxPackage
 							{
 								IntPtr base64Head = IntPtr.Zero;
 								var base64s = PackageReadHelper.StreamToBase64W (pic, null, 0, out base64Head);
-								if (base64Head != IntPtr.Zero) { PackageReadHelper.GetStringAndFreeFromPkgRead (base64Head); base64Head = IntPtr.Zero; }
+								//if (base64Head != IntPtr.Zero) { PackageReadHelper.GetStringAndFreeFromPkgRead (base64Head); base64Head = IntPtr.Zero; }
 								return PackageReadHelper.GetStringAndFreeFromPkgRead (base64s);
 							}
 							catch (Exception) { return ""; }
@@ -288,7 +294,7 @@ namespace AppxPackage
 								pic = PackageReadHelper.GetFileFromPayloadPackage (pkg, logopath);
 								IntPtr base64Head = IntPtr.Zero;
 								var lpstr = PackageReadHelper.StreamToBase64W (pic, null, 0, out base64Head);
-								if (base64Head != IntPtr.Zero) { PackageReadHelper.GetStringAndFreeFromPkgRead (base64Head); base64Head = IntPtr.Zero; }
+								//if (base64Head != IntPtr.Zero) { PackageReadHelper.GetStringAndFreeFromPkgRead (base64Head); base64Head = IntPtr.Zero; }
 								if (!(lpstr != IntPtr.Zero && !string.IsNullOrEmpty (PackageReadHelper.GetStringFromPkgRead (lpstr))))
 								{
 									if (lpstr != IntPtr.Zero) PackageReadHelper.GetStringAndFreeFromPkgRead (lpstr);
@@ -300,7 +306,7 @@ namespace AppxPackage
 										{
 											pic1 = PackageReadHelper.GetFileFromPayloadPackage (pkg1, logopath);
 											lpstr = PackageReadHelper.StreamToBase64W (pic1, null, 0, out base64Head);
-											if (base64Head != IntPtr.Zero) { PackageReadHelper.GetStringAndFreeFromPkgRead (base64Head); base64Head = IntPtr.Zero; }
+											//if (base64Head != IntPtr.Zero) { PackageReadHelper.GetStringAndFreeFromPkgRead (base64Head); base64Head = IntPtr.Zero; }
 										}
 									}
 									catch (Exception) { }
@@ -478,11 +484,7 @@ namespace AppxPackage
 							pic = PackageReadHelper.GetAppxFileFromAppxPackage (m_hReader, value);
 							IntPtr base64Head = IntPtr.Zero;
 							IntPtr lpstr = PackageReadHelper.StreamToBase64W (pic, null, 0, out base64Head);
-							if (base64Head != IntPtr.Zero)
-							{
-								PackageReadHelper.GetStringAndFreeFromPkgRead (base64Head);
-								base64Head = IntPtr.Zero;
-							}
+							//if (base64Head != IntPtr.Zero) { PackageReadHelper.GetStringAndFreeFromPkgRead (base64Head); base64Head = IntPtr.Zero; }
 							return lpstr != IntPtr.Zero
 								? PackageReadHelper.GetStringAndFreeFromPkgRead (lpstr)
 								: "";
@@ -508,16 +510,12 @@ namespace AppxPackage
 						{
 							IntPtr header = IntPtr.Zero;
 							PackageReadHelper.GetSuitablePackageFromBundle (m_hReader, out header, out pkg);
-							if (header != IntPtr.Zero) PackageReadHelper.GetStringAndFreeFromPkgRead (header);
+							//if (header != IntPtr.Zero) PackageReadHelper.GetStringAndFreeFromPkgRead (header);
 							header = IntPtr.Zero;
 							pic = PackageReadHelper.GetFileFromPayloadPackage (pkg, value);
 							IntPtr base64Head = IntPtr.Zero;
 							IntPtr lpstr = PackageReadHelper.StreamToBase64W (pic, null, 0, out base64Head);
-							if (base64Head != IntPtr.Zero)
-							{
-								PackageReadHelper.GetStringAndFreeFromPkgRead (base64Head);
-								base64Head = IntPtr.Zero;
-							}
+							//if (base64Head != IntPtr.Zero) { PackageReadHelper.GetStringAndFreeFromPkgRead (base64Head); base64Head = IntPtr.Zero; }
 							return lpstr != IntPtr.Zero
 								? PackageReadHelper.GetStringAndFreeFromPkgRead (lpstr)
 								: "";
@@ -667,13 +665,14 @@ namespace AppxPackage
 		private PRApplication ReadSingleApplication (IntPtr hKeyValues)
 		{
 			var app = new PRApplication (ref m_hReader, ref m_priBundle, ref m_usePri, ref m_enablePri);
-			uint pairCount = (uint)Marshal.ReadInt32 (hKeyValues);
-			int baseOffset = Marshal.SizeOf (typeof (uint));
-			int pairSize = Marshal.SizeOf (typeof (PackageReadHelper.PAIR_PVOID));
-			for (int j = 0; j < pairCount; j++)
+			int pairCount = Marshal.ReadInt32 (hKeyValues);
+			IntPtr arrayBase = IntPtr.Add (hKeyValues, sizeof (uint));
+			for (int i = 0; i < pairCount; i++)
 			{
-				IntPtr pPair = IntPtr.Add (hKeyValues, baseOffset + j * pairSize);
-				var pair = (PackageReadHelper.PAIR_PVOID) Marshal.PtrToStructure (pPair, typeof (PackageReadHelper.PAIR_PVOID));
+				IntPtr pPairPtr = Marshal.ReadIntPtr (arrayBase, i * IntPtr.Size);
+				if (pPairPtr == IntPtr.Zero) continue;
+				PackageReadHelper.PAIR_PVOID pair =
+					(PackageReadHelper.PAIR_PVOID)Marshal.PtrToStructure (pPairPtr, typeof (PackageReadHelper.PAIR_PVOID));
 				if (pair.lpKey == IntPtr.Zero) continue;
 				string key = Marshal.PtrToStringUni (pair.lpKey);
 				if (string.IsNullOrEmpty (key)) continue;
@@ -1064,41 +1063,11 @@ namespace AppxPackage
 					} break;
 			}
 			#endregion
-			try
-			{
-				var resnames = new HashSet<string> ();
-				using (var prop = Properties)
-				{
-					var temp = prop.Description;
-					if (PriFileHelper.IsMsResourcePrefix (temp)) resnames.Add (temp);
-					temp = prop.DisplayName;
-					if (PriFileHelper.IsMsResourcePrefix (temp)) resnames.Add (temp);
-					temp = prop.Publisher;
-					if (PriFileHelper.IsMsResourcePrefix (temp)) resnames.Add (temp);
-					resnames.Add (prop.Logo);
-				}
-				using (var apps = Applications)
-				{
-					foreach (var app in apps)
-					{
-						foreach (var pair in app)
-						{
-							foreach (var pathres in ConstData.FilePathItems)
-							{
-								if ((pathres?.Trim ()?.ToLower () ?? "") == (pair.Key?.Trim ()?.ToLower ()))
-								{
-									resnames.Add (pair.Value);
-								}
-								else if (PriFileHelper.IsMsResourcePrefix (pair.Value))
-									resnames.Add (pair.Value);
-							}
-						}
-					}
-				}
-				m_priBundle.AddSearch (resnames);
-			}
-			catch (Exception) { }
+			return;
 		}
+#if DEBUG
+		public PriReaderBundle PriInstance => m_priBundle;
+#endif
 		public PackageType Type
 		{
 			get
@@ -1175,6 +1144,26 @@ namespace AppxPackage
 				obj,
 				Newtonsoft.Json.Formatting.Indented
 			);
+		}
+		public void BuildJsonTextAsync (object callback)
+		{
+			if (callback == null) return;
+			Thread thread = new Thread (() =>
+			{
+				string json = string.Empty;
+				try
+				{
+					json = BuildJsonText ();
+				}
+				catch
+				{
+					json = string.Empty;
+				}
+				JSHelper.CallJS (callback, json);
+			});
+			thread.SetApartmentState (ApartmentState.MTA);
+			thread.IsBackground = true;
+			thread.Start ();
 		}
 		private object BuildJsonObject ()
 		{

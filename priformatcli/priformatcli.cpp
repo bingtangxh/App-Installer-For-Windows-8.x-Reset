@@ -48,16 +48,11 @@ ref class PriFileInst
 	PriFile ^inst = nullptr;
 	OpenType opentype = OpenType::Unknown;
 	IStream *isptr = nullptr;
-	System::IO::FileStream ^fsptr = nullptr;
+	System::IO::Stream ^fsptr = nullptr;
 	operator PriFile ^ () { return inst; }
 	operator IStream * () { return isptr; }
-	operator System::IO::FileStream ^ () { return fsptr; }
+	operator System::IO::Stream ^ () { return fsptr; }
 	explicit operator bool () { return inst && (int)opentype && ((bool)isptr ^ (fsptr != nullptr)); }
-	operator System::IO::Stream ^ ()
-	{
-		if (isptr) return gcnew ComStreamWrapper (ComIStreamToCliIStream (isptr));
-		else return fsptr;
-	}
 	size_t Seek (int64_t offset, System::IO::SeekOrigin origin)
 	{
 		if (isptr)
@@ -317,11 +312,13 @@ PCSPRIFILE CreatePriFileInstanceFromStream (PCOISTREAM pStream)
 	{
 		HRESULT hr = S_OK;
 		if (pStream) hr = ((IStream *)pStream)->Seek (LARGE_INTEGER {}, STREAM_SEEK_SET, nullptr);
-		auto pri = PriFile::Parse (ComIStreamToCliIStream (reinterpret_cast <IStream *> (pStream)));
+		System::IO::Stream ^stream = nullptr;
+		auto pri = PriFile::Parse (ComIStreamToCliIStream (reinterpret_cast <IStream *> (pStream)), stream);
 		PriFileInst ^inst = gcnew PriFileInst ();
 		inst->inst = pri;
 		inst->opentype = OpenType::IStream;
 		inst->isptr = reinterpret_cast <IStream *> (pStream);
+		inst->fsptr = stream;
 		auto handle = System::Runtime::InteropServices::GCHandle::Alloc (inst);
 		IntPtr token = System::Runtime::InteropServices::GCHandle::ToIntPtr (handle);
 		return reinterpret_cast <PCSPRIFILE> (token.ToPointer ());

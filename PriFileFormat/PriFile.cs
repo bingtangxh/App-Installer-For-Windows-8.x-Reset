@@ -25,10 +25,11 @@ namespace PriFileFormat
 			return priFile;
 		}
 
-		public static PriFile Parse (System.Runtime.InteropServices.ComTypes.IStream stream)
+		public static PriFile Parse (System.Runtime.InteropServices.ComTypes.IStream stream, out Stream output)
 		{
 
 			ComStreamWrapper csw = new ComStreamWrapper (stream);
+			output = csw;
 			PriFile priFile = new PriFile ();
 			priFile.ParseInternal (csw, true);
 			return priFile;

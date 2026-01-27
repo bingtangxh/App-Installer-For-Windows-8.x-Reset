@@ -1754,3 +1754,44 @@ BOOL GetManifestPrerequisite (_In_ HPKGMANIFESTREAD hReader, _In_ LPCWSTR lpName
 	}
 	return FALSE;
 }
+LPWSTR GetManifestPrerequistieSystemVersionName (_In_ HPKGMANIFESTREAD hReader, _In_ LPCWSTR lpName)
+{
+	auto ptr = ToPtrManifest (hReader);
+	if (!ptr) return nullptr;
+	switch (ptr->type ())
+	{
+		case PackageType::single: {
+			auto read = ptr->appx_reader ();
+			auto pre = read.prerequisites ();
+			auto ver = pre.get_version (lpName ? lpName : L"");
+			auto str = GetPrerequistOSVersionDescription (ver);
+			return _wcsdup (str.c_str ());
+		} break;
+		default:
+			break;
+	}
+	return nullptr;
+}
+BOOL PackageReaderGetFileRoot (LPWSTR lpFilePath) { return PathRemoveFileSpecW (lpFilePath); }
+LPWSTR PackageReaderCombinePath (LPCWSTR lpLeft, LPCWSTR lpRight, LPWSTR lpBuf) { return PathCombineW (lpBuf, lpLeft, lpRight); }
+HANDLE PackageReaderGetFileStream (LPCWSTR lpFilePath)
+{
+	IStream *ptr = nullptr;
+	HRESULT hr = SHCreateStreamOnFileEx (lpFilePath, STGM_READ | STGM_SHARE_DENY_NONE, 0, FALSE, NULL, &ptr);
+	if (SUCCEEDED (hr)) return ptr;
+	else
+	{
+		if (ptr) ptr->Release ();
+		ptr = nullptr;
+	}
+	return nullptr;
+}
+void PackageReaderDestroyFileStream (HANDLE hStream)
+{
+	auto ptr = (IStream *)hStream;
+	if (ptr)
+	{
+		ptr->Release ();
+		return;
+	}
+}

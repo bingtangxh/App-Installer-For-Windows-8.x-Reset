@@ -93,10 +93,6 @@
       <Project>{ffd3fd52-37a8-4f43-883c-de8d996cb0e0}</Project>
       <Name>DataUtils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PriFileFormat\PriFile.csproj">
-      <Project>{ef4012d4-ef08-499c-b803-177739350b2d}</Project>
-      <Name>PriFile</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PrivateInit\PrivateInit.csproj">
       <Project>{8e708d9a-6325-4aa9-b5a5-d1b5eca8eef7}</Project>
       <Name>PrivateInit</Name>

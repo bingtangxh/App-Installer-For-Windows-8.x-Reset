@@ -40,6 +40,7 @@
 			this.webui.Size = new System.Drawing.Size(661, 416);
 			this.webui.TabIndex = 0;
 			this.webui.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.webui_DocumentCompleted);
+			this.webui.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.webui_PreviewKeyDown);
 			// 
 			// WebAppForm
 			// 

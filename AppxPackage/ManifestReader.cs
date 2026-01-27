@@ -7,6 +7,8 @@ using System.Text;
 using AppxPackage.Info;
 using NativeWrappers;
 using System.IO;
+using System.Threading;
+//using PriFormat;
 namespace AppxPackage
 {
 	public static class DataUrlHelper
@@ -543,13 +545,14 @@ namespace AppxPackage
 		private MRApplication ReadSingleApplication (IntPtr hKeyValues)
 		{
 			var app = new MRApplication (ref m_hReader, ref m_pri, ref m_usePri, ref m_enablePri, m_reader.Value.FileRoot);
-			uint pairCount = (uint)Marshal.ReadInt32 (hKeyValues);
-			int baseOffset = Marshal.SizeOf (typeof (uint));
-			int pairSize = Marshal.SizeOf (typeof (PackageReadHelper.PAIR_PVOID));
-			for (int j = 0; j < pairCount; j++)
+			int pairCount = Marshal.ReadInt32 (hKeyValues);
+			IntPtr arrayBase = IntPtr.Add (hKeyValues, sizeof (uint));
+			for (int i = 0; i < pairCount; i++)
 			{
-				IntPtr pPair = IntPtr.Add (hKeyValues, baseOffset + j * pairSize);
-				var pair = (PackageReadHelper.PAIR_PVOID)Marshal.PtrToStructure (pPair, typeof (PackageReadHelper.PAIR_PVOID));
+				IntPtr pPairPtr = Marshal.ReadIntPtr (arrayBase, i * IntPtr.Size);
+				if (pPairPtr == IntPtr.Zero) continue;
+				PackageReadHelper.PAIR_PVOID pair =
+					(PackageReadHelper.PAIR_PVOID)Marshal.PtrToStructure (pPairPtr, typeof (PackageReadHelper.PAIR_PVOID));
 				if (pair.lpKey == IntPtr.Zero) continue;
 				string key = Marshal.PtrToStringUni (pair.lpKey);
 				if (string.IsNullOrEmpty (key)) continue;
@@ -849,12 +852,12 @@ namespace AppxPackage
 		private string m_filePath = string.Empty;
 		private bool m_usePRI = false;
 		private bool m_enablePRI = false;
-		private PriReader m_pri = new PriReader ();
+		private PriReader m_pri = null;
 		public IntPtr Instance => m_hReader;
 		public string FileRoot{ get { return Path.GetPathRoot (m_filePath); } }
 		private void InitPri ()
 		{
-			m_pri.Dispose ();
+			m_pri?.Dispose ();
 			if (!m_usePRI) return;
 			#region Get PRI IStream
 			switch (Type)
@@ -862,45 +865,12 @@ namespace AppxPackage
 				case PackageType.Appx:
 					{
 						var pripath = Path.Combine (FileRoot, "resources.pri");
-						m_pri.Create (pripath);
+						m_pri = new PriReader (pripath);
 					}
 					break;
 			}
 			#endregion
-			try
-			{
-				var resnames = new HashSet<string> ();
-				using (var prop = Properties)
-				{
-					var temp = prop.Description;
-					if (PriFileHelper.IsMsResourcePrefix (temp)) resnames.Add (temp);
-					temp = prop.DisplayName;
-					if (PriFileHelper.IsMsResourcePrefix (temp)) resnames.Add (temp);
-					temp = prop.Publisher;
-					if (PriFileHelper.IsMsResourcePrefix (temp)) resnames.Add (temp);
-					resnames.Add (prop.Logo);
-				}
-				using (var apps = Applications)
-				{
-					foreach (var app in apps)
-					{
-						foreach (var pair in app)
-						{
-							foreach (var pathres in ConstData.FilePathItems)
-							{
-								if ((pathres?.Trim ()?.ToLower () ?? "") == (pair.Key?.Trim ()?.ToLower ()))
-								{
-									resnames.Add (pair.Value);
-								}
-								else if (PriFileHelper.IsMsResourcePrefix (pair.Value))
-									resnames.Add (pair.Value);
-							}
-						}
-					}
-				}
-				m_pri.AddSearch (resnames);
-			}
-			catch (Exception) { }
+			return;
 		}
 		public PackageType Type
 		{
@@ -978,6 +948,25 @@ namespace AppxPackage
 				obj,
 				Newtonsoft.Json.Formatting.Indented
 			);
+		}
+		public void BuildJsonTextAsync (object callback)
+		{
+			if (callback == null) return;
+			Thread thread = new Thread (() => {
+				string json = string.Empty;
+				try
+				{
+					json = BuildJsonText ();
+				}
+				catch
+				{
+					json = string.Empty;
+				}
+				JSHelper.CallJS (callback, json);
+			});
+			thread.SetApartmentState (ApartmentState.MTA);
+			thread.IsBackground = true;
+			thread.Start ();
 		}
 		private object BuildJsonObject ()
 		{

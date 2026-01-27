@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
+using System.Reflection;
+
 namespace AppxPackage
 {
 	[Serializable]
@@ -227,6 +229,33 @@ namespace AppxPackage.Info
 		public static bool operator < (HRESULT a, int value)
 		{
 			return a._value < value;
+		}
+	}
+	public static class JSHelper
+	{
+		public static void CallJS (object jsFunc, params object [] args)
+		{
+			if (jsFunc == null) return;
+
+			try
+			{
+				// 这里固定第一个参数为 thisArg（比如 1）
+				object [] realArgs = new object [args.Length + 1];
+				realArgs [0] = jsFunc;     // thisArg
+				Array.Copy (args, 0, realArgs, 1, args.Length);
+
+				jsFunc.GetType ().InvokeMember (
+					"call",
+					BindingFlags.InvokeMethod,
+					null,
+					jsFunc,
+					realArgs
+				);
+			}
+			catch
+			{
+				// ignore errors in callback invocation
+			}
 		}
 	}
 }

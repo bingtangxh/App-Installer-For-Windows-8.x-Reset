@@ -401,6 +401,8 @@ namespace NativeWrappers
 		);
 		[DllImport (DllName, CallingConvention = CallConv)]
 		public static extern void PackageReaderFreeString (IntPtr p);
+		[DllImport (DllName, CallingConvention = CallConv, CharSet = CharSet.Unicode)]
+		public static extern IntPtr GetManifestPrerequistieSystemVersionName (IntPtr hReader, string lpName);
 
 	}
 }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Threading;
 namespace Manager
 {
 	public partial class ManagerShell: WAShell.WebAppForm
@@ -65,10 +66,6 @@ namespace Manager
 		{
 			var root = Path.GetDirectoryName (DataUtils.Utilities.GetCurrentProgramPath ());
 			WebUI.Navigate (Path.Combine (root, "html\\manager.html"));
-			var pkg = new AppxPackage.PackageReader (@"F:\新建文件夹 (2)\9E2F88E3.Twitter_1.1.13.8_x86__wgeqdkkx372wm.appx");
-			pkg.EnablePri = true;
-			pkg.UsePri = true;
-			var displayName = pkg.Properties.LogoBase64;
 		}
 		private void ManagerShell_Resize (object sender, EventArgs e)
 		{
