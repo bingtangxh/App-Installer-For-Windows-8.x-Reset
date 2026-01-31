@@ -15,6 +15,7 @@ namespace Manager
 		[STAThread]
 		static void Main ()
 		{
+			AppxPackage.PackageReader.AddApplicationItem ("SmallLogo");
 			DataUtils.BrowserEmulation.SetWebBrowserEmulation ();
 			Application.EnableVisualStyles ();
 			Application.SetCompatibleTextRenderingDefault (false);

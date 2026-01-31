@@ -143,6 +143,8 @@ namespace NativeWrappers
 
 		[DllImport (DllName, CallingConvention = CallConv, CharSet = CharSet.Unicode)]
 		public static extern void PackageManagerFreeString (IntPtr lpString);
+		[DllImport (DllName, CallingConvention = CallConv, CharSet = CharSet.Unicode, ExactSpelling = true)]
+		public static extern HRESULT ActivateAppxApplicationWithArgs ([MarshalAs (UnmanagedType.LPWStr)] string lpAppUserId, [MarshalAs (UnmanagedType.LPWStr)] string lpArguments, out DWORD pdwProcessId);
 
 		// ========== 托管辅助 ==========
 		public static string PtrToStringAndFree (IntPtr nativePtr)

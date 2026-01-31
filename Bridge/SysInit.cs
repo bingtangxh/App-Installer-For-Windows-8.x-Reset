@@ -13,6 +13,8 @@ using Newtonsoft.Json;
 using AppxPackage;
 using ModernNotice;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Collections.Concurrent;
 
 namespace Bridge
 {
@@ -182,8 +184,17 @@ namespace Bridge
 		}
 		internal static class JsAsyncRunner
 		{
-			public static void Run (
-				Func<Action<object>, JsAsyncResult> work,
+			private static readonly int MaxConcurrency =
+				Math.Min (8, Environment.ProcessorCount * 2);
+
+			private static readonly SemaphoreSlim _semaphore =
+				new SemaphoreSlim (MaxConcurrency);
+
+			private static CancellationTokenSource _cts =
+				new CancellationTokenSource ();
+
+			public static Task Run (
+				Func<CancellationToken, Action<object>, JsAsyncResult> work,
 				object jsSuccess,
 				object jsFailed,
 				object jsProgress)
@@ -191,18 +202,30 @@ namespace Bridge
 				var success = jsSuccess;
 				var failed = jsFailed;
 				var progress = jsProgress;
+				var token = _cts.Token;
 
-				System.Threading.ThreadPool.QueueUserWorkItem (_ =>
+				return Task.Factory.StartNew (() =>
 				{
+					bool entered = false;
+
 					try
 					{
+						_semaphore.Wait (token);
+						entered = true;
+
+						token.ThrowIfCancellationRequested ();
+
 						Action<object> reportProgress = p =>
 						{
-							if (progress != null)
+							if (!token.IsCancellationRequested && progress != null)
 								CallJS (progress, p);
 						};
-						JsAsyncResult result = work (reportProgress);
-						if (result == null) return;
+
+						var result = work (token, reportProgress);
+
+						if (token.IsCancellationRequested || result == null)
+							return;
+
 						switch (result.Kind)
 						{
 							case JsAsyncResultKind.Success:
@@ -212,40 +235,94 @@ namespace Bridge
 							case JsAsyncResultKind.Failed:
 								CallJS (failed, result.Value);
 								break;
-
-							case JsAsyncResultKind.None:
-							default:
-								break;
 						}
+					}
+					catch (OperationCanceledException)
+					{
+						// 只对“已进入执行态”的任务回调取消
+						if (!entered)
+							return;
+
+						var cancelObj = new
+						{
+							status = false,
+							canceled = true,
+							message = "Operation canceled",
+							jsontext = ""
+						};
+
+						CallJS (failed,
+							Newtonsoft.Json.JsonConvert.SerializeObject (cancelObj));
 					}
 					catch (Exception ex)
 					{
-						// 框架级异常兜底 → failed
-						CallJS (jsFailed, ex.Message);
+						var errObj = new
+						{
+							status = false,
+							message = ex.Message,
+							jsontext = ""
+						};
+
+						CallJS (failed,
+							Newtonsoft.Json.JsonConvert.SerializeObject (errObj));
 					}
-				});
+					finally
+					{
+						if (entered)
+							_semaphore.Release ();
+					}
+				},
+				token,
+				TaskCreationOptions.LongRunning,
+				TaskScheduler.Default);
 			}
+
 			private static void CallJS (object jsFunc, params object [] args)
 			{
 				if (jsFunc == null) return;
 				try
 				{
 					object [] invokeArgs = new object [(args?.Length ?? 0) + 1];
-					invokeArgs [0] = 1; 
+					invokeArgs [0] = 1;
 					if (args != null)
 						for (int i = 0; i < args.Length; i++)
 							invokeArgs [i + 1] = args [i];
+
 					jsFunc.GetType ().InvokeMember (
 						"call",
-						System.Reflection.BindingFlags.InvokeMethod,
+						BindingFlags.InvokeMethod,
 						null,
 						jsFunc,
-						invokeArgs
-					);
+						invokeArgs);
 				}
 				catch
 				{
 				}
+			}
+			// 兼容旧版：只有 reportProgress 的写法
+			public static Task Run (
+				Func<Action<object>, JsAsyncResult> work,
+				object jsSuccess,
+				object jsFailed,
+				object jsProgress)
+			{
+				return Run (
+					(token, report) => {
+						token.ThrowIfCancellationRequested ();
+						return work (report);
+					},
+					jsSuccess,
+					jsFailed,
+					jsProgress
+				);
+			}
+
+			public static void CancelAll ()
+			{
+				var old = _cts;
+				_cts = new CancellationTokenSource ();
+				old.Cancel ();
+				old.Dispose ();
 			}
 		}
 		private string BuildJsonText (object obj)
@@ -490,11 +567,17 @@ namespace Bridge
 				null
 			);
 		}
+		public _I_HResult ActiveApp (string appUserId, string args) { return PackageManager.ActiveApp (appUserId, args); }
+		public _I_HResult ActiveAppByIdentity (string idName, string appId, string args) { return ActiveApp ($"{idName?.Trim ()}!{appId?.Trim ()}", args); }
+		public void CancelAll () { JsAsyncRunner.CancelAll (); }
 	}
 	[ComVisible (true)]
 	[ClassInterface (ClassInterfaceType.AutoDual)]
-	public class _I_Package
+	public class _I_PackageReader
 	{
+		private static readonly int MaxConcurrency = Math.Min (8, Environment.ProcessorCount * 2);
+		private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim (MaxConcurrency);
+		private static CancellationTokenSource _cts = new CancellationTokenSource ();
 		private static void CallJS (object jsFunc, params object [] args)
 		{
 			if (jsFunc == null) return;
@@ -518,160 +601,267 @@ namespace Bridge
 				// ignore errors in callback invocation
 			}
 		}
-		public AppxPackage.PackageReader Reader (string packagePath) { return new AppxPackage.PackageReader (packagePath); }
-		public _I_PackageManager Manager => new _I_PackageManager ();
+		private static Task RunAsync (Action<CancellationToken> work, object successCallback, object failedCallback)
+		{
+			var token = _cts.Token;
+			return Task.Factory.StartNew (() => {
+				_semaphore.Wait (token);
+				try
+				{
+					token.ThrowIfCancellationRequested ();
+					work (token);
+				}
+				catch (OperationCanceledException oce)
+				{
+					var errObj = new
+					{
+						status = false,
+						message = "Task is canceled. Message: " + oce.Message,
+						jsontext = ""
+					};
+					string errJson = Newtonsoft.Json.JsonConvert.SerializeObject (errObj);
+					if (failedCallback != null) CallJS (failedCallback, errJson);
+				}
+				catch (Exception ex)
+				{
+					var errObj = new
+					{
+						status = false,
+						message = ex.Message,
+						jsontext = ""
+					};
+					string errJson = Newtonsoft.Json.JsonConvert.SerializeObject (errObj);
+					if (failedCallback != null) CallJS (failedCallback, errJson);
+				}
+				finally
+				{
+					_semaphore.Release ();
+				}
+			},
+			token,
+			TaskCreationOptions.LongRunning,
+			TaskScheduler.Default);
+		}
+		public AppxPackage.PackageReader Package (string packagePath) { return new AppxPackage.PackageReader (packagePath); }
 		public AppxPackage.ManifestReader Manifest (string manifestPath) { return new AppxPackage.ManifestReader (manifestPath); }
 		public AppxPackage.ManifestReader FromInstallLocation (string installLocation) { return Manifest (Path.Combine (installLocation, "AppxManifest.xml")); }
-		public void ReadFromPackageAsync (string packagePath, bool enablePri, object successCallback, object failedCallback)
+		public Task ReadFromPackageAsync (string packagePath, bool enablePri, object successCallback, object failedCallback)
 		{
-			Thread thread = new Thread (() => {
-				try
+			return RunAsync (token => {
+				string cacheKey = BuildCacheKey (packagePath, enablePri, ReadKind.Package);
+				if (TryHitCache (cacheKey, successCallback)) return;
+				using (var reader = Package (packagePath))
 				{
-					using (var reader = Reader (packagePath))
+					if (enablePri)
 					{
-						if (enablePri)
+						reader.EnablePri = true;
+						reader.UsePri = true;
+					}
+					token.ThrowIfCancellationRequested ();
+					if (!reader.IsValid)
+					{
+						var failObj = new
 						{
-							reader.EnablePri = true;
-							reader.UsePri = true;
-						}
-						if (!reader.IsValid)
-						{
-							var failObj = new
-							{
-								status = false,
-								message = "Reader invalid",
-								jsontext = ""
-							};
-							string failJson = Newtonsoft.Json.JsonConvert.SerializeObject (failObj);
-							if (failedCallback != null) CallJS (failedCallback, failJson);
-							return;
-						}
-						var obj = new
-						{
-							status = true,
-							message = "ok",
-							jsontext = reader.BuildJsonText ()   // 你之前写好的函数
+							status = false,
+							message = "Reader invalid",
+							jsontext = ""
 						};
-						string json = Newtonsoft.Json.JsonConvert.SerializeObject (obj);
-						if (successCallback != null) CallJS (successCallback, json);
+						string failJson = Newtonsoft.Json.JsonConvert.SerializeObject (failObj);
+						if (failedCallback != null) CallJS (failedCallback, failJson);
+						return;
+					}
+					var obj = new
+					{
+						status = true,
+						message = "ok",
+						jsontext = reader.BuildJsonText ()
+					};
+					string json = Newtonsoft.Json.JsonConvert.SerializeObject (obj);
+					if (!token.IsCancellationRequested && successCallback != null) CallJS (successCallback, json);
+					SaveCache (cacheKey, json);
+				}
+			}, successCallback, failedCallback);
+		}
+		public Task ReadFromManifestAsync (string manifestPath, bool enablePri, object successCallback, object failedCallback)
+		{
+			return RunAsync (token => {
+				string cacheKey = BuildCacheKey (manifestPath, enablePri, ReadKind.Manifest);
+				if (TryHitCache (cacheKey, successCallback)) return;
+				using (var reader = Manifest (manifestPath))
+				{
+					if (enablePri)
+					{
+						reader.EnablePri = true;
+						reader.UsePri = true;
+					}
+					token.ThrowIfCancellationRequested ();
+					if (!reader.IsValid)
+					{
+						var failObj = new
+						{
+							status = false,
+							message = "Reader invalid",
+							jsontext = ""
+						};
+						string failJson = Newtonsoft.Json.JsonConvert.SerializeObject (failObj);
+						if (failedCallback != null) CallJS (failedCallback, failJson);
+						return;
+					}
+					var obj = new
+					{
+						status = true,
+						message = "ok",
+						jsontext = reader.BuildJsonText ()
+					};
+					string json = Newtonsoft.Json.JsonConvert.SerializeObject (obj);
+					if (!token.IsCancellationRequested && successCallback != null) CallJS (successCallback, json);
+					SaveCache (cacheKey, json);
+				}
+			}, successCallback, failedCallback);
+		}
+		public Task ReadFromInstallLocationAsync (string installLocation, bool enablePri, object successCallback, object failedCallback)
+		{
+			return RunAsync (token => {
+				var manifestpath = Path.Combine (installLocation, "AppxManifest.xml");
+				string cacheKey = BuildCacheKey (manifestpath, enablePri, ReadKind.Manifest);
+				if (TryHitCache (cacheKey, successCallback)) return;
+				using (var reader = FromInstallLocation (installLocation))
+				{
+					if (enablePri)
+					{
+						reader.EnablePri = true;
+						reader.UsePri = true;
+					}
+					token.ThrowIfCancellationRequested ();
+					if (!reader.IsValid)
+					{
+						var failObj = new
+						{
+							status = false,
+							message = "Reader invalid",
+							jsontext = ""
+						};
+						string failJson = Newtonsoft.Json.JsonConvert.SerializeObject (failObj);
+						if (failedCallback != null) CallJS (failedCallback, failJson);
+						return;
+					}
+					var obj = new
+					{
+						status = true,
+						message = "ok",
+						jsontext = reader.BuildJsonText ()
+					};
+					string json = Newtonsoft.Json.JsonConvert.SerializeObject (obj);
+					if (!token.IsCancellationRequested && successCallback != null) CallJS (successCallback, json);
+					SaveCache (cacheKey, json);
+				}
+			}, successCallback, failedCallback);
+		}
+		public void CancelAll ()
+		{
+			var old = _cts;
+			_cts = new CancellationTokenSource ();
+			old.Cancel ();
+			old.Dispose ();
+		}
+		public bool AddApplicationItem (string itemName) => PackageReader.AddApplicationItem (itemName);
+		public bool RemoveApplicationItem (string itemName) => PackageReader.RemoveApplicationItem (itemName);
+		// Cache about
+		private const int MaxCacheItems = 64;              // 最大缓存数量
+		private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes (30);
+		internal sealed class CacheEntry
+		{
+			public string Json { get; private set; }
+			public DateTime ExpireAt { get; private set; }
+			public DateTime LastAccessUtc { get; private set; }
+			public CacheEntry (string json, DateTime expireAt)
+			{
+				Json = json;
+				ExpireAt = expireAt;
+				LastAccessUtc = DateTime.UtcNow;
+			}
+			public bool IsExpired { get { return DateTime.UtcNow > ExpireAt; } }
+			public void Touch () { LastAccessUtc = DateTime.UtcNow; }
+		}
+		private static readonly ConcurrentDictionary<string, CacheEntry> _cache = new ConcurrentDictionary<string, CacheEntry> ();
+		private static readonly object _cacheCleanupLock = new object ();
+		private static bool TryHitCache (string cacheKey, object successCallback)
+		{
+			CacheEntry entry;
+			if (_cache.TryGetValue (cacheKey, out entry))
+			{
+				if (!entry.IsExpired)
+				{
+					entry.Touch ();
+					if (successCallback != null) CallJS (successCallback, entry.Json);
+					return true;
+				}
+				CacheEntry removed;
+				_cache.TryRemove (cacheKey, out removed);
+			}
+			return false;
+		}
+		private static void SaveCache (string cacheKey, string json)
+		{
+			var entry = new CacheEntry (
+				json,
+				DateTime.UtcNow.Add (CacheDuration)
+			);
+			_cache [cacheKey] = entry;
+			EnsureCacheSize ();
+		}
+		private static void EnsureCacheSize ()
+		{
+			if (_cache.Count <= MaxCacheItems) return;
+			lock (_cacheCleanupLock)
+			{
+				if (_cache.Count <= MaxCacheItems) return;
+				foreach (var kv in _cache)
+				{
+					if (kv.Value.IsExpired)
+					{
+						CacheEntry removed;
+						_cache.TryRemove (kv.Key, out removed);
 					}
 				}
-				catch (Exception ex)
+				if (_cache.Count <= MaxCacheItems) return;
+				while (_cache.Count > MaxCacheItems)
 				{
-					var errObj = new
+					string oldestKey = null;
+					DateTime oldest = DateTime.MaxValue;
+					foreach (var kv in _cache)
 					{
-						status = false,
-						message = ex.Message,
-						jsontext = ""
-					};
-					string errJson = Newtonsoft.Json.JsonConvert.SerializeObject (errObj);
-					if (failedCallback != null) CallJS (failedCallback, errJson);
-				}
-			});
-			thread.IsBackground = true;
-			thread.SetApartmentState (ApartmentState.MTA);
-			thread.Start ();
-		}
-		public void ReadFromManifestAsync (string manifestPath, bool enablePri, object successCallback, object failedCallback)
-		{
-			Thread thread = new Thread (() => {
-				try
-				{
-					using (var reader = Manifest (manifestPath))
-					{
-						if (enablePri)
+						if (kv.Value.LastAccessUtc < oldest)
 						{
-							reader.EnablePri = true;
-							reader.UsePri = true;
+							oldest = kv.Value.LastAccessUtc;
+							oldestKey = kv.Key;
 						}
-						if (!reader.IsValid)
-						{
-							var failObj = new
-							{
-								status = false,
-								message = "Reader invalid",
-								jsontext = ""
-							};
-							string failJson = Newtonsoft.Json.JsonConvert.SerializeObject (failObj);
-							if (failedCallback != null) CallJS (failedCallback, failJson);
-							return;
-						}
-						var obj = new
-						{
-							status = true,
-							message = "ok",
-							jsontext = reader.BuildJsonText ()   // 你之前写好的函数
-						};
-						string json = Newtonsoft.Json.JsonConvert.SerializeObject (obj);
-						if (successCallback != null) CallJS (successCallback, json);
 					}
+					if (oldestKey == null) break;
+					CacheEntry removed;
+					_cache.TryRemove (oldestKey, out removed);
 				}
-				catch (Exception ex)
-				{
-					var errObj = new
-					{
-						status = false,
-						message = ex.Message,
-						jsontext = ""
-					};
-					string errJson = Newtonsoft.Json.JsonConvert.SerializeObject (errObj);
-					if (failedCallback != null) CallJS (failedCallback, errJson);
-				}
-			});
-			thread.IsBackground = true;
-			thread.SetApartmentState (ApartmentState.MTA);
-			thread.Start ();
+			}
 		}
-		public void ReadFromInstallLocationAsync (string installLocation, bool enablePri, object successCallback, object failedCallback)
+		private static string NormalizePath (string path)
 		{
-			Thread thread = new Thread (() => {
-				try
-				{
-					using (var reader = FromInstallLocation (installLocation))
-					{
-						if (enablePri)
-						{
-							reader.EnablePri = true;
-							reader.UsePri = true;
-						}
-						if (!reader.IsValid)
-						{
-							var failObj = new
-							{
-								status = false,
-								message = "Reader invalid",
-								jsontext = ""
-							};
-							string failJson = Newtonsoft.Json.JsonConvert.SerializeObject (failObj);
-							if (failedCallback != null) CallJS (failedCallback, failJson);
-							return;
-						}
-						var obj = new
-						{
-							status = true,
-							message = "ok",
-							jsontext = reader.BuildJsonText ()   // 你之前写好的函数
-						};
-						string json = Newtonsoft.Json.JsonConvert.SerializeObject (obj);
-						if (successCallback != null) CallJS (successCallback, json);
-					}
-				}
-				catch (Exception ex)
-				{
-					var errObj = new
-					{
-						status = false,
-						message = ex.Message,
-						jsontext = ""
-					};
-					string errJson = Newtonsoft.Json.JsonConvert.SerializeObject (errObj);
-					if (failedCallback != null) CallJS (failedCallback, errJson);
-				}
-			});
-			thread.IsBackground = true;
-			thread.SetApartmentState (ApartmentState.MTA);
-			thread.Start ();
+			if (string.IsNullOrWhiteSpace (path)) return string.Empty;
+			path = path.Trim ();
+			while (path.EndsWith ("\\") || path.EndsWith ("/")) path = path.Substring (0, path.Length - 1);
+			return path.ToLowerInvariant ();
 		}
+		private enum ReadKind { Package, Manifest }
+		private static string BuildCacheKey (string path, bool enablePri, ReadKind kind)
+		{
+			return NormalizePath (path) + "|" + enablePri.ToString () + "|" + kind.ToString ();
+		}
+	}
+	[ComVisible (true)]
+	[ClassInterface (ClassInterfaceType.AutoDual)]
+	public class _I_Package
+	{
+		public _I_PackageReader Reader => new _I_PackageReader ();
+		public _I_PackageManager Manager => new _I_PackageManager ();
 	}
 	[ComVisible (true)]
 	[ClassInterface (ClassInterfaceType.AutoDual)]

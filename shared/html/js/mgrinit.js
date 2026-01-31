@@ -1,369 +1,5 @@
 (function(global) {
-    function _createImage(src, onload, onerror) {
-        var img = new Image();
-
-        img.onload = function() {
-            onload(img);
-        };
-
-        img.onerror = function() {
-            onerror && onerror();
-        };
-
-        img.src = src;
-    }
-
-    function getSolidOpaqueBackgroundColor(source, callback) {
-
-        function processImage(img) {
-            if (!img || !img.complete) {
-                callback(null);
-                return;
-            }
-
-            var canvas = document.createElement("canvas");
-            var ctx = canvas.getContext("2d");
-
-            canvas.width = img.naturalWidth || img.width;
-            canvas.height = img.naturalHeight || img.height;
-
-            ctx.drawImage(img, 0, 0);
-
-            try {
-                var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            } catch (e) {
-                // 跨域导致的安全异常
-                callback(null);
-                return;
-            }
-
-            var data = imageData.data;
-            var w = canvas.width;
-            var h = canvas.height;
-
-            var colors = {};
-            var total = 0;
-
-            function pushColor(r, g, b, a) {
-                if (a !== 255) return;
-                var key = r + "," + g + "," + b;
-                colors[key] = (colors[key] || 0) + 1;
-                total++;
-            }
-
-            // top + bottom
-            for (var x = 0; x < w; x++) {
-                var topIndex = (0 * w + x) * 4;
-                var botIndex = ((h - 1) * w + x) * 4;
-                pushColor(data[topIndex], data[topIndex + 1], data[topIndex + 2], data[topIndex + 3]);
-                pushColor(data[botIndex], data[botIndex + 1], data[botIndex + 2], data[botIndex + 3]);
-            }
-
-            // left + right
-            for (var y = 1; y < h - 1; y++) {
-                var leftIndex = (y * w + 0) * 4;
-                var rightIndex = (y * w + (w - 1)) * 4;
-                pushColor(data[leftIndex], data[leftIndex + 1], data[leftIndex + 2], data[leftIndex + 3]);
-                pushColor(data[rightIndex], data[rightIndex + 1], data[rightIndex + 2], data[rightIndex + 3]);
-            }
-
-            if (total === 0) {
-                callback(null);
-                return;
-            }
-
-            var bestKey = null;
-            var bestCount = 0;
-
-            for (var key in colors) {
-                if (colors.hasOwnProperty(key)) {
-                    if (colors[key] > bestCount) {
-                        bestCount = colors[key];
-                        bestKey = key;
-                    }
-                }
-            }
-
-            // 95% 纯色阈值
-            if (bestCount / total < 0.95) {
-                callback(null);
-                return;
-            }
-
-            callback(bestKey);
-        }
-
-        // 如果传入的是 img 元素
-        if (source && source.tagName && source.tagName.toLowerCase() === "img") {
-            processImage(source);
-            return;
-        }
-
-        // 如果传入的是 data url 或普通 url
-        if (typeof source === "string") {
-            _createImage(source, processImage, function() {
-                callback(null);
-            });
-            return;
-        }
-
-        callback(null);
-    }
-
-    function getHamonyColor(source, callback) {
-
-        function _createImage(src, onload, onerror) {
-            var img = new Image();
-            img.onload = function() { onload(img); };
-            img.onerror = function() { onerror && onerror(); };
-            img.src = src;
-        }
-
-        function _toKey(r, g, b) {
-            return r + "," + g + "," + b;
-        }
-
-        function _rgbToHsl(r, g, b) {
-            r /= 255;
-            g /= 255;
-            b /= 255;
-            var max = Math.max(r, g, b);
-            var min = Math.min(r, g, b);
-            var h, s, l = (max + min) / 2;
-
-            if (max === min) {
-                h = s = 0;
-            } else {
-                var d = max - min;
-                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-                switch (max) {
-                    case r:
-                        h = (g - b) / d + (g < b ? 6 : 0);
-                        break;
-                    case g:
-                        h = (b - r) / d + 2;
-                        break;
-                    case b:
-                        h = (r - g) / d + 4;
-                        break;
-                }
-                h /= 6;
-            }
-            return { h: h, s: s, l: l };
-        }
-
-        function _hslToRgb(h, s, l) {
-            var r, g, b;
-
-            function hue2rgb(p, q, t) {
-                if (t < 0) t += 1;
-                if (t > 1) t -= 1;
-                if (t < 1 / 6) return p + (q - p) * 6 * t;
-                if (t < 1 / 2) return q;
-                if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-                return p;
-            }
-
-            if (s === 0) {
-                r = g = b = l;
-            } else {
-                var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-                var p = 2 * l - q;
-                r = hue2rgb(p, q, h + 1 / 3);
-                g = hue2rgb(p, q, h);
-                b = hue2rgb(p, q, h - 1 / 3);
-            }
-
-            return {
-                r: Math.round(r * 255),
-                g: Math.round(g * 255),
-                b: Math.round(b * 255)
-            };
-        }
-
-        function _lum(r, g, b) {
-            function f(x) {
-                x = x / 255;
-                return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4);
-            }
-            return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
-        }
-
-        function _contrast(a, b) {
-            var L1 = _lum(a.r, a.g, a.b);
-            var L2 = _lum(b.r, b.g, b.b);
-            var lighter = Math.max(L1, L2);
-            var darker = Math.min(L1, L2);
-            return (lighter + 0.05) / (darker + 0.05);
-        }
-
-        function _tryPureBackground(data, w, h) {
-            var edgeColors = {};
-            var edgeTotal = 0;
-
-            function push(r, g, b, a) {
-                if (a !== 255) return;
-                var k = _toKey(r, g, b);
-                edgeColors[k] = (edgeColors[k] || 0) + 1;
-                edgeTotal++;
-            }
-
-            for (var x = 0; x < w; x++) {
-                var top = (0 * w + x) * 4;
-                var bot = ((h - 1) * w + x) * 4;
-                push(data[top], data[top + 1], data[top + 2], data[top + 3]);
-                push(data[bot], data[bot + 1], data[bot + 2], data[bot + 3]);
-            }
-            for (var y = 1; y < h - 1; y++) {
-                var left = (y * w + 0) * 4;
-                var right = (y * w + (w - 1)) * 4;
-                push(data[left], data[left + 1], data[left + 2], data[left + 3]);
-                push(data[right], data[right + 1], data[right + 2], data[right + 3]);
-            }
-
-            if (edgeTotal === 0) return null;
-
-            var best = null,
-                bestCount = 0;
-            for (var k in edgeColors) {
-                if (edgeColors.hasOwnProperty(k) && edgeColors[k] > bestCount) {
-                    bestCount = edgeColors[k];
-                    best = k;
-                }
-            }
-            if (best && bestCount / edgeTotal >= 0.95) return best;
-            return null;
-        }
-
-        function _process(img) {
-            if (!img || !img.complete) { callback(null); return; }
-
-            var canvas = document.createElement("canvas");
-            var ctx = canvas.getContext("2d");
-            canvas.width = img.naturalWidth || img.width;
-            canvas.height = img.naturalHeight || img.height;
-            ctx.drawImage(img, 0, 0);
-
-            var imageData;
-            try {
-                imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            } catch (e) {
-                callback(null);
-                return;
-            }
-
-            var data = imageData.data;
-            var w = canvas.width,
-                h = canvas.height;
-
-            // 1) 尝试纯色背景
-            var pure = _tryPureBackground(data, w, h);
-            if (pure) { callback(pure); return; }
-
-            // 2) 统计不透明像素（抽样）
-            var sumR = 0,
-                sumG = 0,
-                sumB = 0,
-                count = 0;
-            var samples = 0;
-            var step = 4; // 4x抽样，减少性能消耗
-            for (var y = 0; y < h; y += step) {
-                for (var x = 0; x < w; x += step) {
-                    var i = (y * w + x) * 4;
-                    var a = data[i + 3];
-                    if (a === 255) {
-                        sumR += data[i];
-                        sumG += data[i + 1];
-                        sumB += data[i + 2];
-                        count++;
-                    }
-                    samples++;
-                }
-            }
-            if (count === 0) { callback(null); return; }
-
-            var avgR = sumR / count,
-                avgG = sumG / count,
-                avgB = sumB / count;
-
-            // 3) 生成候选色（借鉴流行配色）
-            var base = _rgbToHsl(avgR, avgG, avgB);
-
-            function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
-
-            var candidates = [];
-
-            // 中性色（低饱和）
-            candidates.push(_hslToRgb(base.h, 0.05, 0.5));
-            candidates.push(_hslToRgb(base.h, 0.1, 0.6));
-            candidates.push(_hslToRgb(base.h, 0.1, 0.4));
-
-            // 平均色去饱和
-            candidates.push(_hslToRgb(base.h, clamp(base.s * 0.4, 0.05, 0.2), clamp(base.l, 0.2, 0.8)));
-
-            // 互补色（活泼）
-            candidates.push(_hslToRgb((base.h + 0.5) % 1, clamp(base.s * 0.6, 0.1, 0.8), clamp(base.l, 0.35, 0.7)));
-
-            // 类似色
-            candidates.push(_hslToRgb((base.h + 0.083) % 1, clamp(base.s * 0.5, 0.1, 0.8), clamp(base.l, 0.35, 0.7)));
-            candidates.push(_hslToRgb((base.h - 0.083 + 1) % 1, clamp(base.s * 0.5, 0.1, 0.8), clamp(base.l, 0.35, 0.7)));
-
-            // 三分色
-            candidates.push(_hslToRgb((base.h + 0.333) % 1, clamp(base.s * 0.6, 0.1, 0.8), clamp(base.l, 0.35, 0.7)));
-            candidates.push(_hslToRgb((base.h - 0.333 + 1) % 1, clamp(base.s * 0.6, 0.1, 0.8), clamp(base.l, 0.35, 0.7)));
-
-            // 4) 计算最小对比度（与所有不透明像素）
-            function minContrastWithImage(bg) {
-                var bgObj = { r: bg.r, g: bg.g, b: bg.b };
-                var minC = Infinity;
-
-                for (var y = 0; y < h; y += step) {
-                    for (var x = 0; x < w; x += step) {
-                        var i = (y * w + x) * 4;
-                        if (data[i + 3] !== 255) continue;
-                        var px = { r: data[i], g: data[i + 1], b: data[i + 2] };
-                        var c = _contrast(bgObj, px);
-                        if (c < minC) minC = c;
-                    }
-                }
-                return minC;
-            }
-
-            var best = null;
-            for (var i = 0; i < candidates.length; i++) {
-                var c = candidates[i];
-                var minC = minContrastWithImage(c);
-                if (minC >= 4.5) {
-                    best = c;
-                    break;
-                }
-            }
-
-            if (best) {
-                callback(_toKey(best.r, best.g, best.b));
-            } else {
-                callback(null);
-            }
-        }
-
-        if (source && source.tagName && source.tagName.toLowerCase() === "img") {
-            _process(source);
-        } else if (typeof source === "string") {
-            _createImage(source, _process, function() { callback(null); });
-        } else {
-            callback(null);
-        }
-    }
-
-    function getSuitableBackgroundColor(source, callback) {
-        getSolidOpaqueBackgroundColor(source, function(color) {
-            if (color) {
-                callback(color);
-            } else {
-                getHamonyColor(source, callback);
-            }
-        });
-    }
+    var strres = external.StringResources;
 
     function createLocalizedCompare(locale) {
         return function(a, b) {
@@ -383,9 +19,17 @@
         var mgr = Package.manager;
         var nstr = Bridge.NString;
         var datasrc = new DataView.DataSource();
+        datasrc.setKeySelector(function(item) {
+            if (item === null || item === void 0) return null;
+            return Bridge.String.tolower(Bridge.String.trim(item.Identity.FullName));
+        });
         var themeColor = Bridge.UI.themeColor;
         var loadingDisplay = document.getElementById("applist-loading");
         var loadingStatus = loadingDisplay.querySelector(".title");
+        var emptyDisplay = document.createElement("div");
+        var dataLengthDisplay = document.getElementById("applist-datalen");
+        var appSearchList = document.getElementById("applist-search");
+        emptyDisplay.textContent = strres.get("MANAGER_MANAGE_LISTEMPTY");
         var listView = new DataView.ListView(listContainer, function(item) {
             var appItem = appItemTemplate.cloneNode(true);
             appItem.id = "";
@@ -407,17 +51,102 @@
             appItem.setAttribute("data-version", item.Identity.Version.Expression);
             appItem.setAttribute("data-users", item.Users);
             appItem.setAttribute("data-publisher-id", item.Identity.PublisherId);
-            setTimeout(function(a, b) {
-                getSolidOpaqueBackgroundColor(a, function(color) {
-                    try {
-                        var pipes = color.split(",");
-                        var colorobj = new Color(parseInt(pipes[0]), parseInt(pipes[1]), parseInt(pipes[2]));
-                        if (colorobj.hex == "#ffffff" || colorobj.hex == "#000000") throw "too white or black";
-                        var rgbstr = colorobj.RGB.toString();
-                        b.style.backgroundColor = rgbstr;
-                    } catch (e) {}
-                });
-            }, 0, item.Properties.LogoBase64, logoimg.parentElement);
+            logoimg.parentElement.style.backgroundColor = item.BackgroundColor;
+            if (item.BackgroundColor === "transparent") {
+                logoimg.parentElement.style.backgroundColor = themeColor;
+            }
+            var uninstallButton = appItem.querySelector("div[role=control] .uninstall");
+            Windows.UI.Event.Util.addEvent(uninstallButton, "click", function(e) {
+                e.stopPropagation();
+                this.disabled = true;
+                var itemNode = this.parentNode.parentNode.parentNode;
+                var flyout = document.getElementById("app-uninstall-flyout");
+                if (typeof flyout.appDataSource !== "undefined") flyout.appDataSource.clear();
+                if (typeof flyout.appDataSource !== "undefined") {
+                    Package.reader.readFromInstallLocation(this.parentNode.parentNode.parentNode.data.InstallLocation, true).then(function(result) {
+                        try {
+                            if (typeof result.json.applications === "undefined" || result.json.applications.length === 0) {
+                                result.json.applications = [{
+                                    DisplayName: item.Properties.DisplayName || item.Identity.Name,
+                                    SmallLogo_Base64: item.Properties.LogoBase64,
+                                }];
+                            }
+                            flyout.appDataSource.updateList(result.json.applications);
+
+                        } catch (e) {}
+                    }, function(result) {
+                        try { flyout.appDataSource.updateList(result.json.applications); } catch (e) {}
+                    });
+                }
+                var self = this;
+                var confirm = flyout.querySelector(".confirm");
+                confirm.onclick = null;
+                confirm.onclick = function() {
+                    self.disabled = true;
+                    flyout.winControl.hide();
+                    var fullName = itemNode.getAttribute("data-full-name");
+                    itemNode.classList.add("uninstalling");
+                    var progressPart = itemNode.querySelector("div[role=progress]");
+                    var statusDisplay = progressPart.querySelector(".status");
+                    statusDisplay.textContent = strres.get("MANAGER_APP_UNINSTALL_ING");
+                    var progressDisplay = progressPart.querySelector(".progress");
+                    progressDisplay.removeAttribute("value");
+                    self.disabled = true;
+                    (function(itemNode, statusDisplay, progressDisplay, self) {
+                        mgr.remove(fullName).then(function(_s) {
+                            itemNode.classList.remove("uninstalling");
+                            itemNode.classList.add("uninstalled");
+                            if (_s.succeeded) {
+                                statusDisplay.textContent = strres.get("MANAGER_APP_UNINSTALL_SUCCEED");
+                                datasrc.remove(itemNode.data);
+                            } else {
+                                statusDisplay.textContent = _s.message;
+                                setTimeout(function(iNode, uButton) {
+                                    iNode.classList.remove("uninstalled");
+                                    uButton.disabled = false;
+                                }, 5000, itemNode, self);
+                            }
+                        }, function(_f) {
+                            itemNode.classList.remove("uninstalling");
+                            itemNode.classList.add("uninstalled");
+                            try {
+                                if (_f.succeeded) {
+                                    statusDisplay.textContent = strres.get("MANAGER_APP_UNINSTALL_SUCCEED");
+                                    datasrc.remove(itemNode.data);
+                                } else {
+                                    statusDisplay.textContent = _f.message;
+                                    setTimeout(function(iNode, uButton) {
+                                        iNode.classList.remove("uninstalled");
+                                        uButton.disabled = false;
+                                    }, 5000, itemNode, self);
+                                }
+                            } catch (e) {
+                                statusDisplay.textContent = e.message;
+                                setTimeout(function(iNode, uButton) {
+                                    iNode.classList.remove("uninstalled");
+                                    uButton.disabled = false;
+                                }, 5000, itemNode, self);
+                            }
+                            self.disabled = false;
+                        }, function(_p) {
+                            statusDisplay.textContent = Bridge.String.format(
+                                strres.get("MANAGER_APP_UNINSTALL_PROGRESSING"),
+                                _p
+                            );
+                            progressDisplay.value = _p;
+                        });
+                    })(itemNode, statusDisplay, progressDisplay, self);
+                };
+                var winFlyout = flyout.winControl;
+                if (winFlyout._beforehideHandler) {
+                    winFlyout.removeEventListener("beforehide", winFlyout._beforehideHandler);
+                }
+                winFlyout._beforehideHandler = function() {
+                    self.disabled = false;
+                };
+                winFlyout.addEventListener("beforehide", winFlyout._beforehideHandler);
+                flyout.winControl.show(this);
+            });
             Windows.UI.Event.Util.addEvent(appItem.querySelector("div[role=advance] a"), "click", function(e) {
                 e.stopPropagation();
                 try {
@@ -428,93 +157,385 @@
         });
         listView.selectionMode = "single";
         listView.bind(datasrc);
+        listView.emptyView = emptyDisplay;
+        listView.searchHandler = function(text, item) {
+            return ((item.Properties.DisplayName || item.Identity.Name || "") + (item.Properties.Publisher || "")).indexOf(text) >= 0;
+        };
+        appSearchList.control = new Search.Box(appSearchList, {
+            placeholderText: strres.get("MANAGER_MANAGE_SEARCHPLACEHOLDER"),
+            chooseSuggestionOnEnter: false
+        });
+        appSearchList.control.ontextchanged = function(ev) {
+            console.log(ev.text);
+            listView.searchText = ev.detail.text;
+        };
+        listView.onsearchend = function() {
+            dataLengthDisplay.textContent = external.String.format(strres.get("MANAGER_MANAGE_FINDAPPS"), listView.findItemLength);
+        };
         var timer = null;
 
         function refreshAppList() {
+            dataLengthDisplay.textContent = "";
+
+            function processData(manifest, dataitem) {
+                //if (dataitem.Identity.FamilyName = "Microsoft.MicrosoftEdge.Stable_8wekyb3d8bbwe") debugger;
+                dataitem.Properties.DisplayName = dataitem.Properties.DisplayName || manifest.properties.display_name || dataitem.Properties.DisplayName;
+                if ((dataitem.Properties.DisplayName || "").indexOf("ms-resource:") === 0) {
+                    dataitem.Properties.DisplayName = "";
+                }
+                if (manifest.applications.length === 1) {
+                    dataitem.Properties.DisplayName = dataitem.Properties.DisplayName || manifest.applications[0].DisplayName || "";
+                }
+                if ((dataitem.Properties.DisplayName || "").indexOf("ms-resource:") === 0) {
+                    dataitem.Properties.DisplayName = "";
+                }
+                if (manifest.applications.length === 1) {
+                    dataitem.Properties.DisplayName = dataitem.Properties.DisplayName || manifest.applications[0].ShortName || "";
+                }
+                if ((dataitem.Properties.DisplayName || "").indexOf("ms-resource:") === 0) {
+                    dataitem.Properties.DisplayName = "";
+                }
+                dataitem.Properties.DisplayName = dataitem.Properties.DisplayName || dataitem.Identity.FamilyName;
+                dataitem.Properties.Puvlisher = dataitem.Properties.Publisher || manifest.properties.publisher_display_name || dataitem.Properties.Publisher;
+                dataitem.Properties.Framework = dataitem.Properties.Framework || manifest.properties.framework;
+                dataitem.Properties.Logo = dataitem.Properties.Logo || manifest.properties.logo;
+                dataitem.Properties.LogoBase64 = dataitem.Properties.LogoBase64 || manifest.properties.logo_base64;
+                if (manifest.applications.length === 1) {
+                    dataitem.Properties.LogoBase64 = dataitem.Properties.LogoBase64 || manifest.applications[0].Square44x44Logo_Base64 || manifest.applications[0].SmallLogo_Base64;
+                }
+                dataitem.Properties.ResourcePackage = dataitem.Properties.ResourcePackage || manifest.properties.resource_package;
+                dataitem.Properties.Description = dataitem.Properties.Description || manifest.properties.description;
+                try {
+                    dataitem.BackgroundColor = manifest.applications[0].BackgroundColor || "transparent";
+                } catch (e) {
+                    dataitem.BackgroundColor = "transparent";
+                }
+                return dataitem;
+            }
+
             function update(datas) {
                 var newDatas = [];
+                var promises = [];
                 for (var i = 0; i < datas.length; i++) {
                     var data = datas[i];
-                    if (data.Properties.Framework) continue; // 过滤依赖项
-                    var isfind = false; // 过滤系统应用
-                    for (var j = 0; data && data.Users && j < data.Users.length; j++) {
-                        if (Bridge.NString.equals(data.Users[j], "NT AUTHORITY\\SYSTEM")) {
-                            isfind = true;
-                            break;
+                    if (external.System.isWindows10) {
+                        if (data.Properties.DisplayName === null || data.Properties.DisplayName === "" || data.Properties.DisplayName === void 0 ||
+                            data.Properties.LogoBase64 === null || data.Properties.LogoBase64 === "" || data.Properties.LogoBase64 === void 0
+                        ) {
+                            promises.push(function(item, arr) {
+                                return Package.reader.readFromInstallLocation(item.InstallLocation, true).then(function(result) {
+                                    try {
+                                        arr.push(processData(result.json, item));
+                                    } catch (e) {
+                                        item.BackgroundColor = "transparent";
+                                        arr.push(item);
+                                    }
+                                }, function(result) {
+                                    try {
+                                        arr.push(processData(result.json, item));
+                                    } catch (e) {
+                                        item.BackgroundColor = "transparent";
+                                        arr.push(item);
+                                    }
+                                });
+                            }(data, newDatas));
+                        } else {
+                            promises.push(function(item, arr) {
+                                return Package.reader.readFromInstallLocation(item.InstallLocation, false).then(function(result) {
+                                    try {
+                                        item.BackgroundColor = result.json.applications[0].BackgroundColor;
+                                        arr.push(item);
+                                    } catch (e) {
+                                        item.BackgroundColor = "transparent";
+                                        arr.push(item);
+                                    }
+                                }, function(result) {
+                                    try {
+                                        item.BackgroundColor = result.json.applications[0].BackgroundColor;
+                                        arr.push(item);
+                                    } catch (e) {
+                                        item.BackgroundColor = "transparent";
+                                        arr.push(item);
+                                    }
+                                });
+                            }(data, newDatas));
+                        }
+                    } else {
+                        promises.push(function(item, arr) {
+                            return Package.reader.readFromInstallLocation(item.InstallLocation, true).then(function(result) {
+                                try {
+                                    arr.push(processData(result.json, item));
+                                } catch (e) {
+                                    item.BackgroundColor = "transparent";
+                                    arr.push(item);
+                                }
+                            }, function(result) {
+                                try {
+                                    arr.push(processData(result.json, item));
+                                } catch (e) {
+                                    item.BackgroundColor = "transparent";
+                                    arr.push(item);
+                                }
+                            });
+                        }(data, newDatas));
+                    }
+                }
+
+                function updateDatas() {
+                    datasrc.updateList(newDatas, function(item) {
+                        return item.Identity.FullName || "";
+                    });
+                    var compare = function(a, b) { return a - b; };
+                    try {
+                        compare = createLocalizedCompare(external.System.Locale.currentLocale);
+                    } catch (e) {
+                        try {
+                            compare = createLocalizedCompare(navigator.language);
+                        } catch (e) {
+                            compare = function(a, b) {
+                                if (a < b) return -1;
+                                if (a > b) return 1;
+                                return 0;
+                            };
                         }
                     }
-                    if (isfind) continue;
-                    newDatas.push(data);
+                    datasrc.sort(function(a, b) {
+                        return compare(a.Properties.DisplayName, b.Properties.DisplayName);
+                    });
+                    dataLengthDisplay.textContent = external.String.format(strres.get("MANAGER_MANAGE_FINDAPPS"), listView.findItemLength);
                 }
-                datasrc.updateList(newDatas, function(item) {
-                    return item.Identity.FullName || "";
-                });
-                var compare = function(a, b) { return a - b; };
-                try {
-                    compare = createLocalizedCompare(external.System.Locale.currentLocale);
-                } catch (e) {
-                    try {
-                        compare = createLocalizedCompare(navigator.language);
-                    } catch (e) {
-                        compare = function(a, b) {
-                            if (a < b) return -1;
-                            if (a > b) return 1;
-                            return 0;
-                        };
-                    }
-                }
-                datasrc.sort(function(a, b) {
-                    return compare(a.Properties.DisplayName, b.Properties.DisplayName);
-                });
+                return Promise.join(promises).then(updateDatas, updateDatas);
             }
             if (timer) clearTimeout(timer);
             timer = null;
             loadingDisplay.style.display = "";
             loadingDisplay.classList.remove("noloading");
+            loadingDisplay.bar.show();
 
             function waitAndHide() {
-                if (timer) clearTimeout(timer);
-                timer = null;
-                timer = setTimeout(function() {
-                    loadingDisplay.style.display = "none";
-                }, 10000);
+                return new Promise(function(resolve, reject) {
+                    if (timer) clearTimeout(timer);
+                    timer = null;
+                    timer = setTimeout(function(rs, rj) {
+                        //loadingDisplay.style.display = "none";
+                        loadingDisplay.bar.hide();
+                        rs();
+                    }, 5000, resolve, reject);
+                });
             }
-            loadingStatus.textContent = "正在加载数据...";
+            loadingStatus.textContent = strres.get("MANAGER_APP_INSTALLEDAPPS_LOADING");
             return mgr.get().then(function(result) {
-                loadingDisplay.classList.add("noloading");
-                loadingStatus.textContent = "已经加载了所有数据";
-                update(result.list);
-                waitAndHide();
+                return update(result.list).then(function() {
+                    loadingDisplay.classList.add("noloading");
+                    loadingStatus.textContent = strres.get("MANAGER_APP_INSTALLEDAPPS_SUCCEED");
+                    setTimeout(function(lv) {
+                        lv.refresh();
+                    }, 500, listView);
+                }).then(waitAndHide);
             }, function(error) {
                 loadingDisplay.classList.add("noloading");
-                loadingStatus.textContent = "更新时出错: " + (error.result ? (error.result.message || error.result.ErrorCode || "获取失败") : (error.message || error.error || error));
+                var errmsg = (error.result ? (error.result.message || error.result.ErrorCode || "获取失败") : (error.message || error.error || error));
+                loadingStatus.textContent = external.String.format(strres.get("MANAGER_APP_INSTALLEDAPPS_FAILED"), errmsg);
                 try { update(error.list); } catch (e) {}
-                waitAndHide();
-            })
+                setTimeout(function(lv) {
+                    lv.refresh();
+                }, 500, listView);
+                return waitAndHide();
+            });
         }
         var appbar = document.getElementById("appBar");
         var appbarControl = new AppBar.AppBar(appbar);
         var refreshButton = new AppBar.Command();
         refreshButton.icon = "&#57623;";
-        refreshButton.label = "刷新";
+        refreshButton.label = strres.get("MANAGER_APP_REFRESH");
         global.refreshAppList2 = function refreshAppList2() {
             appbarControl.hide();
             refreshButton.disabled = true;
-            refreshAppList().done(function() {
+            return refreshAppList().then(function() {
                 refreshButton.disabled = false;
             }, function(error) {
                 refreshButton.disabled = false;
             });
         }
+        var showSystemApps = document.getElementById("applist-showsystemapp");
+        var showFrameworks = document.getElementById("applist-showframework");
+        listView.filter = function(item) {
+            try {
+                if (!showFrameworks.checked && item.Properties.Framework) return false;
+                if (!showSystemApps.checked && item.Users.indexOf("NT AUTHORITY\\SYSTEM") !== -1) return false;
+                return true;
+            } catch (e) {
+                return false;
+            }
+        };
+        Windows.UI.Event.Util.addEvent(showSystemApps, "change", function() {
+            listView.refresh();
+            dataLengthDisplay.textContent = external.String.format(strres.get("MANAGER_MANAGE_FINDAPPS"), listView.findItemLength);
+        });
+        Windows.UI.Event.Util.addEvent(showFrameworks, "change", function() {
+            listView.refresh();
+            dataLengthDisplay.textContent = external.String.format(strres.get("MANAGER_MANAGE_FINDAPPS"), listView.findItemLength);
+        });
         refreshButton.addEventListener("click", refreshAppList2);
         appbarControl.add(refreshButton);
         refreshAppList2();
+        var appDetailPage = document.getElementById("page-appinfo");
         pagemgr.register("manager", document.getElementById("tag-manager"), document.getElementById("page-manager"));
         pagemgr.register("appinfo", document.getElementById("tag-appinfo"), document.getElementById("page-appinfo"), setAppInfoPageContent);
-        var appinfoBackPage = document.getElementById("page-appinfo").querySelector(".win-backbutton");
+        var appinfoBackPage = appDetailPage.querySelector(".win-backbutton");
         Windows.UI.Event.Util.addEvent(appinfoBackPage, "click", function(e) {
             pagemgr.back();
         });
+        appDetailPage.appDataSource = new DataView.DataSource();
+        var appListView = new DataView.ListView(appDetailPage.querySelector(".apps"), function(item) {
+            var appItem = appItemTemplate.cloneNode(true);
+            appItem.id = "";
+            appItem.style.display = "";
+            var logoimg = appItem.querySelector("img");
+            logoimg.src = item.Square44x44Logo_Base64 || item.SmallLogo_Base64;
+            if (logoimg.src == "" || logoimg.src == null || logoimg.src == void 0) logoimg.removeAttribute("src");
+            logoimg.parentElement.style.backgroundColor = item.BackgroundColor;
+            if (Bridge.NString.equals(item.BackgroundColor, "transparent")) logoimg.parentElement.style.backgroundColor = themeColor;
+            var appName = appItem.querySelector(".displayName");
+            appName.textContent = item.DisplayName || item.ShortName;
+            var appPub = appItem.querySelector(".publisher");
+            appPub.style.display = "none";
+            appItem.querySelector("div[role=advance]").style.display = "none";
+            var ctrls = appItem.querySelector("div[role=control]");
+            ctrls.innerHTML = "";
+            appItem.data = item;
+            var launchButton = document.createElement("button");
+            launchButton.textContent = strres.get("MANAGER_APP_LAUNCH");
+            launchButton.setAttribute("data-app-user-model-id", item.AppUserModelID);
+            var createShortcutButton = document.createElement("button");
+            createShortcutButton.textContent = strres.get("MANAGER_APP_CREATESHORTCUT");
+            createShortcutButton.style.marginRight = "10px";
+            Windows.UI.Event.Util.addEvent(launchButton, "click", function(e) {
+                e.stopPropagation();
+                Package.manager.active(this.getAttribute("data-app-user-model-id"));
+            });
+            ctrls.appendChild(launchButton);
+            ctrls.appendChild(createShortcutButton);
+            return appItem;
+        });
+        appListView.selectionMode = "single";
+        appListView.bind(appDetailPage.appDataSource);
+        appListView.emptyView = emptyDisplay.cloneNode(true);
+        var appDetailUninstall = appDetailPage.querySelector("#detail-uninstall-btn");
+        var appDetailUninstallStatusBlock = appDetailPage.querySelector("#appinfo-uninstallstatus");
+        var appDetailUninstallProgress = appDetailUninstallStatusBlock.querySelector(".progress");
+        var appDetailUninstallProgressStatus = appDetailUninstallStatusBlock.querySelector(".status");
+        appDetailUninstallStatusBlock.bar = new TransitionPanel(appDetailUninstallStatusBlock, {
+            axis: 'y',
+            duration: 500,
+        });
+        Windows.UI.Event.Util.addEvent(appDetailUninstall, "click", function(e) {
+            e.stopPropagation();
+            appinfoBackPage.disabled = true;
+            appDetailUninstallProgress.removeAttribute("value");
+            var item = appDetailPage.data;
+            var flyout = document.getElementById("app-uninstall-flyout");
+            if (typeof flyout.appDataSource !== "undefined") flyout.appDataSource.clear();
+            if (typeof flyout.appDataSource !== "undefined") {
+                flyout.appDataSource.updateList(appDetailPage.appDataSource.get());
+            }
+            var self = this;
+            var confirm = flyout.querySelector(".confirm");
+            confirm.onclick = null;
+            confirm.onclick = function() {
+                self.disabled = true;
+                flyout.winControl.hide();
+                var fullName = item.Identity.FullName;
+                var progressPart = appDetailUninstallStatusBlock;
+                var statusDisplay = appDetailUninstallProgressStatus;
+                statusDisplay.textContent = strres.get("MANAGER_APP_UNINSTALL_ING");
+                var progressDisplay = appDetailUninstallProgress;
+                progressDisplay.style.display = "";
+                self.disabled = true;
+                progressPart.bar.show();
+                (function(statusDisplay, progressDisplay, self, item) {
+                    mgr.remove(fullName).then(function(_s) {
+                        if (_s.succeeded) {
+                            statusDisplay.textContent = strres.get("MANAGER_APP_UNINSTALL_SUCCEED");
+                            datasrc.remove(item);
+                            appinfoBackPage.disabled = false;
+                        } else {
+                            statusDisplay.textContent = _s.message;
+                        }
+                        setTimeout(function(uButton, isSuccess) {
+                            appinfoBackPage.disabled = false;
+                            uButton.disabled = isSuccess;
+                            progressPart.bar.hide();
+                        }, 5000, self, _s.succeeded);
+                        progressDisplay.style.display = "none";
+                    }, function(_f) {
+                        try {
+                            if (_f.succeeded) {
+                                statusDisplay.textContent = strres.get("MANAGER_APP_UNINSTALL_SUCCEED");
+                                datasrc.remove(item);
+                                appinfoBackPage.disabled = false;
+                            } else {
+                                statusDisplay.textContent = _f.message;
+                            }
+                            setTimeout(function(uButton, isSuccess) {
+                                appinfoBackPage.disabled = false;
+                                uButton.disabled = isSuccess;
+                                progressPart.bar.hide();
+                            }, 5000, self, _f.succeeded);
+                        } catch (e) {
+                            statusDisplay.textContent = e.message;
+                            appinfoBackPage.disabled = false;
+                            setTimeout(function(uButton, isSuccess) {
+                                appinfoBackPage.disabled = false;
+                                uButton.disabled = isSuccess;
+                                progressPart.bar.hide();
+                            }, 5000, self, _f.succeeded);
+                        }
+                        self.disabled = false;
+                        progressDisplay.style.display = "none";
+                    }, function(_p) {
+                        statusDisplay.textContent = Bridge.String.format(
+                            strres.get("MANAGER_APP_UNINSTALL_PROGRESSING"),
+                            _p
+                        );
+                        progressDisplay.value = _p;
+                    });
+                })(statusDisplay, progressDisplay, self, item);
+            };
+            var winFlyout = flyout.winControl;
+            if (winFlyout._beforehideHandler) {
+                winFlyout.removeEventListener("beforehide", winFlyout._beforehideHandler);
+            }
+            winFlyout._beforehideHandler = function() {
+                self.disabled = false;
+            };
+            winFlyout.addEventListener("beforehide", winFlyout._beforehideHandler);
+            flyout.winControl.show(this);
+        });
+        var uninstallFlyout = document.getElementById("app-uninstall-flyout");
+        uninstallFlyout.appListView = new DataView.ListView(uninstallFlyout.querySelector(".applist"), function(item) {
+            var appItem = appItemTemplate.cloneNode(true);
+            appItem.id = "";
+            appItem.style.display = "";
+            var logoimg = appItem.querySelector("img");
+            logoimg.src = item.Square44x44Logo_Base64 || item.SmallLogo_Base64;
+            if (logoimg.src == "" || logoimg.src == null || logoimg.src == void 0) logoimg.removeAttribute("src");
+            logoimg.parentElement.style.backgroundColor = item.BackgroundColor;
+            if (Bridge.NString.equals(item.BackgroundColor, "transparent")) logoimg.parentElement.style.backgroundColor = themeColor;
+            var appName = appItem.querySelector(".displayName");
+            appName.style.wordBreak = "normal";
+            appName.style.wordWrap = "normal";
+            appName.textContent = item.DisplayName || item.ShortName;
+            var appPub = appItem.querySelector(".publisher");
+            appPub.style.display = "none";
+            appItem.querySelector("div[role=advance]").style.display = "none";
+            var ctrls = appItem.querySelector("div[role=control]");
+            ctrls.innerHTML = "";
+            appItem.data = item;
+            return appItem;
+        });
+        uninstallFlyout.appDataSource = new DataView.DataSource();
+        uninstallFlyout.appListView.bind(uninstallFlyout.appDataSource);
         pagemgr.addEventListener("load", function(e) {
             appbarControl.enabled = e == "manager";
             refreshButton.style.display = e == "manager" ? "" : "none";

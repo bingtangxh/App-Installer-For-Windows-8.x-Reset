@@ -13,7 +13,11 @@
             var byName = el.getAttribute('data-res-byname');
             var byId = el.getAttribute('data-res-byid');
             var fromFile = el.getAttribute('data-res-fromfile');
-            if ((byName && !Bridge.NString.empty(byName)) || (byId && parseInt(byId, 10) > 0) || (fromFile && !Bridge.NString.empty(fromFile))) {
+            var byXml = el.getAttribute('data-res-resxml');
+            if ((byName && !Bridge.NString.empty(byName)) ||
+                (byId && parseInt(byId, 10) > 0) ||
+                (fromFile && !Bridge.NString.empty(fromFile)) ||
+                (byXml && !Bridge.NString.empty(byXml))) {
                 result.push(el);
             }
         }
@@ -44,6 +48,16 @@
                         try {
                             var obj = eval(nodes[i].getAttribute('data-res-fromfile'));
                             nodes[i].textContent = resources.fromfile(obj.filepath, obj.resid);
+                        } catch (e) {
+                            nodes[i].textContent = "";
+                        }
+                    } else if (nodes[i].hasAttribute('data-res-resxml')) {
+                        try {
+                            var obj = nodes[i].getAttribute('data-res-resxml');
+                            var strres = external.StringResources;
+                            if (strres && strres.isValid) {
+                                nodes[i].textContent = strres.get(obj);
+                            }
                         } catch (e) {
                             nodes[i].textContent = "";
                         }

@@ -112,10 +112,10 @@ namespace AppxPackage
 	[ClassInterface (ClassInterfaceType.AutoDual)]
 	public class BaseInfoSectWithPRISingle: BaseInfoSection
 	{
-		protected Ref<ManifestReader> m_reader = null;
-		protected Ref<PriReader> m_pri = null;
-		protected Ref<bool> m_usePri = false;
-		protected Ref<bool> m_enablePri = false;
+		protected Ref<ManifestReader> m_reader = new Ref<ManifestReader> (null);
+		protected Ref<PriReader> m_pri = new Ref<PriReader> (null);
+		protected Ref<bool> m_usePri = new Ref<bool> (false);
+		protected Ref<bool> m_enablePri = new Ref<bool> (false);
 		public BaseInfoSectWithPRISingle (ref IntPtr hReader, ManifestReader reader, ref PriReader pri, ref bool usePri, ref bool enablePri) : base (ref hReader)
 		{
 			m_reader.Set (reader);
@@ -577,6 +577,10 @@ namespace AppxPackage
 						{
 							dict [(kv.Key?.Trim () ?? "") + "_Base64"] = app.NewAtBase64 (kv.Key);
 						}
+						else
+						{
+							dict [kv.Key] = app.NewAt (kv.Key, m_usePri.Value && m_enablePri.Value) ?? kv.Value;
+						}
 					}
 					dict ["AppUserModelID"] = app.UserModelID;
 					return dict;
@@ -595,7 +599,7 @@ namespace AppxPackage
 			{
 				var ret = new List<string> ();
 				if (!IsValid) return ret;
-				IntPtr hList = PackageReadHelper.GetCapabilitiesList (m_hReader.Value);
+				IntPtr hList = PackageReadHelper.GetManifestCapabilitiesList (m_hReader.Value);
 				if (hList == IntPtr.Zero) return ret;
 				try
 				{
@@ -622,7 +626,7 @@ namespace AppxPackage
 			{
 				var ret = new List<string> ();
 				if (!IsValid) return ret;
-				IntPtr hList = PackageReadHelper.GetDeviceCapabilitiesList (m_hReader.Value);
+				IntPtr hList = PackageReadHelper.GetManifestDeviceCapabilitiesList (m_hReader.Value);
 				if (hList == IntPtr.Zero) return ret;
 				try
 				{
@@ -685,7 +689,7 @@ namespace AppxPackage
 			{
 				var output = new List<DependencyInfo> ();
 				if (!IsValid) return output;
-				IntPtr hList = PackageReadHelper.GetDependencesInfoList (m_hReader);
+				IntPtr hList = PackageReadHelper.GetManifestDependencesInfoList (m_hReader);
 				if (hList == IntPtr.Zero) return output;
 				try
 				{
@@ -737,7 +741,7 @@ namespace AppxPackage
 				var ret = new List<DXFeatureLevel> ();
 				try
 				{
-					var dw = PackageReadHelper.GetResourcesDxFeatureLevels (m_hReader);
+					var dw = PackageReadHelper.GetManifestResourcesDxFeatureLevels (m_hReader);
 					if ((dw & 0x1) != 0) ret.Add (DXFeatureLevel.Level9);
 					if ((dw & 0x2) != 0) ret.Add (DXFeatureLevel.Level10);
 					if ((dw & 0x4) != 0) ret.Add (DXFeatureLevel.Level11);
@@ -753,7 +757,7 @@ namespace AppxPackage
 			{
 				var ret = new List<string> ();
 				if (!IsValid) return ret;
-				IntPtr hList = PackageReadHelper.GetResourcesLanguages (m_hReader.Value);
+				IntPtr hList = PackageReadHelper.GetManifestResourcesLanguages (m_hReader.Value);
 				if (hList == IntPtr.Zero) return ret;
 				try
 				{
@@ -772,7 +776,7 @@ namespace AppxPackage
 			{
 				var ret = new List<int> ();
 				if (!IsValid) return ret;
-				IntPtr hList = PackageReadHelper.GetResourcesLanguagesToLcid (m_hReader.Value);
+				IntPtr hList = PackageReadHelper.GetManifestResourcesLanguagesToLcid (m_hReader.Value);
 				if (hList == IntPtr.Zero) return ret;
 				try
 				{
@@ -791,7 +795,7 @@ namespace AppxPackage
 			{
 				var ret = new List<int> ();
 				if (!IsValid) return ret;
-				IntPtr hList = PackageReadHelper.GetResourcesLanguagesToLcid (m_hReader.Value);
+				IntPtr hList = PackageReadHelper.GetManifestResourcesLanguagesToLcid (m_hReader.Value);
 				if (hList == IntPtr.Zero) return ret;
 				try
 				{
@@ -826,7 +830,7 @@ namespace AppxPackage
 		}
 		protected string GetVersionDescription (string name)
 		{
-			var ptr = PackageReadHelper.GetPackagePrerequistieSystemVersionName (m_hReader, name);
+			var ptr = PackageReadHelper.GetManifestPrerequistieSystemVersionName (m_hReader, name);
 			return PackageReadHelper.GetStringAndFreeFromPkgRead (ptr) ?? "";
 		}
 		public string OSMaxVersionDescription { get { return GetVersionDescription ("OSMaxVersionTested"); } }
@@ -854,7 +858,7 @@ namespace AppxPackage
 		private bool m_enablePRI = false;
 		private PriReader m_pri = null;
 		public IntPtr Instance => m_hReader;
-		public string FileRoot{ get { return Path.GetPathRoot (m_filePath); } }
+		public string FileRoot{ get { return Path.GetDirectoryName (m_filePath); } }
 		private void InitPri ()
 		{
 			m_pri?.Dispose ();
@@ -916,15 +920,15 @@ namespace AppxPackage
 		public MRDependencies Dependencies { get { return new MRDependencies (ref m_hReader); } }
 		public void Dispose ()
 		{
+			var lastvalue = m_usePRI;
+			m_usePRI = false;
+			InitPri ();
+			m_usePRI = lastvalue;
 			if (m_hReader != IntPtr.Zero)
 			{
 				PackageReadHelper.DestroyManifestReader (m_hReader);
 				m_hReader = IntPtr.Zero;
 			}
-			var lastvalue = m_usePRI;
-			m_usePRI = false;
-			InitPri ();
-			m_usePRI = lastvalue;
 		}
 		~ManifestReader () { Dispose (); }
 		public string FilePath
@@ -985,5 +989,7 @@ namespace AppxPackage
 				applications = Applications.BuildJSON ()
 			};
 		}
+		public static bool AddApplicationItem (string itemName) => PackageReadHelper.AddPackageApplicationItemGetName (itemName);
+		public static bool RemoveApplicationItem (string itemName) => PackageReadHelper.RemovePackageApplicationItemGetName (itemName);
 	}
 }

@@ -821,7 +821,8 @@ public ref class AppListWnd: public System::Windows::Forms::Form, public IScript
 					if (color.empty () || color.equals (L"transparent")) color = MPStringToStdW (ColorToHtml (GetDwmThemeColor ()));
 					std::wnstring displayName = app [L"DisplayName"];
 					if (displayName.empty ()) displayName = app [L"ShortName"];
-					auto &logo = app [L"Square44x44Logo"];
+					auto logo = app [L"Square44x44Logo"];
+					if (std::wnstring::empty (logo)) logo = app [L"SmallLogo"];
 					InvokeCallScriptFunction (
 						"addAppToList",
 						CStringToMPString (displayName),

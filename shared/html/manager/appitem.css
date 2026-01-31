@@ -32,6 +32,7 @@
 }
 
 .appitem div[role=img] {
+    position: relative;
     width: 40px;
     height: 40px;
     background-color: #464646;
@@ -56,6 +57,16 @@
     overflow-x: hidden;
     overflow-y: hidden;
     transition: all 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+
+.appitem div[role=img]::after {
+    border: 1px solid rgba(254, 254, 254, 0.1);
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 .appitem div[role=img] img {
@@ -113,6 +124,11 @@
     width: calc(100% - 40px - 10px);
 }
 
+.appitem div[role=excepticon] div[role=progress] {
+    display: none;
+    width: 100%;
+}
+
 .appitem div[role=excepticon] div[role=control] {
     display: none;
     /* IE10 */
@@ -136,9 +152,43 @@
     height: 0;
 }
 
+.appitem div[role=excepticon] div[role=progress] {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.appitem.uninstalling,
 .appitem.selected {
     height: 119px;
     background-color: rgba(232, 232, 232, 1);
+}
+
+.appitem.uninstalled div[role=excepticon] div[role=progress],
+.appitem.uninstalling div[role=excepticon] div[role=progress] {
+    display: block;
+    flex: 1 0 auto;
+    -ms-flex: 1 0 auto;
+    width: 100%;
+}
+
+.appitem.uninstalling div[role=excepticon] div[role=progress] progress {
+    max-width: 100%;
+}
+
+.appitem.uninstalled div[role=excepticon] div[role=progress] progress {
+    display: none;
+}
+
+.appitem.uninstalling div[role=excepticon] div[role=progress],
+.appitem.uninstalled div[role=excepticon] div[role=progress],
+.appitem.uninstalling div[role=excepticon] div[role=progress] .status,
+.appitem.uninstalled div[role=excepticon] div[role=progress] .status {
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
+.appitem.uninstalled {
+    height: auto;
 }
 
 .appitem.selected div[role=excepticon] div[role=control] {
@@ -146,6 +196,23 @@
     display: -ms-flexbox;
     opacity: 1;
     height: auto;
+}
+
+.appitem.uninstalling div[role=excepticon] div[role=advance],
+.appitem.uninstalling div[role=excepticon] div[role=control],
+.appitem.uninstalling.selected div[role=excepticon] div[role=advance],
+.appitem.uninstalling.selected div[role=excepticon] div[role=control],
+.appitem.uninstalled div[role=excepticon] div[role=advance],
+.appitem.uninstalled div[role=excepticon] div[role=control],
+.appitem.uninstalled.selected div[role=excepticon] div[role=advance],
+.appitem.uninstalled.selected div[role=excepticon] div[role=control] {
+    display: none;
+}
+
+.appitem.uninstalling div[role=excepticon] div[role=title],
+.appitem.uninstalled div[role=excepticon] div[role=title] {
+    -ms-flex: none;
+    flex: none;
 }
 
 ul.appitem-list,
@@ -169,6 +236,11 @@ ul.appitem-list li {
 }
 
 .app-loading {
+    width: 100%;
+    height: auto;
+}
+
+.app-loading .container {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -176,7 +248,17 @@ ul.appitem-list li {
     justify-content: flex-start;
     align-items: center;
     width: 100%;
-    height: auto;
+    /*****/
+    display: -ms-flexbox;
+    /* IE10 */
+    -ms-flex-direction: row;
+    /* flex-direction: row */
+    -ms-flex-wrap: wrap;
+    /* flex-wrap: wrap */
+    -ms-flex-pack: start;
+    /* justify-content: flex-start */
+    -ms-flex-align: center;
+    /* align-items: center */
 }
 
 .app-loading.noloading progress {
@@ -204,6 +286,13 @@ ul.appitem-list li {
     height: 67px;
     box-sizing: border-box;
     max-width: 100%;
+    display: -ms-flexbox;
+    -ms-flex-direction: row;
+    /* flex-direction: row */
+    -ms-flex-wrap: nowrap;
+    /* flex-wrap: nowrap */
+    -ms-flex-pack: start;
+    /* justify-content: flex-start */
 }
 
 .app-detailpage header .win-backbutton {
@@ -222,4 +311,92 @@ ul.appitem-list li {
     overflow-y: hidden;
     overflow-x: hidden;
     text-overflow: ellipsis;
+}
+
+.app-detailpage .identity,
+.app-detailpage .publisher-display-name,
+.app-detailpage .version,
+.app-detailpage .description {
+    word-break: break-all;
+}
+
+.loadingstatus {
+    width: 100%;
+    height: auto;
+}
+
+.loadingstatus .container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    /* IE10 */
+    display: -ms-flexbox;
+    -ms-flex-direction: row;
+    /* flex-direction: row */
+    -ms-flex-wrap: wrap;
+    /* flex-wrap: wrap */
+    -ms-flex-pack: start;
+    /* justify-content: flex-start */
+    -ms-flex-align: center;
+    /* align-items: center */
+}
+
+.loadingstatus.noloading progress {
+    display: none;
+}
+
+.loadingstatus .title {
+    margin-left: 10px;
+}
+
+.loadingstatus.noloading .title {
+    margin-left: 0;
+}
+
+.applist-options {
+    margin: 10px 0 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: flex-start;
+    align-items: center;
+    /* IE10 */
+    display: -ms-flexbox;
+    -ms-flex-direction: row;
+    /* flex-direction: row */
+    -ms-flex-wrap: wrap;
+    /* flex-wrap: wrap */
+    -ms-flex-pack: start;
+    /* justify-content: flex-start */
+    -ms-flex-align: center;
+    /* align-items: center */
+}
+
+.applist-options .item {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: flex-start;
+    justify-content: flex-start;
+    align-items: center;
+    margin-right: 20px;
+    /* IE10 */
+    display: -ms-flexbox;
+    -ms-flex-direction: row;
+    /* flex-direction: row */
+    -ms-flex-wrap: nowrap;
+    /* flex-wrap: nowrap */
+    -ms-flex-pack: start;
+    /* justify-content: flex-start */
+    -ms-flex-align: center;
+    /* align-items: center */
+}
+
+.applist-options .item input[type="checkbox"] {
+    margin-left: 0;
 }

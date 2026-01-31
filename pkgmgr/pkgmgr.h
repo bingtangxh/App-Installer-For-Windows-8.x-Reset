@@ -203,6 +203,8 @@ extern "C"
 	PKGMGR_API HRESULT CreateAppDataManager (LPCWSTR lpFamilyName, HWRTAPPDATA *ppApplicationData, LPWSTR *pErrorCode, LPWSTR *pDetailMsg);
 	// 从本地、漫游和临时应用数据存储中删除所有应用程序数据。
 	PKGMGR_API HRESULT WRTAppDataClearAll (HWRTAPPDATA hAppData, LPWSTR *pErrorCode, LPWSTR *pDetailMsg);
+
+	PKGMGR_API HRESULT ActivateAppxApplicationWithArgs (LPCWSTR lpAppUserId, LPCWSTR lpArguments, PDWORD pdwProcessId);
 #ifdef _DEFAULT_INIT_VALUE_
 #undef _DEFAULT_INIT_VALUE_
 #endif

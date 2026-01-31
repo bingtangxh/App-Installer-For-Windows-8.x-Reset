@@ -312,9 +312,15 @@
         function hideTouchHide() {
             touchHide.style.display = "none";
         }
+        var timerHide = null;
         this.show = function() {
             try {
                 if (!_enable) return;
+                if (timerHide) {
+                    clearTimeout(timerHide);
+                    timerHide = null;
+                }
+                this.element.style.display = "";
                 if (!this.element.classList.contains("show"))
                     this.element.classList.add("show");
                 waitTimer(500);
@@ -323,8 +329,16 @@
         };
         this.hide = function() {
             try {
+                if (timerHide) {
+                    clearTimeout(timerHide);
+                    timerHide = null;
+                }
                 if (this.element.classList.contains("show"))
                     this.element.classList.remove("show");
+                timerHide = setTimeout(function() {
+                    timerHide = null;
+                    self.element.style.display = "none";
+                }, 500);
                 waitTimer(500);
                 hideTouchHide();
             } catch (e) {}

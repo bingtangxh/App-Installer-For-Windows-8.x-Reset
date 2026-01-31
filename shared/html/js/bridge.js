@@ -102,4 +102,20 @@
             get: function() { return ext.System.UI.SplashImage; },
         });
     } catch (e) {}
+    // 下面是有关 String 方法的补充
+    if (typeof String.prototype.trim !== "function") {
+        String.prototype.trim = function() {
+            return Bridge.String.trim(this);
+        };
+    }
+    if (typeof String.prototype.toLowerCase !== "function") {
+        String.prototype.toLowerCase = function() {
+            return Bridge.String.tolower(this);
+        };
+    }
+    if (typeof String.prototype.toUpperCase !== "function") {
+        String.prototype.toUpperCase = function() {
+            return Bridge.String.toupper(this);
+        };
+    }
 })(this);

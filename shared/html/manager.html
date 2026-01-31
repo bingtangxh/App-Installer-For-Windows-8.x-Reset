@@ -33,6 +33,9 @@
     <script type="text/javascript" src="js/datasrc.js"></script>
     <script type="text/javascript" src="js/appbar.js"></script>
     <script type="text/javascript" src="js/pagemgr.js"></script>
+    <script type="text/javascript" src="js/search.js"></script>
+    <link rel="stylesheet" href="css/statusbar.css">
+    <script type="text/javascript" src="js/statusbar.js"></script>
     <script type="text/javascript" src="js/manager/pages.js"></script>
     <script type="text/javascript" src="js/mgrinit.js"></script>
 </head>
@@ -42,15 +45,39 @@
         <div class="page full guide fold">
             <main class="main padding">
                 <div id="page-manager" style="display: none;" class="ispage">
-                    <h2>应用</h2>
-                    <p>在这里，可以对安装的 Windows 商店应用进行管理。</p>
-                    <h3>安装的应用</h3>
+                    <h2 data-res-resxml="MANAGER_APP_TITLE"></h2>
+                    <p data-res-resxml="MANAGER_APP_DESCRIPTION"></p>
+                    <h3 data-res-resxml="MANAGER_APP_INSTALLEDAPPS"></h3>
                     <br>
-                    <div class="app-loading" id="applist-loading" style="display: none;">
-                        <progress class="win-ring"></progress>
-                        <span class="win-label title">正在加载应用...</span>
-                        <br>
+                    <div class="win-searchbox win-disposable" id="applist-search" role="group" aria-label="搜索框"></div>
+                    <div class="applist-options">
+                        <div class="item">
+                            <input type="checkbox" id="applist-showsystemapp">
+                            <label for="applist-showsystemapp" data-res-resxml="MANAGER_APP_SHOWSYSTEMAPP"></label>
+                        </div>
+                        <div class="item">
+                            <input type="checkbox" id="applist-showframework">
+                            <label for="applist-showframework" data-res-resxml="MANAGER_APP_SHOWFRAMEWORK"></label>
+                        </div>
                     </div>
+                    <div class="app-loading" id="applist-loading" style="display: none;">
+                        <br>
+                        <div class="container">
+                            <progress class="win-ring"></progress>
+                            <span class="win-label title" data-res-resxml="MANAGER_APP_INSTALLEDAPPS_LOADING"></span>
+                            <br>
+                        </div>
+                    </div>
+                    <p id="applist-datalen"></p>
+                    <script>
+                        (function(global) {
+                            var appLoading = document.getElementById("applist-loading");
+                            appLoading.bar = new TransitionPanel(appLoading, {
+                                axis: 'y',
+                                duration: 500,
+                            });
+                        })(this);
+                    </script>
                     <div class="appitem" id="appitem-template" style="display: none;">
                         <div role="img" style="pointer-events: none;">
                             <img width="" height="" src="images/applogo.default.png" />
@@ -58,14 +85,18 @@
                         <div role="divide" style="pointer-events: none;"></div>
                         <div role="excepticon">
                             <div role="title" class="win-type-x-small" style="pointer-events: none;">
-                                <span class="displayName">App Name</span><br>
-                                <span class="publisher">Publisher</span>
+                                <span class="displayName"></span><br>
+                                <span class="publisher"></span>
                             </div>
                             <div role="advance">
-                                <a>高级选项</a>
+                                <a data-res-resxml="MANAGER_APP_ADVANCEOPTIONS"></a>
+                            </div>
+                            <div role="progress">
+                                <span class="status" data-res-resxml="MANAGER_APP_UNINSTALL_ING"></span><br>
+                                <progress class="win-progress progress" min="0" max="100"></progress>
                             </div>
                             <div role="control">
-                                <button name="uninstall">卸载</button>
+                                <button class="uninstall" name="uninstall" data-res-resxml="MANAGER_APP_UNINSTALL"></button>
                             </div>
                         </div>
                     </div>
@@ -73,7 +104,7 @@
                     </div>
                     <div class="bottom-compensate"></div>
                 </div>
-                <div id="page-appinfo" class="ispage app-detailpage">
+                <div id="page-appinfo" class="ispage app-detailpage" style="display: none;">
                     <header>
                         <button class="win-backbutton"></button>
                         <h2 class="display-name">App DisplayName</h2>
@@ -81,18 +112,37 @@
                     <span class="publisher-display-name">App PublisherDisplayName</span><br>
                     <span class="version">App Version</span><br>
                     <span class="description">App Description</span>
-                    <p><strong>应用身份</strong></p>
+                    <p><strong data-res-resxml="MANAGER_APP_IDENTITY"></strong></p>
                     <div class="identity win-type-body" style="width: 100%; max-width: 100%; box-sizing: border-box; -ms-user-select: element;">
-                        <span style="font-weight: bold;">名称</span><span>: </span><span class="name"></span><br>
-                        <span style="font-weight: bold;">发布者</span><span>: </span><span class="publisher"></span><br>
-                        <span style="font-weight: bold;">发布者 ID</span><span>: </span><span class="publisher-id"></span><br>
-                        <span style="font-weight: bold;">系列名</span><span>: </span><span class="family-name"></span><br>
-                        <span style="font-weight: bold;">全名</span><span>: </span><span class="full-name"></span><br>
-                        <span style="font-weight: bold;">支持的处理器架构</span><span>: </span><span class="architecture"></span><br>
+                        <span style="font-weight: bold;" data-res-resxml="MANAGER_APP_IDENTITY_NAME"></span><span>: </span><span class="name"></span><br>
+                        <span style="font-weight: bold;" data-res-resxml="MANAGER_APP_IDENTITY_PUBLISHER"></span><span>: </span><span class="publisher"></span><br>
+                        <span style="font-weight: bold;" data-res-resxml="MANAGER_APP_IDENTITY_PUBLISHERID"></span><span>: </span><span class="publisher-id"></span><br>
+                        <span style="font-weight: bold;" data-res-resxml="MANAGER_APP_IDENTITY_FAMILYNAME"></span><span>: </span><span class="family-name"></span><br>
+                        <span style="font-weight: bold;" data-res-resxml="MANAGER_APP_IDENTITY_FULLNAME"></span><span>: </span><span class="full-name"></span><br>
+                        <span style="font-weight: bold;" data-res-resxml="MANAGER_APP_IDENTITY_ARCHITECTURE"></span><span>: </span><span class="architecture"></span><br>
                     </div>
-                    <p><strong>卸载</strong></p>
-                    <p>卸载此应用及其设置。</p>
-                    <button id="detail-uninstall-btn" data-app-fullname="">卸载</button>
+                    <p><strong data-res-resxml="MANAGER_APP_HASAPPS"></strong></p>
+                    <p data-res-resxml="MANAGER_APP_HASAPPS_DESC"></p>
+                    <div class="loadingstatus" id="appinfo-loading">
+                        <div class="container">
+                            <progress class="win-ring"></progress>
+                            <span class="win-label title" data-res-resxml="MANAGER_APP_INSTALLEDAPPS_LOADING"></span>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="apps">
+                    </div>
+                    <p><strong data-res-resxml="MANAGER_APP_UNINSTALL"></strong></p>
+                    <p data-res-resxml="MANAGER_APP_UNINSTALL_DESC"></p>
+                    <div class="loadingstatus" id="appinfo-uninstallstatus">
+                        <div style="width: 100%;">
+                            <span class="status" data-res-resxml="MANAGER_APP_UNINSTALL_ING"></span><br>
+                            <progress class="win-progress progress" min="0" max="100"></progress>
+                        </div>
+                        <br>
+                    </div>
+                    <button id="detail-uninstall-btn" data-res-resxml="MANAGER_APP_UNINSTALL">卸载</button>
+                    <div class="bottom-compensate"></div>
                 </div>
             </main>
             <aside class="win-ui-dark">
@@ -100,8 +150,8 @@
                     <ul class="list top">
                         <li class="title">
                             <div role="img">&#58344;</div>
-                            <div role="placeholder"></div>
-                            <span class="win-type-base">应用管理</span>
+                            <!--<div role="placeholder"></div>-->
+                            <span class="win-type-base" data-res-resxml="MANAGER_APPTITLE"></span>
                         </li>
                         <script>
                             (function($) {
@@ -117,7 +167,7 @@
                     <ul class="list">
                         <li id="tag-manager">
                             <div role="img">&#57587;</div>
-                            <span class="win-type-base">管理</span>
+                            <span class="win-type-base" data-res-resxml="MANAGER_MANAGE"></span>
                         </li>
                         <li id="tag-appinfo" class="subitem">
                             <div role="img">&#57650;</div>
@@ -133,6 +183,39 @@
         </div>
     </div>
     <div class="win-overlay win-commandlayout win-appbar win-bottom appbar win-ui-dark" id="appBar" role="menubar">
+    </div>
+    <div data-win-control="WinJS.UI.Flyout" id="app-uninstall-flyout" style="position: absolute; width: 336px; padding: 0; max-height: 284px;">
+        <div class="top" style="padding: 20px 20px 0 20px;">
+            <span data-res-resxml="MANAGER_APP_UNINSTALL_DESC"></span>
+        </div>
+        <div class="sapplist applist"></div>
+        <style>
+            #app-uninstall-flyout {
+                /*min-height: 88px;
+                transition: all 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);*/
+            }
+            
+            #app-uninstall-flyout .sapplist {
+                padding: 0 20px;
+                width: 100%;
+                box-sizing: border-box;
+                overflow-x: hidden;
+                overflow-y: auto;
+                -ms-overflow-style: -ms-autohiding-scrollbar;
+                max-height: 160px;
+            }
+        </style>
+        <div class="bottom" style="padding: 20px 20px 20px 20px; height: 32px;">
+            <button class="confirm" data-res-resxml="MANAGER_APP_UNINSTALL" style="float: right;"></button>
+        </div>
+    </div>
+    <div id="app-deskshortcut-create" style="position: absolute;">
+        <p>即将在桌面创建快捷方式，这里做一些调整。快捷方式不建议固定到开始菜单中，因为本快捷方式只是一种启动器。不具有其余磁贴功能。</p>
+        <div>
+            <div>
+                <div class="win-radio"></div>
+            </div>
+        </div>
     </div>
 </body>
 

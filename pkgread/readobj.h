@@ -509,11 +509,137 @@ namespace appx_info
 	class appx_apps: virtual public com_info <IAppxManifestApplicationsEnumerator>
 	{
 		using Base = com_info <IAppxManifestApplicationsEnumerator>;
+		CComPtr <IAppxManifestReader> manifest = nullptr;
+		protected:
+		mutable std::map<std::wstring, std::map<std::wstring, std::wstring>> xml_cache;
+		mutable bool xml_parsed = false;
+		void parse_xml () const
+		{
+			if (xml_parsed || !manifest) return;
+
+			CComPtr<IStream> xmlstream;
+			if (FAILED (manifest->GetStream (&xmlstream)) || !xmlstream)
+				return;
+
+			LARGE_INTEGER zero {};
+			xmlstream->Seek (zero, STREAM_SEEK_SET, nullptr);
+
+			CComPtr<IXmlReader> reader;
+			if (FAILED (CreateXmlReader (__uuidof(IXmlReader), (void**)&reader, nullptr)))
+				return;
+
+			reader->SetInput (xmlstream);
+
+			XmlNodeType nodeType;
+			bool inApplication = false;
+			std::wstring currentId;
+			std::map<std::wstring, std::wstring> currentValues;
+
+			while (S_OK == reader->Read (&nodeType))
+			{
+				if (nodeType == XmlNodeType_Element)
+				{
+					LPCWSTR name = nullptr;
+					reader->GetLocalName (&name, nullptr);
+
+					if (!_wcsicmp (name, L"Application"))
+					{
+						inApplication = true;
+						currentValues.clear ();
+						currentId.clear ();
+
+						auto read_attr = [&] (const wchar_t* xmlName, const wchar_t* key)
+						{
+							if (SUCCEEDED (reader->MoveToAttributeByName (xmlName, nullptr)))
+							{
+								LPCWSTR v = nullptr;
+								reader->GetValue (&v, nullptr);
+								if (v) currentValues [key] = v;
+								reader->MoveToElement ();
+							}
+						};
+
+						read_attr (L"Id", L"ID");
+						read_attr (L"Executable", L"Executable");
+						read_attr (L"EntryPoint", L"EntryPoint");
+						read_attr (L"StartPage", L"StartPage");
+
+						currentId = currentValues [L"ID"];
+					}
+					else if (inApplication)
+					{
+						auto read_attr = [&] (const wchar_t* xmlName, const wchar_t* key)
+						{
+							if (SUCCEEDED (reader->MoveToAttributeByName (xmlName, nullptr)))
+							{
+								LPCWSTR v = nullptr;
+								reader->GetValue (&v, nullptr);
+								if (v) currentValues [key] = v;
+								reader->MoveToElement ();
+							}
+						};
+
+						if (!_wcsicmp (name, L"VisualElements"))
+						{
+							read_attr (L"DisplayName", L"DisplayName");
+							read_attr (L"Description", L"Description");
+							read_attr (L"BackgroundColor", L"BackgroundColor");
+							read_attr (L"ForegroundText", L"ForegroundText");
+							read_attr (L"Logo", L"Logo");
+							read_attr (L"SmallLogo", L"SmallLogo");
+							read_attr (L"Square44x44Logo", L"Square44x44Logo");
+							read_attr (L"Square150x150Logo", L"Square150x150Logo");
+						}
+						else if (!_wcsicmp (name, L"DefaultTile"))
+						{
+							read_attr (L"ShortName", L"ShortName");
+							read_attr (L"WideLogo", L"WideLogo");
+							read_attr (L"Wide310x150Logo", L"Wide310x150Logo");
+							read_attr (L"Square310x310Logo", L"Square310x310Logo");
+							read_attr (L"Square71x71Logo", L"Square71x71Logo");
+						}
+						else if (!_wcsicmp (name, L"LockScreen"))
+						{
+							read_attr (L"BadgeLogo", L"LockScreenLogo");
+							read_attr (L"Notification", L"LockScreenNotification");
+						}
+					}
+				}
+				else if (nodeType == XmlNodeType_EndElement)
+				{
+					LPCWSTR name = nullptr;
+					reader->GetLocalName (&name, nullptr);
+					if (!_wcsicmp (name, L"Application"))
+					{
+						// fallback常量
+						if (currentValues [L"Wide310x150Logo"].empty ())
+							currentValues [L"Wide310x150Logo"] = currentValues [L"WideLogo"];
+						if (currentValues [L"Square70x70Logo"].empty ())
+							currentValues [L"Square70x70Logo"] = currentValues [L"Square71x71Logo"];
+						if (!currentId.empty ()) xml_cache [currentId] = currentValues;
+						inApplication = false;
+						currentValues.clear ();
+						currentId.clear ();
+					}
+				}
+			}
+			xml_parsed = true;
+		}
+		std::wstring get_value_ext (const std::wstring& appId, const std::wstring& item) const
+		{
+			parse_xml (); // 只会解析一次
+			auto it = xml_cache.find (appId);
+			if (it == xml_cache.end ()) return L"";
+
+			auto jt = it->second.find (item);
+			return (jt != it->second.end ()) ? jt->second : L"";
+		}
 		public:
-		using Base::Base;
+		appx_apps (IAppxManifestApplicationsEnumerator *ptr, IAppxManifestReader *mptr):
+			Base (ptr), manifest (mptr) {}
 		size_t applications (_Out_ std::vector <app_info> &output) const
 		{
-			return EnumerateComInterface <IAppxManifestApplicationsEnumerator, IAppxManifestApplication *, app_info> (pointer (), output, [] (IAppxManifestApplication *&p) -> app_info {
+			auto ret = EnumerateComInterface <IAppxManifestApplicationsEnumerator, IAppxManifestApplication *, app_info> (pointer (), output, [] (IAppxManifestApplication *&p) -> app_info {
 				raii rel ([&p] () {
 					if (p) p->Release ();
 					p = nullptr;
@@ -544,6 +670,16 @@ namespace appx_info
 				}
 				return app;
 			});
+			for (auto &it : output)
+			{
+				auto id = it [L"Id"];
+				for (auto &kv : it)
+				{
+					if (IsNormalizeStringEmpty (kv.second))
+						kv.second = get_value_ext (id, kv.first);
+				}
+			}
+			return ret;
 		}
 		size_t app_user_model_ids (_Out_ std::vector <std::wstring> &output) const
 		{
@@ -910,9 +1046,11 @@ class appxreader: virtual public com_info_quote <IAppxPackageReader>
 	HRESULT get_applications (_Outptr_ IAppxManifestApplicationsEnumerator **output) const { return get_from_manifest <IAppxManifestApplicationsEnumerator *> (&Manifest::GetApplications, output); }
 	appx_info::appx_apps applications () const
 	{
+		IAppxManifestReader *m = nullptr;
 		IAppxManifestApplicationsEnumerator *ip = nullptr;
+		manifest (&m);
 		get_applications (&ip);
-		return appx_info::appx_apps (ip);
+		return appx_info::appx_apps (ip, m);
 	}
 	HRESULT get_capabilities (_Outptr_ APPX_CAPABILITIES *output) const { return get_from_manifest <APPX_CAPABILITIES> (&Manifest::GetCapabilities, output); }
 	HRESULT get_device_capabilities (_Outptr_ IAppxManifestDeviceCapabilitiesEnumerator **output) const { return get_from_manifest <IAppxManifestDeviceCapabilitiesEnumerator *> (&Manifest::GetDeviceCapabilities, output); }
@@ -1377,7 +1515,7 @@ class appxmanifest: virtual public com_info_quote <IAppxManifestReader>
 	{
 		IAppxManifestApplicationsEnumerator *ip = nullptr;
 		get_applications (&ip);
-		return appx_info::appx_apps (ip);
+		return appx_info::appx_apps (ip, pointer ());
 	}
 	HRESULT get_capabilities (_Outptr_ APPX_CAPABILITIES *output) const { return get_from_manifest <APPX_CAPABILITIES> (&Manifest::GetCapabilities, output); }
 	HRESULT get_device_capabilities (_Outptr_ IAppxManifestDeviceCapabilitiesEnumerator **output) const { return get_from_manifest <IAppxManifestDeviceCapabilitiesEnumerator *> (&Manifest::GetDeviceCapabilities, output); }

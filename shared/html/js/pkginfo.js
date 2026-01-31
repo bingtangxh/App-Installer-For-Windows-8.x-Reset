@@ -16,7 +16,44 @@
         if (callback) callback(ret);
     }
     global.Package = {
-        reader: function(pkgPath) { return external.Package.reader(pkgPath); },
+        reader: {
+            package: function(pkgPath) { return external.Package.Reader.package(pkgPath); },
+            manifest: function(swManifestPath) { return external.Package.Reader.manifest(swManifestPath); },
+            manifestFromInstallLocation: function(swInstallLocation) { return external.Package.Reader.fromInstallLocation(swInstallLocation); },
+            readFromPackage: function(swPkgPath, bUsePri) {
+                if (bUsePri === null || bUsePri === void 0) bUsePri = false;
+                return new Promise(function(resolve, reject) {
+                    external.Package.Reader.readFromPackageAsync(swPkgPath, bUsePri, function(result) {
+                        parseJsonCallback(result, resolve);
+                    }, function(error) {
+                        parseJsonCallback(error, reject);
+                    });
+                });
+            },
+            readFromManifest: function(swManifestPath, bUsePri) {
+                if (bUsePri === null || bUsePri === void 0) bUsePri = false;
+                return new Promise(function(resolve, reject) {
+                    external.Package.Reader.readFromManifestAsync(swManifestPath, bUsePri, function(result) {
+                        parseJsonCallback(result, resolve);
+                    }, function(error) {
+                        parseJsonCallback(error, reject);
+                    });
+                });
+            },
+            readFromInstallLocation: function(swInstallLocation, bUsePri) {
+                if (bUsePri === null || bUsePri === void 0) bUsePri = false;
+                return new Promise(function(resolve, reject) {
+                    external.Package.Reader.readFromInstallLocationAsync(swInstallLocation, bUsePri, function(result) {
+                        parseJsonCallback(result, resolve);
+                    }, function(error) {
+                        parseJsonCallback(error, reject);
+                    });
+                });
+            },
+            cancelAll: function() { external.Package.Reader.cancelAll(); },
+            addApplicationReadItem: function(swItemName) { return external.Package.Reader.addApplicationItem(swItemName); },
+            removeApplicationReadItem: function(swItemName) { return external.Package.Reader.removeApplicationItem(swItemName); }
+        },
         manager: {
             add: function(swPkgPath, uOptions) {
                 return new Promise(function(resolve, reject, progress) {
@@ -129,38 +166,8 @@
                     });
                 });
             },
-        },
-        manifest: function(swManifestPath) { return external.Package.manifest(swManifestPath); },
-        manifestFromInstallLocation: function(swInstallLocation) { return external.Package.fromInstallLocation(swInstallLocation); },
-        readFromPackage: function(swPkgPath, bUsePri) {
-            if (bUsePri === null || bUsePri === void 0) bUsePri = false;
-            return new Promise(function(resolve, reject) {
-                external.Package.readFromPackageAsync(swPkgPath, bUsePri, function(result) {
-                    parseJsonCallback(result, resolve);
-                }, function(error) {
-                    parseJsonCallback(error, reject);
-                });
-            });
-        },
-        readFromManifest: function(swPkgPath, bUsePri) {
-            if (bUsePri === null || bUsePri === void 0) bUsePri = false;
-            return new Promise(function(resolve, reject) {
-                external.Package.readFromManifestAsync(swPkgPath, bUsePri, function(result) {
-                    parseJsonCallback(result, resolve);
-                }, function(error) {
-                    parseJsonCallback(error, reject);
-                });
-            });
-        },
-        readFromInstallLocation: function(swPkgPath, bUsePri) {
-            if (bUsePri === null || bUsePri === void 0) bUsePri = false;
-            return new Promise(function(resolve, reject) {
-                external.Package.readFromInstallLocationAsync(swPkgPath, bUsePri, function(result) {
-                    parseJsonCallback(result, resolve);
-                }, function(error) {
-                    parseJsonCallback(error, reject);
-                });
-            });
+            cancelAll: function() { mgr.cancelAll(); },
+            active: function(swAppUserModelID, swArgs) { return mgr.activeApp(swAppUserModelID, swArgs || null); }
         },
     };
 })(this);

@@ -603,5 +603,17 @@ namespace AppxPackage
 				GC.KeepAlive (callback);
 			}
 		}
+		public static DataUtils._I_HResult ActiveApp (string appUserId)
+		{
+			uint processId;
+			var hr = PackageManageHelper.ActivateAppxApplication (appUserId, out processId);
+			return new DataUtils._I_HResult (hr);
+		}
+		public static DataUtils._I_HResult ActiveApp (string appUserId, string cmdargs)
+		{
+			uint processId;
+			var hr = PackageManageHelper.ActivateAppxApplicationWithArgs (appUserId, cmdargs, out processId);
+			return new DataUtils._I_HResult (hr);
+		}
 	}
 }

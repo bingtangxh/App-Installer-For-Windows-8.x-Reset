@@ -1003,3 +1003,33 @@ HRESULT WRTAppDataClearAll (HWRTAPPDATA hAppData, LPWSTR *pErrorCode, LPWSTR *pD
 	}
 	return E_FAIL;
 }
+[STAThread]
+HRESULT ActivateAppxApplicationWithArgs (LPCWSTR lpAppUserId, LPCWSTR lpArguments, PDWORD pdwProcessId)
+{
+	HRESULT hr = CoInitializeEx (nullptr, COINIT_APARTMENTTHREADED);
+	if (FAILED (hr) && hr != RPC_E_CHANGED_MODE) return hr;
+	if (!lpAppUserId) return E_INVALIDARG;
+	std::wstring appUserModelId (lpAppUserId);
+	IApplicationActivationManager *pAam = nullptr;
+	destruct autoRelease ([&] {
+		if (pAam) pAam->Release ();
+	});
+	hr = CoCreateInstance (
+		CLSID_ApplicationActivationManager,
+		nullptr,
+		CLSCTX_LOCAL_SERVER,
+		IID_IApplicationActivationManager,
+		(void **)&pAam
+	);
+	if (FAILED (hr)) return hr;
+	CoAllowSetForegroundWindow (pAam, nullptr);
+	DWORD pid = 0;
+	hr = pAam->ActivateApplication (
+		appUserModelId.c_str (),
+		lpArguments && *lpArguments ? lpArguments : nullptr, // ÔÊÐí¿Õ
+		AO_NONE,
+		&pid
+	);
+	if (SUCCEEDED (hr) && pdwProcessId) *pdwProcessId = pid;
+	return hr;
+}

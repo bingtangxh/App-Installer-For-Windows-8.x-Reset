@@ -101,7 +101,8 @@ std::vector <std::wstring> appitems =
 	L"BackgroundColor",
 	L"ForegroundText",
 	L"ShortName",
-	L"Square44x44Logo"
+	L"Square44x44Logo",
+	L"SmallLogo"
 };
 std::vector <std::wstring> &GetApplicationAttributeItems () { return appitems; }
 static CriticalSection g_appcs;

@@ -698,6 +698,10 @@ namespace AppxPackage
 						{
 							dict [(kv.Key?.Trim () ?? "") + "_Base64"] = app.NewAtBase64 (kv.Key);
 						}
+						else
+						{
+							dict [kv.Key] = app.NewAt (kv.Key, m_usePri.Value && m_enablePri.Value) ?? kv.Value;
+						}
 					}
 					dict ["AppUserModelID"] = app.UserModelID;
 					return dict;
@@ -1182,5 +1186,7 @@ namespace AppxPackage
 				applications = Applications.BuildJSON ()
 			};
 		}
+		public static bool AddApplicationItem (string itemName) => PackageReadHelper.AddPackageApplicationItemGetName (itemName);
+		public static bool RemoveApplicationItem (string itemName) => PackageReadHelper.RemovePackageApplicationItemGetName (itemName);
 	}
 }
