@@ -27,4 +27,11 @@
         <scale dpi="180">splash\settings\large\splashscreen.scale-180.png</scale>
         <scale dpi="default">splash\settings\large\splashscreen.png</scale>
     </resource>
+    <resource id="manager">
+        <scale dpi="80">splash\manager\splash.scale-80.png</scale>
+        <scale dpi="100">splash\manager\splash.scale-100.png</scale>
+        <scale dpi="140">splash\manager\splash.scale-140.png</scale>
+        <scale dpi="180">splash\manager\splash.scale-180.png</scale>
+        <scale dpi="default">splash\manager\splash.png</scale>
+    </resource>
 </resources>

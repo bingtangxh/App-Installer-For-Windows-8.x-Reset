@@ -597,6 +597,7 @@
 			this.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
 			this.Name = "ShortcutCreateForm";
+			this.ShowIcon = false;
 			this.Text = "ShortcutCreateForm";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ShortcutCreateForm_FormClosing);
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ShortcutCreateForm_FormClosed);

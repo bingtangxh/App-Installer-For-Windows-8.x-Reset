@@ -20,7 +20,7 @@
       ForegroundText='light'
       BackgroundColor='#159d9d'>
       <DefaultTile ShowName='allLogos' />
-      <SplashScreen Image="VisualElements\splash\settings\splashscreen.png"
+      <SplashScreen Image="VisualElements\splash\manager\splash.png"
         BackgroundColor="#159d9d" DarkModeBackgroundColor='#2e1e5c' />
     </VisualElements>
   </Application>
