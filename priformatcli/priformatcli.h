@@ -75,6 +75,44 @@ extern "C" {
 	PRIFORMATCLI_API BOOL IsMsResourceUri (LPCWSTR pResUri);
 	// 工具函数，用于释放本地 DLL 返回的字符串
 	PRIFORMATCLI_API void PriFormatFreeString (LPWSTR lpStrFromThisDll);
+	typedef struct DWORDWSTRPAIR__
+	{
+		DWORD dwKey _DEFAULT_VALUE_SET (0);
+		LPWSTR lpValue _DEFAULT_VALUE_SET (NULL);
+	} DWORDWSTRPAIR;
+	typedef struct DWSPAIRLIST__
+	{
+		DWORD dwLength _DEFAULT_VALUE_SET (0);
+		DWORDWSTRPAIR lpArray [1];
+	} DWSPAIRLIST, *HDWSPAIRLIST;
+	// HDWSPAIRLIST 由此销毁
+	PRIFORMATCLI_API void DestroyPriResourceAllValueList (HDWSPAIRLIST list);
+	// DWORD 部分
+	// 高 16 位：
+	// 高 4 位：0: Scale 资源, 1: TargetSize 资源, 2: 字符串资源（防止无法获取资源）
+	// 低 4 位：对比度 0 None, 1 White, 2 Black, 3 High, 4 Low
+	// 低 16 位：
+	// Scale 或 TargetSize 或 LCID
+	PRIFORMATCLI_API HDWSPAIRLIST GetPriResourceAllValueList (PCSPRIFILE pPriFile, LPCWSTR lpResName);
+	typedef struct WSDSPAIR__
+	{
+		LPWSTR lpKey;
+		HDWSPAIRLIST lpValue;
+	} WSDSPAIR;
+	typedef struct WSDSPAIRLIST___
+	{
+		DWORD dwLength _DEFAULT_VALUE_SET (0);
+		WSDSPAIR lpArray [1];
+	} WSDSPAIRLIST, *HWSDSPAIRLIST;
+	// HWSDSPAIRLIST 由此销毁
+	PRIFORMATCLI_API void DestroyResourcesAllValuesList (HWSDSPAIRLIST list);
+	// DWORD 部分
+	// 高 16 位：
+	// 高 4 位：0: Scale 资源, 1: TargetSize 资源, 2: 字符串资源（防止无法获取资源）
+	// 低 4 位：对比度 0 None, 1 White, 2 Black, 3 High, 4 Low
+	// 低 16 位：
+	// Scale 或 TargetSize 或 LCID
+	PRIFORMATCLI_API HWSDSPAIRLIST GetPriResourcesAllValuesList (PCSPRIFILE pPriFile, const LPCWSTR *lpResNames, DWORD dwCount);
 #ifdef _DEFAULT_VALUE_SET
 #undef _DEFAULT_VALUE_SET
 #endif

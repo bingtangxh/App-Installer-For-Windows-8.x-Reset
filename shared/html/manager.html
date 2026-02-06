@@ -144,6 +144,123 @@
                     <button id="detail-uninstall-btn" data-res-resxml="MANAGER_APP_UNINSTALL">卸载</button>
                     <div class="bottom-compensate"></div>
                 </div>
+                <div id="page-load" class="ispage" style="display: none;">
+                    <style>
+                        .checklist {
+                            display: flex;
+                            flex-direction: column;
+                            flex-wrap: wrap;
+                            align-content: flex-start;
+                            justify-content: flex-start;
+                            width: 100%;
+                            box-sizing: border-box;
+                            padding-bottom: 10px;
+                        }
+                        
+                        .checklist .title {
+                            margin-bottom: 10px;
+                        }
+                        
+                        .checklist .item {
+                            margin-left: 10px;
+                            display: flex;
+                            flex-direction: row;
+                            flex-wrap: nowrap;
+                            align-content: flex-start;
+                            justify-content: flex-start;
+                            align-items: center;
+                        }
+                    </style>
+                    <h2 data-res-resxml="MANAGER_LOAD"></h2>
+                    <p data-res-resxml="MANAGER_LOAD_DESC"></p>
+                    <h3 data-res-resxml="MANAGER_LOAD_INSTALL"></h3>
+                    <p data-res-resxml="MANAGER_LOAD_INSTALL_DESC"></p>
+                    <div class="checklist" id="ins-deployoptions">
+                        <span class="title" data-res-resxml="MANAGER_LOAD_DEPLOY_OPTIONS"></span>
+                        <div class="item">
+                            <input type="checkbox" value="2" id="ins-devmode">
+                            <label for="ins-devmode" data-res-resxml="MANAGER_LOAD_DEPLOY_OPTIONS_DEVELOPMENT_MODE"></label>
+                        </div>
+                        <div class="item">
+                            <input type="checkbox" value="1" id="ins-force-appshutdown">
+                            <label for="ins-force-appshutdown" data-res-resxml="MANAGER_LOAD_DEPLOY_OPTIONS_FORCE_APP_SHUTDOWN"></label>
+                        </div>
+                        <div class="item">
+                            <input type="checkbox" value="32" id="ins-all-resources">
+                            <label for="ins-all-resources" data-res-resxml="MANAGER_LOAD_DEPLOY_OPTIONS_INSTALL_ALL_RESOURCES"></label>
+                        </div>
+                    </div>
+                    <div class="statusbar" id="ins-progress">
+                        <div class="container" style="padding-bottom: 10px;">
+                            <span class="status"></span><br>
+                            <progress class="win-progress progress" min="0" max="100"></progress>
+                        </div>
+                    </div>
+                    <button id="ins-btn" data-res-resxml="MANAGER_LOAD_INSTALL_BTN"></button>
+                    <br><br>
+                    <h3 data-res-resxml="MANAGER_LOAD_REGISTER"></h3>
+                    <p data-res-resxml="MANAGER_LOAD_REGISTER_DESC"></p>
+                    <div class="checklist" id="reg-deployoptions">
+                        <span class="title" data-res-resxml="MANAGER_LOAD_DEPLOY_OPTIONS"></span>
+                        <div class="item">
+                            <input type="checkbox" value="2" id="reg-devmode">
+                            <label for="reg-devmode" data-res-resxml="MANAGER_LOAD_DEPLOY_OPTIONS_DEVELOPMENT_MODE"></label>
+                        </div>
+                        <div class="item">
+                            <input type="checkbox" value="1" id="reg-force-appshutdown">
+                            <label for="reg-force-appshutdown" data-res-resxml="MANAGER_LOAD_DEPLOY_OPTIONS_FORCE_APP_SHUTDOWN"></label>
+                        </div>
+                    </div>
+                    <div class="statusbar" id="reg-progress">
+                        <div class="container">
+                            <span class="status" data-res-resxml="MANAGER_APP_REG_ING"></span><br>
+                            <progress class="win-progress progress" min="0" max="100"></progress>
+                        </div>
+                    </div>
+                    <button id="reg-btn" data-res-resxml="MANAGER_LOAD_REGISTER_BTN"></button>
+                    <br><br>
+                    <h3 data-res-resxml="MANAGER_LOAD_STAGE"></h3>
+                    <p data-res-resxml="MANAGER_LOAD_STAGE_DESC"></p>
+                    <div class="checklist" id="sta-deployoptions">
+                        <span class="title" data-res-resxml="MANAGER_LOAD_DEPLOY_OPTIONS"></span>
+                        <div class="item">
+                            <input type="checkbox" value="2" id="sta-devmode">
+                            <label for="sta-devmode" data-res-resxml="MANAGER_LOAD_DEPLOY_OPTIONS_DEVELOPMENT_MODE"></label>
+                        </div>
+                        <div class="item">
+                            <input type="checkbox" value="1" id="sta-force-appshutdown">
+                            <label for="sta-force-appshutdown" data-res-resxml="MANAGER_LOAD_DEPLOY_OPTIONS_FORCE_APP_SHUTDOWN"></label>
+                        </div>
+                        <div class="item">
+                            <input type="checkbox" value="32" id="sta-all-resources">
+                            <label for="sta-all-resources" data-res-resxml="MANAGER_LOAD_DEPLOY_OPTIONS_INSTALL_ALL_RESOURCES"></label>
+                        </div>
+                    </div>
+                    <div class="statusbar" id="sta-progress">
+                        <div class="container">
+                            <span class="status" data-res-resxml="MANAGER_APP_REG_ING"></span><br>
+                            <progress class="win-progress progress" min="0" max="100"></progress>
+                        </div>
+                    </div>
+                    <button id="sta-btn" data-res-resxml="MANAGER_LOAD_STAGE_BTN"></button>
+                    <div class="bottom-compensate"></div>
+                    <script>
+                        (function(global) {
+                            var prefixs = ["ins", "reg", "sta"];
+                            var statusbars = [
+                                document.getElementById("ins-progress"),
+                                document.getElementById("reg-progress"),
+                                document.getElementById("sta-progress")
+                            ];
+                            statusbars.forEach(function(statusbar) {
+                                statusbar.bar = new TransitionPanel(statusbar, {
+                                    axis: 'y',
+                                    duration: 500,
+                                });
+                            });
+                        })(this);
+                    </script>
+                </div>
             </main>
             <aside class="win-ui-dark">
                 <nav class="container">
@@ -171,12 +288,44 @@
                         </li>
                         <li id="tag-appinfo" class="subitem">
                             <div role="img">&#57650;</div>
-                            <span class="win-type-base">应用信息</span>
+                            <span class="win-type-base" data-res-resxml="MANAGER_APP"></span>
                         </li>
-                        <li>
-                            <div role="img">&#57587;</div>
-                            <span class="win-type-base">Manager</span>
+                        <li id="tag-load">
+                            <div role="img">&#57765;</div>
+                            <span class="win-type-base" data-res-resxml="MANAGER_LOAD"></span>
                         </li>
+                        <li id="tag-settings">
+                            <div role="img">&#57621;</div>
+                            <span class="win-type-base" data-res-resxml="MANAGER_SETTINGS"></span>
+                        </li>
+                        <script>
+                            (function(global) {
+                                var isexec = false;
+                                var settag = document.getElementById("tag-settings");
+                                Windows.UI.Event.Util.addEvent(settag, "click", function() {
+                                    if (isexec) return;
+                                    var self = this;
+                                    try {
+                                        var settingpath = external.Storage.Path.combine(external.Storage.Path.root, "settings.exe");
+                                        //var cmdline = "\"{execfile}\" manager".replace("{execfile}", settingpath);
+                                        external.Process.runAsync(
+                                            "manager",
+                                            settingpath,
+                                            1,
+                                            "",
+                                            function(ret) {
+                                                isexec = false;
+                                                self.classList.remove("selected");
+                                            }
+                                        );
+                                        isexec = true;
+                                        self.classList.add("selected");
+                                    } catch (e) {
+                                        console.error(e);
+                                    }
+                                });
+                            })(this);
+                        </script>
                     </ul>
                 </nav>
             </aside>
@@ -207,14 +356,6 @@
         </style>
         <div class="bottom" style="padding: 20px 20px 20px 20px; height: 32px;">
             <button class="confirm" data-res-resxml="MANAGER_APP_UNINSTALL" style="float: right;"></button>
-        </div>
-    </div>
-    <div id="app-deskshortcut-create" style="position: absolute;">
-        <p>即将在桌面创建快捷方式，这里做一些调整。快捷方式不建议固定到开始菜单中，因为本快捷方式只是一种启动器。不具有其余磁贴功能。</p>
-        <div>
-            <div>
-                <div class="win-radio"></div>
-            </div>
         </div>
     </div>
 </body>

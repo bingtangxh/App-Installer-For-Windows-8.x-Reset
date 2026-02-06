@@ -47,11 +47,11 @@ extern "C"
 	// 只能如此。
 	// 可查阅文档 https://learn.microsoft.com/zh-cn/uwp/api/windows.management.deployment.deploymentoptions?view=winrt-26100
 
+	// 如果当前正在使用此包或依赖于此包的任何包，则会强制关闭与该包关联的进程，以便可以继续注册。
+#define DEPOLYOPTION_FORCE_APP_SHUTDOWN		0x00000001
 	// 设置此选项时，应用将在开发模式下安装。 有关开发模式的信息，请参阅 备注。
 	// 使用此选项可启用关键应用开发方案。不能将此选项与捆绑包结合使用。 
 	// 如果将此选项与捆绑包一起使用，调用将返回ERROR_INSTALL_FAILED。
-#define DEPOLYOPTION_FORCE_APP_SHUTDOWN		0x00000001
-	// 如果当前正在使用此包或依赖于此包的任何包，则会强制关闭与该包关联的进程，以便可以继续注册。
 #define DEPOLYOPTION_DEVELOPMENT_MODE		0x00000002
 	// 设置此选项时，将指示应用跳过资源适用性检查。 这会有效地暂存或注册用户传递给 命令的所有资源包，
 	// 这会强制对捆绑包中包含的所有包具有适用性。 如果用户传入捆绑包，则将注册所有包含的资源包。 

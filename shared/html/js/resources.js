@@ -14,10 +14,12 @@
             var byId = el.getAttribute('data-res-byid');
             var fromFile = el.getAttribute('data-res-fromfile');
             var byXml = el.getAttribute('data-res-resxml');
+            var customSet = el.getAttribute('data-res-custom');
             if ((byName && !Bridge.NString.empty(byName)) ||
                 (byId && parseInt(byId, 10) > 0) ||
                 (fromFile && !Bridge.NString.empty(fromFile)) ||
-                (byXml && !Bridge.NString.empty(byXml))) {
+                (byXml && !Bridge.NString.empty(byXml)) ||
+                (customSet && !Bridge.NString.empty(customSet))) {
                 result.push(el);
             }
         }
@@ -55,9 +57,20 @@
                         try {
                             var obj = nodes[i].getAttribute('data-res-resxml');
                             var strres = external.StringResources;
-                            if (strres && strres.isValid) {
-                                nodes[i].textContent = strres.get(obj);
+                            if (strres) {
+                                try {
+                                    nodes[i].textContent = strres.get(obj);
+                                } catch (e) {
+                                    nodes[i].textContent = strres.getString(obj);
+                                }
                             }
+                        } catch (e) {
+                            nodes[i].textContent = "";
+                        }
+                    } else if (nodes[i].hasAttribute('data-res-custom')) {
+                        try {
+                            var obj = eval(nodes[i].getAttribute('data-res-custom'));
+                            nodes[i].textContent = obj;
                         } catch (e) {
                             nodes[i].textContent = "";
                         }

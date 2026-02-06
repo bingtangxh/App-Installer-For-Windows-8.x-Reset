@@ -354,8 +354,244 @@
         <lang name="zh-CN">正在卸载... {0}%</lang>
         <lang name="en-US">Uninstalling... {0}%</lang>
     </resource>
-        <resource id="MANAGER_APP_UNINSTALL_SUCCEED">
+    <resource id="MANAGER_APP_UNINSTALL_SUCCEED">
         <lang name="zh-CN">已成功卸载。</lang>
         <lang name="en-US">Uninstall succeeded.</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_TITLE">
+        <lang name="zh-CN">创建桌面快捷方式</lang>
+        <lang name="en-US">Create Desktop Shortcut</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_DESC">
+        <lang name="zh-CN">桌面上将创建一个快捷方式，作为启动 Windows 商店应用的入口点。由于 Windows 8.x 的限制，此操作将通过启动程序（使用参数）来实现；请勿将其固定到“开始”菜单。</lang>
+        <lang name="en-US">A shortcut to the Windows Store app will be created on the desktop as the entry point for launching the app. Due to limitations in Windows 8.x, this will be achieved through launching the program (using parameters); please do not pin it to the Start Menu.</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_ICONTYPE">
+        <lang name="zh-CN">请选择设置图标设置模式。</lang>
+        <lang name="en-US">Please select the icon settings mode.</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_ICONTYPE_GEN">
+        <lang name="zh-CN">生成新的图标</lang>
+        <lang name="en-US">Generate new icon</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_ICONTYPE_SEL">
+        <lang name="zh-CN">选择现有图标</lang>
+        <lang name="en-US">Select existing icon</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_ICONTYPE_SEL_ICONPATH">
+        <lang name="zh-CN">请选择图标路径: </lang>
+        <lang name="en-US">Please select icon path: </lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_BROWSE">
+        <lang name="zh-CN">浏览...</lang>
+        <lang name="en-US">Browse...</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_PREVIEW">
+        <lang name="zh-CN">预览:</lang>
+        <lang name="en-US">Preview:</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_SELECT">
+        <lang name="zh-CN">选择</lang>
+        <lang name="en-US">Select</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_GENERATE">
+        <lang name="zh-CN">创建</lang>
+        <lang name="en-US">Create</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_CANCEL">
+        <lang name="zh-CN">取消</lang>
+        <lang name="en-US">Cancel</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_BACKGROUNDCOLOR">
+        <lang name="zh-CN">背景颜色</lang>
+        <lang name="en-US">Background Color</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_RATIO">
+        <lang name="zh-CN">背景与前景的边长比</lang>
+        <lang name="en-US">Background-to-foreground edge ratio</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_RATIO_CUSTOM">
+        <lang name="zh-CN">自定义</lang>
+        <lang name="en-US">Custom</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_RATIO_CUSTOMRATIO">
+        <lang name="zh-CN">自定义比例</lang>
+        <lang name="en-US">Custom Ratio</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_DISPLAYNAME">
+        <lang name="zh-CN">快捷方式显示名</lang>
+        <lang name="en-US">Shortcut Display Name</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_IMAGELIST">
+        <lang name="zh-CN">图片列表</lang>
+        <lang name="en-US">Image List</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_SIZE">
+        <lang name="zh-CN">尺寸</lang>
+        <lang name="en-US">Size</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_IMAGE">
+        <lang name="zh-CN">图像</lang>
+        <lang name="en-US">Image</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_LOADING">
+        <lang name="zh-CN">请稍候...</lang>
+        <lang name="en-US">Please wait...</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_SETIMG_TITLE">
+        <lang name="zh-CN">设置当前图片</lang>
+        <lang name="en-US">Set Current Image</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_SETIMG_CURRSIZE">
+        <lang name="zh-CN">当前尺寸</lang>
+        <lang name="en-US">Current Size</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_SETIMG_USEDEF">
+        <lang name="zh-CN">使用预设资源</lang>
+        <lang name="en-US">Use Default Resources</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_SETIMG_USEFILE">
+        <lang name="zh-CN">使用自定义文件</lang>
+        <lang name="en-US">Use Custom File</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_SETIMG_FILEPATH">
+        <lang name="zh-CN">文件路径</lang>
+        <lang name="en-US">File Path</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_SETIMG_SET">
+        <lang name="zh-CN">设置</lang>
+        <lang name="en-US">Set</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_ASK_ICONEXISTS">
+        <lang name="zh-CN">发现图标文件已经存在，是否继续生成？生成的图标文件不会覆盖已有文件。</lang>
+        <lang name="en-US">Icon file already exists, do you want to continue generating? The generated icon file will not overwrite existing files.</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_BACK_TITLE">
+        <lang name="zh-CN">正在生成快捷方式</lang>
+        <lang name="en-US">Generating Shortcut</lang>
+    </resource>
+     <resource id="MANAGER_APP_SHORTCUTCREATE_BACK_TEXT_ING">
+        <lang name="zh-CN">正在生成快捷方式...</lang>
+        <lang name="en-US">Generating Shortcut...</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_BACK_TITLE_SUCCEED">
+        <lang name="zh-CN">已生成快捷方式</lang>
+        <lang name="en-US">Shortcut Generated</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_BACK_TEXT_SUCCEED">
+        <lang name="zh-CN">已成功生成快捷方式。</lang>
+        <lang name="en-US">Shortcut generated successfully.</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_BACK_TITLE_FAILED">
+        <lang name="zh-CN">生成时出现问题</lang>
+        <lang name="en-US">Error Generating Shortcut</lang>
+    </resource>
+    <resource id="MANAGER_APP_SHORTCUTCREATE_OPENINSTALLLOCATION">
+        <lang name="zh-CN">打开安装位置</lang>
+        <lang name="en-US">Open Install Location</lang>
+    </resource>
+    <resource id="MANAGER_APP">
+        <lang name="zh-CN">应用信息</lang>
+        <lang name="en-US">App Information</lang>
+    </resource>
+    <resource id="MANAGER_LOAD">
+        <lang name="zh-CN">安装与注册</lang>
+        <lang name="en-US">Install &amp; Register</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_DESC">
+        <lang name="zh-CN">在这里，可以进行对应用的安装、注册等操作。</lang>
+        <lang name="en-US">Here, you can perform installations, registrations, and other operations on apps.</lang>
+    </resource>
+     <resource id="MANAGER_LOAD_INSTALL">
+        <lang name="zh-CN">安装</lang>
+        <lang name="en-US">Install</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_INSTALL_BTN">
+        <lang name="zh-CN">安装</lang>
+        <lang name="en-US">Install</lang>
+    </resource>
+     <resource id="MANAGER_LOAD_INSTALL_DESC">
+        <lang name="zh-CN">将应用部署到系统中。</lang>
+        <lang name="en-US">Deploy the app to the system.</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_DEPLOY_OPTIONS">
+        <lang name="zh-CN">部署选项</lang>
+        <lang name="en-US">Deploy Options</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_DEPLOY_OPTIONS_DEVELOPMENT_MODE">
+        <lang name="zh-CN">开发模式</lang>
+        <lang name="en-US">Development Mode</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_DEPLOY_OPTIONS_FORCE_APP_SHUTDOWN">
+        <lang name="zh-CN">强制关闭应用</lang>
+        <lang name="en-US">Force App Shutdown</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_DEPLOY_OPTIONS_INSTALL_ALL_RESOURCES">
+        <lang name="zh-CN">安装所有资源 (对于捆绑包)</lang>
+        <lang name="en-US">Install All Resources (for Bundle Packages)</lang>
+    </resource>
+     <resource id="MANAGER_LOAD_REGISTER">
+        <lang name="zh-CN">注册</lang>
+        <lang name="en-US">Register</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_REGISTER_BTN">
+        <lang name="zh-CN">注册</lang>
+        <lang name="en-US">Register</lang>
+    </resource>
+     <resource id="MANAGER_LOAD_REGISTER_DESC">
+        <lang name="zh-CN">将应用清单注册到系统中。</lang>
+        <lang name="en-US">Register the app manifest to the system.</lang>
+    </resource>
+     <resource id="MANAGER_LOAD_STAGE">
+        <lang name="zh-CN">预部署</lang>
+        <lang name="en-US">Stage</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_STAGE_DESC">
+        <lang name="zh-CN">将应用预部署到系统中。</lang>
+        <lang name="en-US">Stage the app to the system.</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_STAGE_BTN">
+        <lang name="zh-CN">预部署</lang>
+        <lang name="en-US">Stage</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_INSTALL_ING">
+        <lang name="zh-CN">正在安装... {0}</lang>
+        <lang name="en-US">Installing... {0}</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_REGISTER_ING">
+        <lang name="zh-CN">正在注册... {0}</lang>
+        <lang name="en-US">Registering... {0}</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_STAGE_ING">
+        <lang name="zh-CN">正在预部署... {0}</lang>
+        <lang name="en-US">Staging... {0}</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_INSTALL_SUCCEED">
+        <lang name="zh-CN">安装完成</lang>
+        <lang name="en-US">Install Complete.</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_REGISTER_SUCCEED">
+        <lang name="zh-CN">注册完成</lang>
+        <lang name="en-US">Registration Complete.</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_STAGE_SUCCEED">
+        <lang name="zh-CN">预部署完成</lang>
+        <lang name="en-US">Staging Complete.</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_INS_OR_STA_FILTERDISPLAY">
+        <lang name="zh-CN">Windows 商店应用包 (*.appx, *.appxbundle, *.msix, *.msixbundle)</lang>
+        <lang name="en-US">Windows Store App Package (*.appx, *.appxbundle, *.msix, *.msixbundle)</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_REG_FILTERDISPLAY">
+        <lang name="zh-CN">Windows 商店应用清单文件 (*.appxmanifest, *AppxManifest.xml)</lang>
+        <lang name="en-US">Windows Store App Manifest File (*.appxmanifest, *AppxManifest.xml)</lang>
+    </resource>
+     <resource id="MANAGER_LOAD_ALLFILES">
+        <lang name="zh-CN">所有文件 (*.*)</lang>
+        <lang name="en-US">All Files (*.*)</lang>
+    </resource>
+    <resource id="MANAGER_SETTINGS">
+        <lang name="zh-CN">设置</lang>
+        <lang name="en-US">Settings</lang>
     </resource>
 </resources>

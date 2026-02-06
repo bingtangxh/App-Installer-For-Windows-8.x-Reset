@@ -18,6 +18,7 @@
 #include <cwchar>
 #include <functional>
 #include <algorithm>
+#include <set>
 
 const std::wstring g_swMsResUriProtocolName = L"ms-resource:";
 const size_t g_cbMsResPNameLength = lstrlenW (g_swMsResUriProtocolName.c_str ());
@@ -408,11 +409,11 @@ LPCWSTR PriFileGetLastError ()
 }
 enum class Contrast
 {
-	None,
-	White,
-	Black,
-	High,
-	Low
+	None = 0,
+	White = 1,
+	Black = 2,
+	High = 3,
+	Low = 4
 };
 struct candidate_value
 {
@@ -579,7 +580,7 @@ SearchLoop:
 		for each (auto candidateSet in resourceMapSection->CandidateSets->Values)
 		{
 			// 超时强制退出（也就没有遍及的必要了）
-			if ((System::DateTime::Now - begtime).TotalSeconds > 20) return;
+			if ((System::DateTime::Now - begtime).TotalSeconds > 60) return;
 			allitemslen ++;
 			auto item = pri->inst->GetResourceMapItemByRef (candidateSet->ResourceMapItem);
 			std::wstring itemfullname = MPStringToStdW (item->FullName);
@@ -918,4 +919,293 @@ void PriFormatFreeString (LPWSTR lpStrFromThisDll)
 {
 	if (!lpStrFromThisDll) return;
 	free (lpStrFromThisDll);
+}
+
+PriFileInst ^GetPriFileInst (PCSPRIFILE file)
+{
+	if (!file) return nullptr;
+	using namespace System::Runtime::InteropServices;
+	IntPtr ptr (file); // void* → IntPtr
+	GCHandle handle = GCHandle::FromIntPtr (ptr);
+	return safe_cast<PriFileInst^>(handle.Target);
+}
+
+// 高 16 位：
+// 高 4 位：0: Scale 资源, 1: TargetSize 资源, 2: 字符串资源（防止无法获取资源）
+// 低 4 位：对比度 0 None, 1 White, 2 Black, 3 High, 4 Low
+// 低 16 位：
+// Scale 或 TargetSize 或 LCID
+// 运行时，外部不可使用 output
+#define PRI_TYPE_SHIFT        28
+#define PRI_CONTRAST_SHIFT    24
+#define PRI_TYPE_MASK         0xF0000000
+#define PRI_CONTRAST_MASK     0x0F000000
+#define PRI_VALUE_MASK        0x0000FFFF
+#define PRI_MAKE_KEY(type, contrast, value) \
+    ( ((DWORD)(type)     << PRI_TYPE_SHIFT)     | \
+      ((DWORD)(contrast) << PRI_CONTRAST_SHIFT) | \
+      ((DWORD)(value)    &  PRI_VALUE_MASK) )
+#define PRI_MAKE_SCALE(scale, contrast) PRI_MAKE_KEY(0, contrast, scale)
+#define PRI_MAKE_TARGETSIZE(size, contrast) PRI_MAKE_KEY(1, contrast, size)
+#define PRI_MAKE_STRING(lcid) PRI_MAKE_KEY(2, 0, lcid)
+size_t GetPriScaleAndTargetSizeFileList (
+	PCSPRIFILE pPriFile, 
+	const std::vector <std::wstring> &resnames,
+	std::map <std::wnstring, std::map <DWORD, std::wnstring>> &output
+)
+{
+	output.clear ();
+	if (!pPriFile) return 0;
+	auto inst = GetPriFileInst (pPriFile);
+	auto pri = inst->inst;
+	auto priFile = inst;
+	auto resmapsect = pri->PriDescriptorSection->ResourceMapSections;
+	std::set <std::wnstring> rnlist;
+	for (auto &it : resnames) rnlist.insert (std::wnstring (it));
+	for (size_t i = 0; i < resmapsect->Count; i ++)
+	{
+		auto resourceMapSectionRef = resmapsect [i];
+		auto resourceMapSection = pri->GetSectionByRef (resourceMapSectionRef);
+		if (resourceMapSection->HierarchicalSchemaReference != nullptr) continue;
+		auto decisionInfoSection = pri->GetSectionByRef (resourceMapSection->DecisionInfoSection);
+		for each (auto candidateSet in resourceMapSection->CandidateSets->Values)
+		{
+			auto item = pri->GetResourceMapItemByRef (candidateSet->ResourceMapItem);
+			std::wstring itemfullname = MPStringToStdW (item->FullName);
+			std::vector <std::wnstring> itempath;
+			{
+				auto ips = split_wcstok (itemfullname, L"\\");
+				for (auto &it : ips)
+				{
+					if (std::wnstring::empty (it)) continue;
+					itempath.push_back (it);
+				}
+			}
+			bool isfind = false;
+			std::wnstring taskkey = L"";
+			int tasktype = 1;
+			for (auto &it : rnlist)
+			{
+				TASKITEM_SEARCH key (it);
+				std::vector <std::wnstring> namepath;
+				key.get_path (namepath);
+				if (PathEquals (itempath, namepath))
+				{
+					taskkey = it;
+					tasktype = key.iTaskType;
+					isfind = true;
+					break;
+				}
+			}
+			if (!isfind) continue;
+			std::map <DWORD, std::wnstring> values;
+			for each (auto candidate in candidateSet->Candidates)
+			{
+				DWORD resc = 0;
+				System::String ^value = nullptr;
+				if (candidate->SourceFile.HasValue)
+				{
+					// 内嵌资源，暂无法处理
+					// value = System::String::Format ("<external in {0}>", pri->GetReferencedFileByRef (candidate->SourceFile.Value)->FullName);
+					value = pri->GetReferencedFileByRef (candidate->SourceFile.Value)->FullName;
+				}
+				else
+				{
+					ByteSpan ^byteSpan = nullptr;
+					if (candidate->DataItem.HasValue) byteSpan = priFile->inst->GetDataItemByRef (candidate->DataItem.Value);
+					else byteSpan = candidate->Data.Value;
+					priFile->Seek (byteSpan->Offset, System::IO::SeekOrigin::Begin);
+					auto binaryReader = gcnew System::IO::BinaryReader (priFile, System::Text::Encoding::Default, true);
+					auto data = binaryReader->ReadBytes ((int)byteSpan->Length);
+					switch (candidate->Type)
+					{
+						case ResourceValueType::AsciiPath:
+						case ResourceValueType::AsciiString:
+							value = System::Text::Encoding::ASCII->GetString (data)->TrimEnd ('\0');
+							break;
+						case ResourceValueType::Utf8Path:
+						case ResourceValueType::Utf8String:
+							value = System::Text::Encoding::UTF8->GetString (data)->TrimEnd ('\0');
+							break;
+						case ResourceValueType::Path:
+						case ResourceValueType::String:
+							value = System::Text::Encoding::Unicode->GetString (data)->TrimEnd ('\0');
+							break;
+						case ResourceValueType::EmbeddedData:
+							value = Convert::ToBase64String (data);
+							break;
+					}
+					delete binaryReader;
+					delete data;
+					binaryReader = nullptr;
+					data = nullptr;
+				}
+				auto qualifierSet = decisionInfoSection->QualifierSets [candidate->QualifierSet];
+				auto qualis = gcnew System::Collections::Generic::Dictionary <QualifierType, Object ^> ();
+				for each (auto quali in qualifierSet->Qualifiers)
+				{
+					auto type = quali->Type;
+					auto value = quali->Value;
+					qualis->Add (type, value);
+				}
+				if (qualis->ContainsKey (QualifierType::Language))
+				{
+					resc = PRI_MAKE_STRING (LocaleCodeToLcidW (MPStringToStdW (qualis [QualifierType::Language]->ToString ())));
+					values [resc] = MPStringToStdW (value ? value : System::String::Empty);
+				}
+				else if (qualis->ContainsKey (QualifierType::TargetSize))
+				{
+					if (qualis->ContainsKey (QualifierType::Contrast))
+					{
+						Contrast ct = Contrast::None;
+						auto contstr = std::wnstring (MPStringToStdW (qualis [QualifierType::Contrast]->ToString ()->Trim ()->ToUpper ()));
+						if (contstr.equals (L"WHITE")) ct = Contrast::White;
+						else if (contstr.equals (L"BLACK")) ct = Contrast::Black;
+						else if (contstr.equals (L"HIGH")) ct = Contrast::High;
+						resc = PRI_MAKE_TARGETSIZE (Convert::ToUInt32 (qualis [QualifierType::TargetSize]), (DWORD)ct);
+						values [resc] = MPStringToStdW (value ? value : System::String::Empty);
+					}
+					else
+					{
+						resc = PRI_MAKE_TARGETSIZE (Convert::ToUInt32 (qualis [QualifierType::TargetSize]), 0);
+						values [resc] = MPStringToStdW (value ? value : System::String::Empty);
+					}
+				}
+				else if (qualis->ContainsKey (QualifierType::Scale))
+				{
+					if (qualis->ContainsKey (QualifierType::Contrast))
+					{
+						Contrast ct = Contrast::None;
+						auto contstr = std::wnstring (MPStringToStdW (qualis [QualifierType::Contrast]->ToString ()->Trim ()->ToUpper ()));
+						if (contstr.equals (L"WHITE")) ct = Contrast::White;
+						else if (contstr.equals (L"BLACK")) ct = Contrast::Black;
+						else if (contstr.equals (L"HIGH")) ct = Contrast::High;
+						resc = PRI_MAKE_SCALE (Convert::ToUInt32 (qualis [QualifierType::Scale]), (DWORD)ct);
+						values [resc] = MPStringToStdW (value ? value : System::String::Empty);
+					}
+					else
+					{
+						resc = PRI_MAKE_SCALE (Convert::ToUInt32 (qualis [QualifierType::Scale]), 0);
+						values [resc] = MPStringToStdW (value ? value : System::String::Empty);
+					}
+				}
+				delete qualis;
+				qualis = nullptr;
+			}
+			output [taskkey] = values;
+			rnlist.erase (taskkey);
+		}
+		resourceMapSection = nullptr;
+	}
+}
+HDWSPAIRLIST CreateDWSPAIRLISTFromMap (const std::map <DWORD, std::wstring> &input)
+{
+	DWORD count = (DWORD)input.size ();
+	if (count == 0) return nullptr;
+	size_t totalSize = sizeof (DWSPAIRLIST) + sizeof (DWORDWSTRPAIR) * (count - 1);
+	HDWSPAIRLIST list = (HDWSPAIRLIST)malloc (totalSize);
+	if (!list) return nullptr;
+	list->dwLength = count;
+	DWORD index = 0;
+	for (auto &it : input)
+	{
+		list->lpArray [index].dwKey = it.first;
+		list->lpArray [index].lpValue = _wcsdup (it.second.c_str ());
+		index ++;
+	}
+	return list;
+}
+HDWSPAIRLIST CreateDWSPAIRLISTFromMap (const std::map <DWORD, std::wnstring> &input)
+{
+	DWORD count = (DWORD)input.size ();
+	if (count == 0) return nullptr;
+	size_t totalSize = sizeof (DWSPAIRLIST) + sizeof (DWORDWSTRPAIR) * (count - 1);
+	HDWSPAIRLIST list = (HDWSPAIRLIST)malloc (totalSize);
+	if (!list) return nullptr;
+	list->dwLength = count;
+	DWORD index = 0;
+	for (auto &it : input)
+	{
+		list->lpArray [index].dwKey = it.first;
+		list->lpArray [index].lpValue = _wcsdup (it.second.c_str ());
+		index ++;
+	}
+	return list;
+}
+void DestroyPriResourceAllValueList (HDWSPAIRLIST list)
+{
+	if (!list) return;
+	for (DWORD i = 0; i < list->dwLength; i++)
+	{
+		if (list->lpArray [i].lpValue)
+		{
+			free (list->lpArray [i].lpValue);  // 对应 _wcsdup
+			list->lpArray [i].lpValue = NULL;
+		}
+	}
+	free (list);
+}
+HDWSPAIRLIST GetPriResourceAllValueList (PCSPRIFILE pPriFile, LPCWSTR lpResName)
+{
+	if (!pPriFile || !lpResName) return nullptr;
+	std::map <std::wnstring, std::map <DWORD, std::wnstring>> rnout;
+	std::vector <std::wstring> rnl = {lpResName ? lpResName : L""};
+	GetPriScaleAndTargetSizeFileList (pPriFile, rnl, rnout);
+	for (auto &it : rnout) return CreateDWSPAIRLISTFromMap (it.second);
+	return nullptr;
+}
+HWSDSPAIRLIST CreateWSDSPAIRLISTFromMap (const std::map <std::wnstring, std::map <DWORD, std::wnstring>> &input)
+{
+	DWORD count = (DWORD)input.size ();
+	if (count == 0) return nullptr;
+	size_t totalSize = sizeof (WSDSPAIRLIST) + sizeof (WSDSPAIR) * (count - 1);
+	HWSDSPAIRLIST list = (HWSDSPAIRLIST)malloc (totalSize);
+	if (!list) return nullptr;
+	list->dwLength = count;
+	DWORD index = 0;
+	for (auto &it : input)
+	{
+		list->lpArray [index].lpKey = _wcsdup (it.first.c_str ());
+		list->lpArray [index].lpValue = nullptr;
+		if (!it.second.empty ())
+		{
+			list->lpArray [index].lpValue = CreateDWSPAIRLISTFromMap (it.second);
+		}
+		index ++;
+	}
+	return list;
+}
+void DestroyResourcesAllValuesList (HWSDSPAIRLIST list)
+{
+	if (!list) return;
+	for (DWORD i = 0; i < list->dwLength; i++)
+	{
+		if (list->lpArray [i].lpKey)
+		{
+			free (list->lpArray [i].lpKey);
+			list->lpArray [i].lpKey = nullptr;
+		}
+		if (list->lpArray [i].lpValue)
+		{
+			DestroyPriResourceAllValueList (list->lpArray [i].lpValue);
+			list->lpArray [i].lpValue = nullptr;
+		}
+	}
+	free (list);
+}
+HWSDSPAIRLIST GetPriResourcesAllValuesList (PCSPRIFILE pPriFile, const LPCWSTR *lpResNames, DWORD dwCount)
+{
+	if (!pPriFile || !lpResNames || dwCount == 0) return nullptr;
+	std::map <std::wnstring, std::map <DWORD, std::wnstring>> rnout;
+	std::vector<std::wstring> rnl;
+	rnl.reserve (dwCount);
+	for (DWORD i = 0; i < dwCount; i++)
+	{
+		if (lpResNames [i])
+			rnl.emplace_back (lpResNames [i]);
+	}
+	if (rnl.empty ()) return nullptr;
+	GetPriScaleAndTargetSizeFileList (pPriFile, rnl, rnout);
+	if (rnout.empty ()) return nullptr;
+	return CreateWSDSPAIRLISTFromMap (rnout);
 }

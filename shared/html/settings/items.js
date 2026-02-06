@@ -10,6 +10,10 @@
         return res.fromfile(libpath, resid);
     }
 
+    function getStringRes(resid) {
+        return Bridge.External.StringResources.getString(resid);
+    }
+
     function getSettingsItem(page, displayName) {
         return {
             page: page,
@@ -18,7 +22,8 @@
     }
     var settingItems = {
         appinstaller: getSettingsItem("appinstaller.html", getLibRes("appinstaller.exe", 300)),
-	settings: getSettingsItem("settings.html", getLibRes("settings.exe", 200))
+        manager: getSettingsItem("manager.html", getStringRes("MANAGER_APPTITLE")),
+        settings: getSettingsItem("settings.html", getLibRes("settings.exe", 200)),
     };
     Object.defineProperty(global, "settingPages", {
         get: function() { return settingItems; }

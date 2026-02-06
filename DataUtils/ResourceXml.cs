@@ -230,6 +230,7 @@ namespace DataUtils
 
 			return string.Empty;
 		}
+		public string GetString (string id) => Get (id);
 
 		public string this [string id]
 		{

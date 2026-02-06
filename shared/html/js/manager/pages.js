@@ -124,5 +124,100 @@
             }
         );
     }
+
+    function initLoaderPage() {
+        var page = document.getElementById("page-load");
+        var prefixs = ["ins", "reg", "sta"];
+        var opdict = {
+            ins: Package.manager.add,
+            reg: Package.manager.register,
+            sta: Package.manager.stage
+        };
+        var ingdict = {
+            ins: strres.get("MANAGER_LOAD_INSTALL_ING"),
+            reg: strres.get("MANAGER_LOAD_REGISTER_ING"),
+            sta: strres.get("MANAGER_LOAD_STAGE_ING")
+        };
+        var sdict = {
+            ins: strres.get("MANAGER_LOAD_INSTALL_SUCCEED"),
+            reg: strres.get("MANAGER_LOAD_REGISTER_SUCCEED"),
+            sta: strres.get("MANAGER_LOAD_STAGE_SUCCEED")
+        }
+        var explorer = external.Storage.Explorer;
+        prefixs.forEach(function(prefix) {
+            var checklist = document.getElementById(prefix + "-deployoptions");
+            var btn = document.getElementById(prefix + "-btn");
+            var statusbar = document.getElementById(prefix + "-progress");
+            var progressbar = statusbar.querySelector(".progress");
+            var status = statusbar.querySelector(".status");
+            progressbar.removeAttribute("value");
+            status.textContent = "";
+            var hideTimer = null;
+            btn.onclick = function() {
+                var self = this;
+                self.disabled = true;
+                var nextNextStep = function(statusbar) {
+                    if (hideTimer) clearTimeout(hideTimer);
+                    hideTimer = setTimeout(function() {
+                        hideTimer = null;
+                        statusbar.bar.hide();
+                    }, 10000);
+                }
+                var nextStep = function(filename) {
+                    if (filename === "" || filename === null || filename === void 0) {
+                        self.disabled = false;
+                        return;
+                    }
+                    if (hideTimer) clearTimeout(hideTimer);
+                    var op = opdict[prefix];
+                    var options = 0;
+                    var items = checklist.querySelectorAll("input:checked");
+                    if (items) {
+                        for (var i = 0; i < items.length; i++) {
+                            options |= parseInt(items[i].value);
+                        }
+                    }
+                    progressbar.removeAttribute("value");
+                    status.textContent = external.String.format(ingdict[prefix], "");
+                    statusbar.bar.show();
+                    op(filename, options).then(function(result) {
+                        self.disabled = false;
+                        status.textContent = sdict[prefix];
+                        refreshAppList2();
+                        nextNextStep(statusbar);
+                    }, function(error) {
+                        self.disabled = false;
+                        status.textContent = error.message;
+                        nextNextStep(statusbar);
+                    }, function(_p) {
+                        status.textContent = external.String.format(ingdict[prefix], _p + "%");
+                        progressbar.value = _p;
+                    });
+                }
+
+                if (prefix === "ins" || prefix === "sta") explorer.file(
+                    external.String.format("{0}|{1}|{2}|{3}",
+                        strres.get("MANAGER_LOAD_INS_OR_STA_FILTERDISPLAY"),
+                        "*.appx;*.appxbundle;*.msix;*.msixbundle",
+                        strres.get("MANAGER_LOAD_ALLFILES"),
+                        "*.*"
+                    ),
+                    "",
+                    nextStep
+                );
+                else if (prefix === "reg") explorer.file(
+                    external.String.format("{0}|{1}|{2}|{3}",
+                        strres.get("MANAGER_LOAD_REG_FILTERDISPLAY"),
+                        "*.appxmanifest;AppxManifest.xml",
+                        strres.get("MANAGER_LOAD_ALLFILES"),
+                        "*.*"
+                    ),
+                    "",
+                    nextStep
+                );
+            };
+        });
+    }
     global.setAppInfoPageContent = setAppInfoPageContent;
+    global.initLoaderPage = initLoaderPage;
 })(this);

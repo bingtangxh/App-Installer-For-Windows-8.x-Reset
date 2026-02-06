@@ -857,6 +857,7 @@ namespace AppxPackage
 		private bool m_usePRI = false;
 		private bool m_enablePRI = false;
 		private PriReader m_pri = null;
+		public PriReader PriFile => m_pri;
 		public IntPtr Instance => m_hReader;
 		public string FileRoot{ get { return Path.GetDirectoryName (m_filePath); } }
 		private void InitPri ()

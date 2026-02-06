@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>App Installer Settings</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="../../js/module.js"></script>
+    <script type="text/javascript" src="../../js/polyfill-ie.js"></script>
+    <link rel="stylesheet" href="../../libs/winjs/2.0/css/ui-light.css" id="winjs-style">
+    <script type="text/javascript" src="../../libs/winjs/1.0/js/base.js"></script>
+    <script type="text/javascript" src="../../libs/winjs/1.0/js/ui.js"></script>
+    <script type="text/javascript" src="../../js/color.js"></script>
+    <script type="text/javascript" src="../../js/promise.js"></script>
+    <script type="text/javascript" src="../../js/bridge.js"></script>
+    <script type="text/javascript" src="../../js/dpimodes.js"></script>
+    <script type="text/javascript" src="../../js/resources.js"></script>
+    <script type="text/javascript" src="../../js/animation.js"></script>
+    <link rel="stylesheet" href="../../fonts/fonts.css">
+    <script type="text/javascript" src="../../js/event.js"></script>
+    <script type="text/javascript" src="../../js/tileback.js"></script>
+    <script type="text/javascript" src="../../js/load.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../libs/msgbox/msgbox.css">
+    <script type="text/javascript" src="../../libs/msgbox/msgbox.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../libs/toggle/toggle.css">
+    <script type="text/javascript" src="../../libs/toggle/toggle.js"></script>
+    <script type="text/javascript" src="../../js/init.js"></script>
+    <link rel="stylesheet" type="text/css" href="../page.css">
+    <link rel="stylesheet" type="text/css" href="../subpage.css">
+    <script type="text/javascript" src="preinit.js"></script>
+    <script type="text/javascript" src="initsame.js"></script>
+    <script>
+        try {
+            window.parent.setItemHighlight("general");
+        } catch (e) {}
+    </script>
+</head>
+
+<body>
+    <div class="pagecontainer full pagesection">
+        <div class="section padding">
+            <div class="bottom-compensate">
+                <h2 id="page-title" data-res-fromfile="publicRes (101)"></h2>
+                <div class="win-settings-section">
+                    <br>
+                    <label class="win-label" for="save-wnd-size" id="save-wnd-size-label" data-res-fromfile="publicRes (125)"></label>
+                    <script>
+                        (function() {
+                            "use strict";
+                            var label = document.getElementById("save-wnd-size-label");
+                            var toggle = new Toggle();
+                            toggle.create();
+                            toggle.parent = label.parentNode;
+                            toggle.showlabel = true;
+                            var winjsres = Bridge.External.WinJsStringRes;
+                            toggle.setStatusText(winjsres.getString("ms-resource://Microsoft.WinJS.1.0/ui/on"), winjsres.getString("ms-resource://Microsoft.WinJS.1.0/ui/off"));
+                            toggle.inputId = "save-wnd-size";
+                            var ini = Bridge.External.Config.GetConfig();
+                            toggle.addEventListener("change", function() {
+                                ini.set("Settings", "PackageManager:SavePosAndSizeBeforeCancel", toggle.checked);
+                            });
+                            toggle.checked = parseBool(ini.getSection("Settings").getKey("PackageManager:SavePosAndSizeBeforeCancel").value);
+                        })();
+                    </script>
+                </div>
+                <div class="win-settings-section">
+                    <br>
+                    <label class="win-label" for="default-wndwidth" data-res-fromfile="publicRes(126)"></label><br>
+                    <input type="number" id="default-wndwidth" inputmode="numeric"><br><br>
+                    <label class="win-label" for="default-wndheight" data-res-fromfile="publicRes(127)"></label><br>
+                    <input type="number" id="default-wndheight" inputmode="numeric">
+                    <script>
+                        (function() {
+                            "use strict";
+                            var ini = Bridge.External.Config.GetConfig();
+                            var defWndWInput = document.getElementById("default-wndwidth");
+                            var defWndHInput = document.getElementById("default-wndheight");
+                            var setsect = ini.getSection("Settings");
+                            var defwk = setsect.getKey("PackageManager:DefaultWidth");
+                            var defhk = setsect.getKey("PackageManager:DefaultHeight");
+                            defWndWInput.value = defwk.value;
+                            defWndHInput.value = defhk.value;
+                            var eventutil = Windows.UI.Event.Util;
+
+                            function inputDefaultWidthChangeEvent(e) {
+                                defwk.value = parseInt(defWndWInput.value);
+                            }
+
+                            function inputDefaultHeightChangeEvent(e) {
+                                defhk.value = parseInt(defWndHInput.value);
+                            }
+                            var debounced_idwc = debounce(inputDefaultWidthChangeEvent, 500);
+                            var debounced_idhc = debounce(inputDefaultHeightChangeEvent, 500);
+                            eventutil.addEvent(defWndWInput, "input", debounced_idwc);
+                            eventutil.addEvent(defWndWInput, "propertychange", debounced_idwc);
+                            eventutil.addEvent(defWndWInput, "change", debounced_idwc);
+                            eventutil.addEvent(defWndHInput, "input", debounced_idhc);
+                            eventutil.addEvent(defWndHInput, "propertychange", debounced_idhc);
+                            eventutil.addEvent(defWndHInput, "change", debounced_idhc);
+                        })();
+                    </script>
+                </div>
+                <div class="win-settings-section">
+                    <br>
+                    <label class="win-label" for="min-wndwidth" data-res-fromfile="publicRes (128)"></label><br>
+                    <input type="number" id="min-wndwidth" inputmode="numeric"><br><br>
+                    <label class="win-label" for="min-wndheight" data-res-fromfile="publicRes (129)"></label><br>
+                    <input type="number" id="min-wndheight" inputmode="numeric">
+                    <script>
+                        (function() {
+                            "use strict";
+                            var ini = Bridge.External.Config.GetConfig();
+                            var minWndWInput = document.getElementById("min-wndwidth");
+                            var minWndHInput = document.getElementById("min-wndheight");
+                            var setsect = ini.getSection("Settings");
+                            var minwk = setsect.getKey("PackageManager:MinimumWidth");
+                            var minhk = setsect.getKey("PackageManager:MinimumHeight");
+                            minWndWInput.value = minwk.value;
+                            minWndHInput.value = minhk.value;
+                            var eventutil = Windows.UI.Event.Util;
+
+                            function inputDefaultWidthChangeEvent(e) {
+                                minwk.value = parseInt(minWndWInput.value);
+                            }
+
+                            function inputDefaultHeightChangeEvent(e) {
+                                minhk.value = parseInt(minWndHInput.value);
+                            }
+                            var debounced_idwc = debounce(inputDefaultWidthChangeEvent, 500);
+                            var debounced_idhc = debounce(inputDefaultHeightChangeEvent, 500);
+                            eventutil.addEvent(minWndWInput, "input", debounced_idwc);
+                            eventutil.addEvent(minWndWInput, "propertychange", debounced_idwc);
+                            eventutil.addEvent(minWndWInput, "change", debounced_idwc);
+                            eventutil.addEvent(minWndHInput, "input", debounced_idhc);
+                            eventutil.addEvent(minWndHInput, "propertychange", debounced_idhc);
+                            eventutil.addEvent(minWndHInput, "change", debounced_idhc);
+                        })();
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

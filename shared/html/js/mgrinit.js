@@ -1,5 +1,7 @@
 (function(global) {
     var strres = external.StringResources;
+    var conf = external.Config.current;
+    var set = conf.getSection("Settings");
 
     function createLocalizedCompare(locale) {
         return function(a, b) {
@@ -359,6 +361,8 @@
         }
         var showSystemApps = document.getElementById("applist-showsystemapp");
         var showFrameworks = document.getElementById("applist-showframework");
+        showSystemApps.checked = set.getKey("PackageManager:ShowSystemApps").readBool(false);
+        showFrameworks.checked = set.getKey("PackageManager:ShowFrameworks").readBool(false);
         listView.filter = function(item) {
             try {
                 if (!showFrameworks.checked && item.Properties.Framework) return false;
@@ -371,10 +375,12 @@
         Windows.UI.Event.Util.addEvent(showSystemApps, "change", function() {
             listView.refresh();
             dataLengthDisplay.textContent = external.String.format(strres.get("MANAGER_MANAGE_FINDAPPS"), listView.findItemLength);
+            set.getKey("PackageManager:ShowSystemApps").set(showSystemApps.checked);
         });
         Windows.UI.Event.Util.addEvent(showFrameworks, "change", function() {
             listView.refresh();
             dataLengthDisplay.textContent = external.String.format(strres.get("MANAGER_MANAGE_FINDAPPS"), listView.findItemLength);
+            set.getKey("PackageManager:ShowFrameworks").set(showFrameworks.checked);
         });
         refreshButton.addEventListener("click", refreshAppList2);
         appbarControl.add(refreshButton);
@@ -408,11 +414,59 @@
             launchButton.textContent = strres.get("MANAGER_APP_LAUNCH");
             launchButton.setAttribute("data-app-user-model-id", item.AppUserModelID);
             var createShortcutButton = document.createElement("button");
-            createShortcutButton.textContent = strres.get("MANAGER_APP_CREATESHORTCUT");
+            createShortcutButton.setAttribute("data-app-user-model-id", item.AppUserModelID);
+            createShortcutButton.textContent = strres.get("MANAGER_APP_SHORTCUTCREATE_TITLE");
             createShortcutButton.style.marginRight = "10px";
             Windows.UI.Event.Util.addEvent(launchButton, "click", function(e) {
                 e.stopPropagation();
                 Package.manager.active(this.getAttribute("data-app-user-model-id"));
+            });
+            Windows.UI.Event.Util.addEvent(createShortcutButton, "click", function(e) {
+                e.stopPropagation();
+                var backid =
+                    messageBoxAdvance(function() {
+                        var ring = document.createElement("progress");
+                        ring.classList.add("win-ring");
+                        ring.style.color = "white";
+                        var text = document.createElement("span");
+                        text.textContent = strres.get("MANAGER_APP_SHORTCUTCREATE_BACK_TEXT_ING");
+                        text.style.marginLeft = "20px";
+                        var container = document.createElement("div");
+                        container.style.display = "flex";
+                        container.style.flexDirection = "row";
+                        container.appendChild(ring);
+                        container.appendChild(text);
+                        container.style.marginTop = "10px";
+                        var openInstallLocation = document.createElement("button");
+                        openInstallLocation.textContent = strres.get("MANAGER_APP_SHORTCUTCREATE_OPENINSTALLLOCATION");
+                        openInstallLocation.style.marginTop = "10px";
+                        openInstallLocation.style.display = "block";
+                        openInstallLocation.setAttribute("data-install-location", appDetailPage.data.InstallLocation);
+                        openInstallLocation.onclick = function() {
+                            external.Storage.Path.open(this.getAttribute("data-install-location"));
+                        };
+                        var finalc = document.createElement("div");
+                        finalc.appendChild(container);
+                        finalc.appendChild(document.createElement("br"));
+                        finalc.appendChild(openInstallLocation);
+                        return finalc;
+                    }(), strres.get("MANAGER_APP_SHORTCUTCREATE_BACK_TITLE"), [], "#159d9d");
+                document.getElementById(backid).querySelector(".notice-controls").style.display = "none";
+                var back = document.getElementById(backid);
+                external.createAppShortcut(appDetailPage.data.InstallLocation, this.getAttribute("data-app-user-model-id"), function(complete) {
+                    complete = JSON.parse(complete);
+                    if (typeof back.remove !== "undefined") back.remove();
+                    else if (typeof back.removeNode !== "undefined") back.removeNode(true);
+                    else back.parentNode.removeChild(back);
+                    if (complete.succeeded) messageBoxAdvance(strres.get("MANAGER_APP_SHORTCUTCREATE_BACK_TEXT_SUCCEED"), strres.get("MANAGER_APP_SHORTCUTCREATE_BACK_TITLE_SUCCEED"), [], "#159d9d");
+                    else messageBoxAdvance(complete.message, strres.get("MANAGER_APP_SHORTCUTCREATE_BACK_TITLE_FAILED"), [], "#159d9d");
+                }, function(error) {
+                    error = JSON.parse(error);
+                    if (typeof back.remove !== "undefined") back.remove();
+                    else if (typeof back.removeNode !== "undefined") back.removeNode(true);
+                    else back.parentNode.removeChild(back);
+                    messageBoxAdvance((error.message || error.error || error), strres.get("MANAGER_APP_SHORTCUTCREATE_BACK_TITLE_FAILED"), [], "#159d9d");
+                });
             });
             ctrls.appendChild(launchButton);
             ctrls.appendChild(createShortcutButton);
@@ -536,10 +590,12 @@
         });
         uninstallFlyout.appDataSource = new DataView.DataSource();
         uninstallFlyout.appListView.bind(uninstallFlyout.appDataSource);
+        initLoaderPage();
         pagemgr.addEventListener("load", function(e) {
             appbarControl.enabled = e == "manager";
             refreshButton.style.display = e == "manager" ? "" : "none";
         });
+        pagemgr.register("load", document.getElementById("tag-load"), document.getElementById("page-load"));
         pagemgr.go("manager");
     });
 })(this);

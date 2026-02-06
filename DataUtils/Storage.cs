@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace DataUtils
 {
@@ -257,6 +262,28 @@ namespace DataUtils
 			string b = Utilities.NormalizeFullPath (r);
 			return string.Equals (a, b, StringComparison.OrdinalIgnoreCase);
 		}
+		public bool Open (string path)
+		{
+			if (string.IsNullOrEmpty (path)) return false;
+			try
+			{
+				if (File.Exists (path))
+				{
+					Process.Start (path);
+					return true;
+				}
+
+				if (Directory.Exists (path))
+				{
+					Process.Start ("explorer.exe", path);
+					return true;
+				}
+			}
+			catch
+			{
+			}
+			return false;
+		}
 	}
 	// Basic entry object
 	[ComVisible (true)]
@@ -476,13 +503,183 @@ namespace DataUtils
 	}
 	[ComVisible (true)]
 	[ClassInterface (ClassInterfaceType.AutoDual)]
+	public class _I_Explorer
+	{
+		[DllImport ("user32.dll")]
+		private static extern IntPtr GetForegroundWindow ();
+		class WindowWrapper: IWin32Window
+		{
+			private IntPtr _hwnd;
+			public WindowWrapper (IntPtr handle) { _hwnd = handle; }
+			public IntPtr Handle { get { return _hwnd; } }
+		}
+		private static IWin32Window GetActiveWindowOwner ()
+		{
+			IntPtr hWnd = GetForegroundWindow ();
+			return hWnd != IntPtr.Zero ? new WindowWrapper (hWnd) : null;
+		}
+		private static void CallJS (object jsFunc, params object [] args)
+		{
+			if (jsFunc == null) return;
+			try
+			{
+				object [] realArgs = new object [args.Length + 1];
+				realArgs [0] = jsFunc; // thisArg
+				Array.Copy (args, 0, realArgs, 1, args.Length);
+				jsFunc.GetType ().InvokeMember (
+					"call",
+					System.Reflection.BindingFlags.InvokeMethod,
+					null,
+					jsFunc,
+					realArgs
+				);
+			}
+			catch { }
+		}
+		public void File (string filter, string initDir, object jsCallback)
+		{
+			IWin32Window owner = GetActiveWindowOwner ();
+			Thread t = new Thread (() =>
+			{
+				string result = string.Empty;
+				try
+				{
+					using (OpenFileDialog dlg = new OpenFileDialog ())
+					{
+						dlg.Filter = filter;
+						dlg.InitialDirectory = string.IsNullOrEmpty (initDir)
+							? Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments)
+							: initDir;
+						dlg.Multiselect = false;
+						if (dlg.ShowDialog (owner) == DialogResult.OK)
+							result = dlg.FileName;
+					}
+				}
+				catch { }
+				CallJS (jsCallback, result);
+			});
+			t.IsBackground = true;
+			t.SetApartmentState (ApartmentState.STA);
+			t.Start ();
+		}
+		public void Files (string filter, string initDir, object jsCallback)
+		{
+			IWin32Window owner = GetActiveWindowOwner ();
+			Thread t = new Thread (() =>
+			{
+				string result = "[]";
+				try
+				{
+					using (OpenFileDialog dlg = new OpenFileDialog ())
+					{
+						dlg.Filter = filter;
+						dlg.InitialDirectory = string.IsNullOrEmpty (initDir)
+							? Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments)
+							: initDir;
+						dlg.Multiselect = true;
+						if (dlg.ShowDialog (owner) == DialogResult.OK)
+							result = Newtonsoft.Json.JsonConvert.SerializeObject (dlg.FileNames);
+					}
+				}
+				catch { }
+				CallJS (jsCallback, result);
+			});
+			t.IsBackground = true;
+			t.SetApartmentState (ApartmentState.STA);
+			t.Start ();
+		}
+		public void Dir (string initDir, object jsCallback)
+		{
+			IWin32Window owner = GetActiveWindowOwner ();
+			Thread t = new Thread (() =>
+			{
+				string result = string.Empty;
+				try
+				{
+					using (FolderBrowserDialog dlg = new FolderBrowserDialog ())
+					{
+						dlg.SelectedPath = string.IsNullOrEmpty (initDir)
+							? Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments)
+							: initDir;
+						if (dlg.ShowDialog (owner) == DialogResult.OK)
+							result = dlg.SelectedPath;
+					}
+				}
+				catch { }
+
+				CallJS (jsCallback, result);
+			});
+			t.IsBackground = true;
+			t.SetApartmentState (ApartmentState.STA);
+			t.Start ();
+		}
+		public void Dirs (string initDir, object jsCallback)
+		{
+			IWin32Window owner = GetActiveWindowOwner ();
+			Thread t = new Thread (() =>
+			{
+				string result = "[]";
+				try
+				{
+					using (var dlg = new OpenFileDialog ())
+					{
+						// trick: 多选文件夹
+						dlg.ValidateNames = false;
+						dlg.CheckFileExists = false;
+						dlg.CheckPathExists = true;
+						dlg.FileName = "SelectFolder";
+						dlg.InitialDirectory = string.IsNullOrEmpty (initDir)
+							? Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments)
+							: initDir;
+						dlg.Multiselect = true;
+						if (dlg.ShowDialog (owner) == DialogResult.OK)
+						{
+							var dirs = dlg.FileNames.Select (f => Path.GetDirectoryName (f)).Distinct ().ToArray ();
+							result = Newtonsoft.Json.JsonConvert.SerializeObject (dirs);
+						}
+					}
+				}
+				catch { }
+				CallJS (jsCallback, result);
+			});
+			t.IsBackground = true;
+			t.SetApartmentState (ApartmentState.STA);
+			t.Start ();
+		}
+	}
+	[ComVisible (true)]
+	[ClassInterface (ClassInterfaceType.AutoDual)]
 	public class _I_Storage
 	{
+		private static void CallJS (object jsFunc, params object [] args)
+		{
+			if (jsFunc == null) return;
+			try
+			{
+				// 这里固定第一个参数为 thisArg（比如 1）
+				object [] realArgs = new object [args.Length + 1];
+				realArgs [0] = jsFunc;     // thisArg
+				Array.Copy (args, 0, realArgs, 1, args.Length);
+
+				jsFunc.GetType ().InvokeMember (
+					"call",
+					BindingFlags.InvokeMethod,
+					null,
+					jsFunc,
+					realArgs
+				);
+			}
+			catch
+			{
+				// ignore errors in callback invocation
+			}
+		}
 		protected _I_Path path = new _I_Path ();
 		public _I_Path Path { get { return path; } }
 		public _I_File GetFile (string path) { return new _I_File (path); }
 		public _I_Directory GetDirectory (string path) { return new _I_Directory (path); }
 		public _I_Directory GetDir (string path) { return GetDirectory (path); }
+		public _I_Explorer Explorer => new _I_Explorer ();
 	}
 	// Small shell helpers that P/Invoke for folder retrieval using CSIDL or Known Folder GUIDs
 	internal static class ShellHelpers

@@ -9,6 +9,7 @@ namespace Manager
 		public ManagerShell ()
 		{
 			InitializeComponent ();
+			this.PublicObjectForScripting = new BridgeExt (this, this, this, this);
 			try
 			{
 				var relativePath = DataUtils.VisualElementsStore.Vemanifest.SplashScreenImage (Program.g_appId);
@@ -23,6 +24,7 @@ namespace Manager
 			}
 			catch { }
 			InitSize ();
+			Text = Bridge.ResXmlStore.StringRes.Get ("MANAGER_APPTITLE");
 		}
 		private void InitSize ()
 		{

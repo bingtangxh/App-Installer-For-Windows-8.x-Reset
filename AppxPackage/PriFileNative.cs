@@ -66,6 +66,108 @@ namespace AppxPackage
 			PriFormatFreeString (ptr); // 如果 DLL 返回的内存要求 free
 			return s;
 		}
+		[StructLayout (LayoutKind.Sequential)]
+		internal struct DWORDWSTRPAIR
+		{
+			public uint dwKey;
+			public IntPtr lpValue; // LPWSTR
+		}
+		[StructLayout (LayoutKind.Sequential)]
+		internal struct DWSPAIRLIST
+		{
+			public uint dwLength;
+			public DWORDWSTRPAIR lpArray; // 第一个元素（柔性数组起点）
+		}
+		[StructLayout (LayoutKind.Sequential)]
+		internal struct WSDSPAIR
+		{
+			public IntPtr lpKey;         // LPWSTR
+			public IntPtr lpValue;       // HDWSPAIRLIST
+		}
+		[StructLayout (LayoutKind.Sequential)]
+		internal struct WSDSPAIRLIST
+		{
+			public uint dwLength;
+			public WSDSPAIR lpArray;     // 第一个元素
+		}
+		[DllImport (DLL, CallingConvention = CallingConvention.Cdecl)]
+		public static extern IntPtr GetPriResourceAllValueList (PCSPRIFILE pFilePri, [MarshalAs (UnmanagedType.LPWStr)] string resName);
+		[DllImport (DLL, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void DestroyPriResourceAllValueList (IntPtr list);
+		[DllImport (DLL, CallingConvention = CallingConvention.Cdecl)]
+		public static extern IntPtr GetPriResourcesAllValuesList (PCSPRIFILE pFilePri, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPWStr)] string [] lpResNames, uint dwCount);
+		[DllImport (DLL, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void DestroyResourcesAllValuesList (IntPtr list);
+		public static Dictionary<uint, string> ParseDWSPAIRLIST (IntPtr ptr)
+		{
+			if (ptr == IntPtr.Zero)
+				return null;
+
+			var result = new Dictionary<uint, string> ();
+
+			// 读取数量
+			uint count = (uint)Marshal.ReadInt32 (ptr);
+
+			// 跳过 dwLength
+			IntPtr pFirst = IntPtr.Add (ptr, sizeof (uint));
+
+			int elementSize = Marshal.SizeOf (typeof (DWORDWSTRPAIR));
+
+			for (int i = 0; i < count; i++)
+			{
+				IntPtr pItem = IntPtr.Add (pFirst, i * elementSize);
+
+				object boxed =
+					Marshal.PtrToStructure (pItem, typeof (DWORDWSTRPAIR));
+
+				DWORDWSTRPAIR item = (DWORDWSTRPAIR)boxed;
+
+				string value = null;
+
+				if (item.lpValue != IntPtr.Zero)
+					value = Marshal.PtrToStringUni (item.lpValue);
+
+				result [item.dwKey] = value;
+			}
+
+			return result;
+		}
+		public static Dictionary<string, Dictionary<uint, string>> ParseWSDSPAIRLIST (IntPtr ptr)
+		{
+			if (ptr == IntPtr.Zero)
+				return null;
+
+			var result =
+				new Dictionary<string, Dictionary<uint, string>> ();
+
+			uint count = (uint)Marshal.ReadInt32 (ptr);
+
+			IntPtr pFirst = IntPtr.Add (ptr, sizeof (uint));
+
+			int elementSize = Marshal.SizeOf (typeof (WSDSPAIR));
+
+			for (int i = 0; i < count; i++)
+			{
+				IntPtr pItem = IntPtr.Add (pFirst, i * elementSize);
+
+				object boxed =
+					Marshal.PtrToStructure (pItem, typeof (WSDSPAIR));
+
+				WSDSPAIR item = (WSDSPAIR)boxed;
+
+				string key = null;
+
+				if (item.lpKey != IntPtr.Zero)
+					key = Marshal.PtrToStringUni (item.lpKey);
+
+				Dictionary<uint, string> valueDict =
+					ParseDWSPAIRLIST (item.lpValue);
+
+				result [key] = valueDict;
+			}
+
+			return result;
+		}
 	}
 	public static class LpcwstrListHelper
 	{

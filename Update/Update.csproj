@@ -73,12 +73,6 @@
   <ItemGroup>
     <Content Include="Project1.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\settings\settings.vcxproj">
-      <Project>{ad25497f-a15f-4dff-ac7a-b8abf5f411d6}</Project>
-      <Name>settings</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

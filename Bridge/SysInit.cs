@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Win32;
 using DataUtils;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Windows.Forms;
-using System.Drawing;
 using Newtonsoft.Json;
 using AppxPackage;
 using ModernNotice;
@@ -898,6 +894,7 @@ namespace Bridge
 		public _I_Taskbar Taskbar { get; private set; } = null;
 		public _I_System System => system;
 		public _I_Notice Notice => new _I_Notice ();
+		public _I_Process Process => proc;
 		public string CmdArgs
 		{
 			get

@@ -12,6 +12,9 @@
     global.publicRes = function(resId) {
         return getFileResPair(respath, resId);
     }
+    global.stringRes = function(resId) {
+        return Bridge.External.StringResources.getString(resId);
+    }
 
     function ready(e) {
         function nextstep() {

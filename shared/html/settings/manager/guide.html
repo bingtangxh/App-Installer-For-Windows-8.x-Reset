@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>App Installer Settings</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="../../js/module.js"></script>
+    <script type="text/javascript" src="../../js/polyfill-ie.js"></script>
+    <link rel="stylesheet" href="../../libs/winjs/2.0/css/ui-light.css" id="winjs-style">
+    <script type="text/javascript" src="../../libs/winjs/1.0/js/base.js"></script>
+    <script type="text/javascript" src="../../libs/winjs/1.0/js/ui.js"></script>
+    <script type="text/javascript" src="../../js/color.js"></script>
+    <script type="text/javascript" src="../../js/promise.js"></script>
+    <script type="text/javascript" src="../../js/bridge.js"></script>
+    <script type="text/javascript" src="../../js/dpimodes.js"></script>
+    <script type="text/javascript" src="../../js/resources.js"></script>
+    <script type="text/javascript" src="../../js/animation.js"></script>
+    <link rel="stylesheet" href="../../fonts/fonts.css">
+    <script type="text/javascript" src="../../js/event.js"></script>
+    <script type="text/javascript" src="../../js/tileback.js"></script>
+    <script type="text/javascript" src="../../js/load.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../libs/msgbox/msgbox.css">
+    <script type="text/javascript" src="../../libs/msgbox/msgbox.js"></script>
+    <script type="text/javascript" src="../../js/init.js"></script>
+    <link rel="stylesheet" type="text/css" href="../page.css">
+    <link rel="stylesheet" type="text/css" href="../subpage.css">
+    <script type="text/javascript" src="preinit.js"></script>
+    <script type="text/javascript" src="initsame.js"></script>
+    <script>
+        try {
+            window.parent.setItemHighlight("guide");
+        } catch (e) {}
+    </script>
+</head>
+
+<body>
+    <div class="pagecontainer full pagesection">
+        <div class="section padding">
+            <div class="bottom-compensate">
+                <h2 id="guide-title"></h2>
+                <p id="guide-desc" style="white-space: pre-wrap;"></p>
+            </div>
+        </div>
+        <script>
+            (function() {
+                "use strict";
+                var res = Bridge.Resources;
+                var stru = Bridge.String;
+                var title = document.getElementById("guide-title");
+                title.textContent = stru.format(res.byname("IDS_TITLEFORMAT"), stringRes("MANAGER_APPTITLE"));
+                var text = document.getElementById("guide-desc");
+                text.textContent = res.byname("IDS_GUIDETEXT_COMMON");
+            })();
+        </script>
+    </div>
+</body>
+
+</html>

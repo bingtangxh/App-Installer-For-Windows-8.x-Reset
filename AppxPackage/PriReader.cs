@@ -9,6 +9,51 @@ using System.Threading.Tasks;
 
 namespace AppxPackage
 {
+	public struct PriResourceKey
+	{
+		public enum PriResourceType: byte
+		{
+			Scale = 0,
+			TargetSize = 1,
+			String = 2
+		}
+		public enum PriContrast: byte
+		{
+			None = 0,
+			White = 1,
+			Black = 2,
+			High = 3,
+			Low = 4
+		}
+		public readonly PriResourceType Type;
+		public readonly PriContrast Contrast;
+		public readonly ushort Value;
+		public uint Raw { get; }
+		public PriResourceKey (uint raw)
+		{
+			Raw = raw;
+			Type = (PriResourceType)((raw >> 28) & 0xF);
+			Contrast = (PriContrast)((raw >> 24) & 0xF);
+			Value = (ushort)(raw & 0xFFFF);
+		}
+		public bool IsScale => Type == PriResourceType.Scale;
+		public bool IsTargetSize => Type == PriResourceType.TargetSize;
+		public bool IsString => Type == PriResourceType.String;
+		public override string ToString ()
+		{
+			switch (Type)
+			{
+				case PriResourceType.Scale:
+					return $"Scale={Value}, Contrast={Contrast}";
+				case PriResourceType.TargetSize:
+					return $"TargetSize={Value}, Contrast={Contrast}";
+				case PriResourceType.String:
+					return $"LCID=0x{Value:X4}";
+				default:
+					return $"Unknown(0x{Raw:X8})";
+			}
+		}
+	}
 	public class PriReader: IDisposable
 	{
 		private IntPtr m_hPriFile = IntPtr.Zero;
@@ -60,7 +105,7 @@ namespace AppxPackage
 		public PriReader (IntPtr pStream) { Create (pStream); }
 		public PriReader ([MarshalAs (UnmanagedType.LPWStr)] string fileName) { Create (fileName); }
 		public PriReader () { }
-		public void AddSearch (IEnumerable <string> arr)
+		public void AddSearch (IEnumerable<string> arr)
 		{
 			IntPtr buf = IntPtr.Zero;
 			try
@@ -102,9 +147,98 @@ namespace AppxPackage
 		}
 		public static string LastError { get { return PriFileHelper.PriFileGetLastError (); } }
 		public string Path (string resName) { return Resource (resName); }
-		public Dictionary <string, string> Paths (IEnumerable <string> resNames) { return Resources (resNames); }
+		public Dictionary<string, string> Paths (IEnumerable<string> resNames) { return Resources (resNames); }
 		public string String (string resName) { return Resource (resName); }
-		public Dictionary <string, string> Strings (IEnumerable <string> resNames) { return Resources (resNames); }
+		public Dictionary<string, string> Strings (IEnumerable<string> resNames) { return Resources (resNames); }
+		public Dictionary<PriResourceKey, string> ResourceAllValues (string resName)
+		{
+			var task = Task.Factory.StartNew (() => {
+				IntPtr ptr = IntPtr.Zero;
+
+				try
+				{
+					ptr = PriFileHelper.GetPriResourceAllValueList (
+						m_hPriFile, resName);
+
+					if (ptr == IntPtr.Zero)
+						return new Dictionary<PriResourceKey, string> ();
+
+					var raw =
+						PriFileHelper.ParseDWSPAIRLIST (ptr);
+
+					var result =
+						new Dictionary<PriResourceKey, string> ();
+
+					foreach (var kv in raw)
+					{
+						var key = new PriResourceKey (kv.Key);
+						result [key] = kv.Value;
+					}
+					return result;
+				}
+				finally
+				{
+					if (ptr != IntPtr.Zero) PriFileHelper.DestroyPriResourceAllValueList (ptr);
+				}
+			});
+			return task.Result;
+		}
+		public Dictionary<string, Dictionary<PriResourceKey, string>> ResourcesAllValues (IEnumerable<string> resNames)
+		{
+			var task = Task.Factory.StartNew (() => {
+				IntPtr ptr = IntPtr.Zero;
+
+				try
+				{
+					var list = resNames?.ToList ();
+
+					if (list == null || list.Count == 0)
+						return new Dictionary<string,
+							Dictionary<PriResourceKey, string>> ();
+
+					ptr = PriFileHelper.GetPriResourcesAllValuesList (
+						m_hPriFile,
+						list.ToArray (),
+						(uint)list.Count);
+
+					if (ptr == IntPtr.Zero)
+						return new Dictionary<string,
+							Dictionary<PriResourceKey, string>> ();
+
+					var raw =
+						PriFileHelper.ParseWSDSPAIRLIST (ptr);
+
+					var result =
+						new Dictionary<string,
+							Dictionary<PriResourceKey, string>> ();
+
+					foreach (var outer in raw)
+					{
+						var innerDict =
+							new Dictionary<PriResourceKey, string> ();
+
+						foreach (var inner in outer.Value)
+						{
+							var key =
+								new PriResourceKey (inner.Key);
+
+							innerDict [key] = inner.Value;
+						}
+
+						result [outer.Key] = innerDict;
+					}
+
+					return result;
+				}
+				finally
+				{
+					if (ptr != IntPtr.Zero)
+						PriFileHelper.DestroyResourcesAllValuesList (ptr);
+				}
+			});
+
+			return task.Result;
+		}
 	}
 	public class PriReaderBundle: IDisposable
 	{
@@ -246,6 +380,7 @@ namespace AppxPackage
 		{
 			return Resources (resNames);
 		}
+
 		public void Dispose ()
 		{
 			foreach (PriInst it in _priFiles) it.Reader.Dispose ();
