@@ -41,6 +41,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IMetroIconSupport.cs" />
+    <Compile Include="ModenForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModenForm.Designer.cs">
+      <DependentUpon>ModenForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NormalForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NormalForm.Designer.cs">
+      <DependentUpon>NormalForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -83,6 +96,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ModenForm.resx">
+      <DependentUpon>ModenForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -93,6 +109,105 @@
     <EmbeddedResource Include="WebAppForm.resx">
       <DependentUpon>WebAppForm.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\blank.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\blank_light.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\blank_press.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cancel_back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cancel_ban.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cancel_ban_back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cancel_light.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cancel_press.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\max.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\max_back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\max_ban.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\max_ban_back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\max_light.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\max_press.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\min.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\min_back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\min_ban.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\min_ban_back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\min_light.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\min_press.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\options.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\options_back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\options_ban.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\options_ban_back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\options_light.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\options_press.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\restore.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\restore_back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\restore_ban.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\restore_ban_back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\restore_light.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\restore_press.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

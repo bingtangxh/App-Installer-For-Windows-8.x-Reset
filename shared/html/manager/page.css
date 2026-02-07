@@ -112,7 +112,7 @@ legend,
     overflow-x: hidden;
     overflow-y: auto;
     -ms-overflow-style: -ms-autohiding-scrollbar;
-    transition: all 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+    transition: left, right, top, bottom, width, height, opacity 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
     position: absolute;
     right: 0;
     top: 0;

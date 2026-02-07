@@ -50,6 +50,7 @@
 			this.ClientSize = new System.Drawing.Size(661, 416);
 			this.Controls.Add(this.webui);
 			this.Name = "WebAppForm";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Main Web App Form";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WebAppForm_FormClosing);
 			this.Load += new System.EventHandler(this.WebAppForm_Load);

@@ -207,6 +207,7 @@
             });
         }
         this.register = function(tag, guideNode, pageNode, respHandler) {
+            pageNode.style.opacity = 0;
             dict[tag] = new PagePair(guideNode, pageNode, respHandler);
             guideNode.__pageTag = tag;
             try {

@@ -1700,7 +1700,7 @@
 <InstallOrder>1000</InstallOrder>
 <SCStartRoot>0</SCStartRoot>
 <SCStartProgs>0</SCStartProgs>
-<SCAppFld>1</SCAppFld>
+<SCAppFld>0</SCAppFld>
 <SCStartup>0</SCStartup>
 <SCDesk>0</SCDesk>
 <SCQLaunch>0</SCQLaunch>
@@ -5341,7 +5341,7 @@ CreateShortcut (applnkpath, SessionVar.Expand("%AppFolder%\\appinstaller.exe"), 
 Registry.SetValue(HKEY_CURRENT_USER, "SOFTWARE\\Windows Modern\\App Installer", "AppInstallerLnk", applnkpath, REG_SZ);
 CreateShortcut (setlnkpath, SessionVar.Expand("%AppFolder%\\settings.exe"), "WindowsModern.PracticalToolsProject!Settings");
 Registry.SetValue(HKEY_CURRENT_USER, "SOFTWARE\\Windows Modern\\App Installer", "SettingsLnk", setlnkpath, REG_SZ);
-CreateShortcut (setlnkpath, SessionVar.Expand("%AppFolder%\\Manager.exe"), "WindowsModern.PracticalToolsProject!Manager");
+CreateShortcut (mgrlnkpath, SessionVar.Expand("%AppFolder%\\Manager.exe"), "WindowsModern.PracticalToolsProject!Manager");
 Registry.SetValue(HKEY_CURRENT_USER, "SOFTWARE\\Windows Modern\\App Installer", "ManagerLnk", setlnkpath, REG_SZ);
 SetDesktopInit (desktopini, ".ShellClassInfo", "ConfirmFileOp", 0);
 SetDesktopInit (desktopini, "LocalizedFileNames", "App Installer.lnk", SessionVar.Expand("@%AppFolder%\\appinstaller.exe,-300"));

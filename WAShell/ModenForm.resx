@@ -1,0 +1,819 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAgAAAAAAAEAGAAOCwAAhgAAAEBAAAABABgAKDIAAJQLAAAwMAAAAQAYAKgcAAC8PQAAKCgAAAEA
+        GAAoFAAAZFoAACAgAAABABgAqAwAAIxuAAAYGAAAAQAYAEgHAAA0ewAAFBQAAAEAGAAoBQAAfIIAABAQ
+        AAABABgAaAMAAKSHAACJUE5HDQoaCgAAAA1JSERSAAABAAAAAQAIBgAAAFxyqGYAAAAJcEhZcwAADsMA
+        AA7DAcdvqGQAAArASURBVHic7d2/b5XXHcfxDyRWrSymiMUdAglS1a0UxnbwwB+QSmTGLFGGDu3SpFO9
+        VRmzVSw4YiwDkTIykCFDB0ewkC4BjJLeqkLiWkXIyEroQJ9yfLm+P89zvt9zvu/XihQfRc/nzXNt/DzH
+        9PE3LwQgpOPWBwBghwAAgREAIDACAARGAIDACAAQGAEAAiMAQGAEAAiMAACBEQAgMAIABEYAgMAIABAY
+        AQACIwCBnFtf1fDPP9f2++s689MV6+PAgWM8ECSGc+uruv3B21pbfdX8z77e09atx3r45MDwZLBEAAIY
+        N/4UIYgr/EeAzQtrOre+an2M3kwbvyRdPr+mB388y0eDgMLeAWxeWNPWxVM6fWJFe/s/auPqI90Z7Fsf
+        K6tZxj8OdwRxhAtAOvxUaxFYdPwpQtC+MAE4avipViKQY/wpQtCu5gMwy/BTtUcg9/hThKA9zQZg3uGn
+        ao1An+NPEYJ2NBeAZYafqi0CpcafIgT1ayYAuYafqiUCFuNPEYJ6VR+APoaf8h4B6/GnCEF9qg1A38NP
+        eY2Ap/GnCEE9qgtAyeGnvEXA6/hThMC/agJgNfyUlwjUMP4UIfDLfQA8DD9lHYHaxp8iBP64DYC34aes
+        IlDz+FOEwA93AfA8/FTpCLQy/hQhsOcmALUMP1UqAi2OP0UI7JgHoMbhp/qOQOvjTxGC8swCUPvwU31F
+        INL4U4SgnOIBaGn4qdwRiDr+FCHoX7EAtDr8VK4IMP7DCEF/eg9AhOGnlo0A4z8aIcivtwBEG35q0Qgw
+        /tkQgnyyByDy8FPzRoDxz48QLC9bABj+62aNAONfDiFY3NIBYPiTTYsA48+HEMxv6atu4923GP8Ea6vH
+        dfuDt8e+fITx58ULTuaX5SPA9vvrunx+Lcd5mjV6J8D4+8cdwXTZvgdABKbrIiCJ8RdECI6W9acARGC6
+        u4PnkqRfrv/E+CTxEILXvaHf/G4r13/s5r2neufkStMv21zU7vBAf/ji3/rw5r/0178PtTs80K9+tqoT
+        q29YHy2Mc+ur+v2vT+qdkyu6M3iu4f6P1kcy18s/BOJO4JXd4YG2bj3W9s7e2D/npyh2uCPo8V8CRo/A
+        tOGPIgR2Ioeg198FiBiBeYc/ihDYiRiC3n8ZKEoElh3+KEJgJ1IIivw6cMsRyD38UYTAToQQFHseQGsR
+        6Hv4owiBnZZDUPSJQC1EoPTwRxECOy2GoPgjwWqNgPXwRxECOy2FwOShoDVFwNvwRxECOy2EwOypwN4j
+        4H34owiBnZpDYPpeAI8RqG34owiBnRpDYP5iEC8RqH34owiBnZpCYB4AyTYCrQ1/FCGwU0MIXARAKh+B
+        1oc/ihDY8RwCNwGQykQg2vBHEQI7HkPgKgBSfxGIPvxRhMCOpxC4C4CUNwIMfzJCYMdDCFwGQFo+Agx/
+        PoTAjmUI3AZAWiwCDH85hMCORQhcB0CaPQIMPy9CYOe317/XzXv/KfK13AdAmhwBht8vQlDWZ1/vafNv
+        g2Jfr4oASK9HgOGXRQj6V3r8UkUBkF5GYOPdtxi+IULQD4vxSxneDViSxf8gHLa9s6czn3yrKzcG2h3a
+        /xy7BVbjlyq7A5CkF3/5hSQ+AnjBHcFyLMcvVRyADiHwgRDMz3r8UgMB6BACHwjBbDyMX2ooAB1C4AMh
+        OJqX8UsNBqBDCHwgBId5Gr/UcAA6hMAHQuBv/FKAAHQIgQ9RQ+Bx/FKgAHQIgQ+RQuB1/FLAAHQIgQ+t
+        h8Dz+KXAAegQAh9aDIH38UsE4P8IgQ+thKCG8UsE4DWEwIeaQ1DL+CUCcCRC4ENtIahp/BIBmIoQ+FBD
+        CGobv0QAZkYIfPAaghrHLxGAuRECHzyFoNbxSwRgYYTAB+sQ1Dx+iQAsjRD4YBGC2scvEYBsCIEPpULQ
+        wvglApAdIfChzxC0Mn6JAPSGEPiQOwQtjV8iAL0jBD7kCEFr45cIQDGEwIdFQ9Di+CUCUBwh8GGeELQ6
+        fokAmCEEPkwLQcvjlwiAOULgw7gQtD5+iQC4QQh86EJw+/6z5scvSW9aHwAvnT6xomuX1rV18RQhcODy
+        +bUjX0nvQa6/MLgDcIo7grKsf6dgVrmvCwLgHCHoV9ThdwhAJQhBXtGH3yEAlSEEy2H4hxGAShGC+TD8
+        8QhA5QjBZAx/MgLQCEJwGMOfDQFojPUFZY3hz4cANMrLBVYKw18MAWictwsuN4a/HAIQhNcLcFEMPw8C
+        EIz3C3Iahp8XAQiqlgu0w/D7QQCC837BMvx+EQBI8ncBM/wyCAAOsb6gGX5ZBABjlb7AGb4NAoCJ+r7g
+        Gb4tAoCZ5B4Aw/eBAGAuyw6C4fvCQ0Exl+7hpYsO49ql9cwnyivK8DsEAFC84XcIAEKLOvwOAUBI0Yff
+        IQAIheEfRgAQAsMfjwCgaQx/MgKAoo796R/WR0DiuPUBANghAEBgBAAIjAAAgREAIDACAARGAFDUw4/O
+        avPCmvUx8D8EAEV1v05MCHwgADBBCHwgADBFCGwRALhACGwQALhCCMoiAHCJEJRBAOBa6RBsXljTw4/O
+        9v51vCAAqELfIeiGf+3SuvtHludEAFCV3CGIOvwOAUCVlg1B9OF3CACqNm8IGP5hBABNmBYChj8ezwRE
+        U7oQbF08pa1bjyWpincRWiEAaFIXAkzGRwAgMAIABEYAgMAIABAYAQACIwBAYAQACIwAAIERACAwAgAE
+        RgCAwAgAEBgBAAIjAEBgBAAIjAAAgREAIDACAARGAIDACAAQGAEAAiMAQGAEAAiMAACBEQAgMAIABEYA
+        gMAIABAYAQACIwBAYAQACIwAAIERACAwAgAERgCAwKoLwJcPnlkfAWhGdQG488/n1kcAmlFdALZ39qyP
+        ADSjugDcGezzMQDIpLoASNLWrcfWRwCaUGUAbt9/pk+/emJ9DKB6VQZAenkXcHfANwSBZVQbgOH+D9q4
+        +ogIAEuoNgDSqwh8fu+p9VGAKlUdAOllBN67/p2u3Bhod3hgfRygKtUHoLO9s6czn3xLCIA5NBOADiEA
+        ZtdcADqEAJiu2QB0CAFwtOYD0CEEwOvCBKBDCIBXwgWgQwiAwAHoEAJEFj4AHUKAiAjACEKASAjAEQgB
+        IiAAUxACtIwAzIgQoEUEYE6EAC0hAAsiBGgBAVgSIUDNCEAmhAA1IgCZEQLUhAD0hBDUK9KLZwhAzwhB
+        fSK9f5IAFEII6hHp/ZMEoDBC4NuXD57pzmDf+hjFEAAjhMCnaO+dJADGCIEfn371RLfvx/kGoEQA3CAE
+        tu4Onof7218iAO4QgvLuDp5r4+ojDfd/sD5KcQTAKUJQxuf3noYdv0QA3CME/dgdHujKjYHeu/5d2PFL
+        0pvWB8Bstnf2tL2zp80La9q6eEqnT6xYH6lKu8MDbd16HOpn/ZMQgMoQgsUw/PEIQKUIwWwY/mQEoHKE
+        YDyGPxsC0AhC8BLDnw8BaEzUEDD8xRCARkUJAcNfDgFoXKshYPh5EIAgWgkBw8+LAARTawgYfj8IQFC1
+        hIDh94sABOc1BAy/DAIASX5CwPDLIgA4xCoEDN8GAcBYpULA8G0RAEzUVwgYvg8EADMZDcGiGL4vx/Tx
+        Ny+sDwHABo8EAwIjAEBgBAAIjAAAgREAIDACAARGAIDACAAQGAEAAiMAQGAEAAiMAACBEQAgMAIABEYA
+        gMD+Cwb3Zd+SyYtKAAAAAElFTkSuQmCCKAAAAEAAAACAAAAAAQAYAAAAAAAAMAAAAAAAAAAAAAAAAAAA
+        AAAAANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4Nd4ANd4ANd4
+        APrv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P//
+        /////9d4ANd4ANd4AP////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOar
+        YPrv4P///////////////9d4ANd4ANd4AP////////////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4AOarYPrv4P///////////////////////9d4ANd4ANd4AP////////////////////////rv4Oar
+        YNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4AOarYPrv4P///////////////////////////////9d4ANd4ANd4AP//////////////
+        //////////////////rv4N+RMNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4AOarYPrv4P///////////////////////////////////////9d4ANd4ANd4
+        AP////////////////////////////////////XewNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P//////////////////////////////////////////
+        /////9d4ANd4ANd4AP///////////////////////////////////////9d4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P//////////////////////////////////
+        /////////////////////9d4ANd4ANd4AP///////////////////////////////////////9d4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P//////////////////////////
+        /////////////////////////////////////9d4ANd4ANd4AP//////////////////////////////
+        /////////9d4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P//////////////////
+        /////////////////////////////////////////////////////9d4ANd4ANd4AP//////////////
+        /////////////////////////9d4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P//////////
+        /////////////////////////////////////////////////////////////////////9d4ANd4ANd4
+        AP///////////////////////////////////////9d4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AN+RMPrv4P//
+        ////////////////////////////////////////////////////////////////////////////////
+        /////9d4ANd4ANd4AP///////////////////////////////////////9d4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4APXewP//////////////////////////////////////////////////////////////////////
+        /////////////////////9d4ANd4ANd4AP///////////////////////////////////////9d4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4AP//////////////////////////////////////////////////////////
+        /////////////////////////////////////9d4ANd4ANd4AP//////////////////////////////
+        /////////9d4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////////////////////////////////////
+        /////////////////////////////////////////////////////9d4ANd4ANd4AP//////////////
+        /////////////////////////9d4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////////////////////
+        /////////////////////////////////////////////////////////////////////9d4ANd4ANd4
+        AP///////////////////////////////////////9d4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////
+        ////////////////////////////////////////////////////////////////////////////////
+        /////9d4ANd4ANd4AP///////////////////////////////////////9d4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4AP//////////////////////////////////////////////////////////////////////////
+        /////////////////////9d4ANd4ANd4AP///////////////////////////////////////9d4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4AP//////////////////////////////////////////////////////////
+        /////////////////////////////////////9d4ANd4ANd4AP//////////////////////////////
+        /////////9d4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////////////////////////////////////
+        /////////////////////////////////////////////////////9d4ANd4ANd4AP//////////////
+        /////////////////////////9d4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////////////////////
+        /////////////////////////////////////////////////////////////////////9d4ANd4ANd4
+        AP///////////////////////////////////////9d4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////
+        ////////////////////////////////////////////////////////////////////////////////
+        /////9d4ANd4ANd4AP///////////////////////////////////////9d4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4AP//////////////////////////////////////////////////////////////////////////
+        /////////////////////9d4ANd4ANd4AP///////////////////////////////////////9d4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4AP//////////////////////////////////////////////////////////
+        /////////////////////////////////////9d4ANd4ANd4AP////////////////////////rv4Prv
+        4P///////9d4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////////////////////////////////////
+        /////////////////////////////////////////////////////9d4ANd4ANd4AP//////////////
+        //rv4OarYNd4ANd4AOarYPrv4Nd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////////////////////
+        /////////////////////////////////////////////////////////////////////9d4ANd4ANd4
+        AP////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////
+        ////////////////////////////////////////////////////////////////////////////////
+        /////9d4ANd4ANd4APrv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4AP//////////////////////////////////////////////////////////////////////////
+        /////////////////////9d4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4AP//////////////////////////////////////////////////////////
+        /////////////////////////////////////9d4ANd4ANd4AP//////////////////////////////
+        //rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////////////////////////////////////
+        //////////////////////////////////////////////rv4OarYNd4ANd4ANd4AOarYPrv4P//////
+        //////////////////////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////////////////////
+        //////////////////////////////////////////////////////rv4OarYNd4ANd4ANd4ANd4ANd4
+        ANd4ANd4AOarYPrv4P////////////////////////////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////
+        //////////////////////////////////////////////////////////////rv4OarYNd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P////////////////////////////////rv4Oar
+        YNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4AP////////////////////////////////////////////////////////////////rv4OarYNd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P//////////////
+        //////////////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4AP////////////////////////////////////////////////////////rv
+        4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        AOarYPrv4P////////////////////////////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////////////////////////////////////
+        //////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4AOarYPrv4PDNoNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////////////////////
+        //////////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P////////////DNoNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////
+        //////////////////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P////////////////////////DNoNd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4AP////////////////////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P//////////////////////////////
+        //////DNoNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4AP////////////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P//////////////////////
+        //////////////////////////DNoNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P//////////////
+        //////////////////////////////////////////////DNoNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4APrv4OarYNd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P//////
+        //////////////////////////////////////////////////////////////////DNoNd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4APDNoPrv4OarYNd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv
+        4P//////////////////////////////////////////////////////////////////////////////
+        //XewNyJINd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4APDN
+        oP////////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        AOarYPrv4P//////////////////////////////////////////////////////////////////////
+        //////////XewOGaQNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4APDNoP////////////////////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4AOarYPrv4P//////////////////////////////////////////////////////////////
+        //////////////////XewOGaQNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4APDNoP////////////////////////////////////rv4OarYNd4ANd4ANd4
+        ANd4ANd4ANd4ANd4AOarYPrv4P//////////////////////////////////////////////////////
+        //////////////////////////XewOGaQNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4APDNoP//////////////////////////////////////////
+        //////rv4OarYNd4ANd4ANd4AOarYPrv4P//////////////////////////////////////////////
+        //////////////////////////////////XewOGaQNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4APDNoP//////////////////////////////
+        //////////////////////////////rv4OmzcPrv4P//////////////////////////////////////
+        //////////////////////////////////////////XewOGaQNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANyJIPXewP//////////////
+        //////////////////////////////////////////////jm0NyIH/jm0P//////////////////////
+        //////////////////////////////////////////////////XewOGaQNd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        AOGaQPXewP////////////////////////////////////////////////jm0NqAENd4ANqAEPjm0P//
+        //////////////////////////////////////////////////////////XewOGaQNd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4AOGaQPXewP////////////////////////////////////jm0NqAENd4
+        ANd4ANd4ANqAEPjm0P////////////////////////////////////////////////XewOGaQNd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOGaQPXewP//////////////////////
+        //jm0NqAENd4ANd4ANd4ANd4ANd4ANqAEPjm0P////////////////////////////////////XewOGa
+        QNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOGaQPXe
+        wP////////////jm0NqAENd4ANd4ANd4ANd4ANd4ANd4ANd4ANqAEPjm0P//////////////////////
+        //XewOGaQNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4AOGaQPXewPjm0NqAENd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANqAEPjm0P//
+        //////////XewOGaQNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANqAEPjm0PXewOGaQNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKAAAADAAAABgAAAAAQAYAAAAAAAAGwAAAAAAAAAAAAAAAAAA
+        AAAAANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv
+        4Nd4ANd4APrv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4AOarYPrv4P///////9d4ANd4AP////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P///////////////9d4ANd4AP//////
+        //////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P//////
+        /////////////////9d4ANd4AP////////////////////////jm0NqAENd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4AOarYPrv4P///////////////////////////////9d4ANd4AP//////////////////////
+        /////+7EkNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P//////////////////////////////////////
+        /9d4ANd4AP///////////////////////////////9d4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P//////////////
+        /////////////////////////////////9d4ANd4AP///////////////////////////////9d4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        AOarYPrv4P///////////////////////////////////////////////////////9d4ANd4AP//////
+        /////////////////////////9d4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANqAEPjm0P//////////////////////////////////////////////
+        /////////////////9d4ANd4AP///////////////////////////////9d4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AO7EkP//////////////////
+        /////////////////////////////////////////////////9d4ANd4AP//////////////////////
+        /////////9d4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4AP//////////////////////////////////////////////////////////////////////
+        /9d4ANd4AP///////////////////////////////9d4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////////////////////////////////
+        /////////////////////////////////9d4ANd4AP///////////////////////////////9d4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////
+        /////////////////////////////////////////////////////////////////9d4ANd4AP//////
+        /////////////////////////9d4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4AP//////////////////////////////////////////////////////
+        /////////////////9d4ANd4AP///////////////////////////////9d4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////////////////
+        /////////////////////////////////////////////////9d4ANd4AP//////////////////////
+        /////////9d4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4AP//////////////////////////////////////////////////////////////////////
+        /9d4ANd4AP///////////////////////////////9d4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////////////////////////////////
+        /////////////////////////////////9d4ANd4AP////////////////rv4Ou8gPrv4P///9d4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////
+        /////////////////////////////////////////////////////////////////9d4ANd4AP//////
+        //rv4OarYNd4ANd4ANd4AOarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4AP//////////////////////////////////////////////////////
+        /////////////////9d4ANd4APrv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////////////////
+        /////////////////////////////////////////////////9d4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4AP//////////////////////////////////////////////////////////////////////
+        /9d4ANd4AP////////////////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////////////////////////////////
+        //////////////////////////rv4OarYNd4ANd4AOarYPrv4P////////////////////rv4OarYNd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////
+        //////////////////////////////////////////////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4
+        AOarYPrv4P////////////////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4AP////////////////////////////////////////////////rv4Oar
+        YNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P////////////////////rv4OarYNd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////////////////////
+        //////////////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        AOarYPrv4P////////////////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4AP////////////////////////////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4PDNoNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP////////////////////////rv4OarYNd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P////////////DN
+        oNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AP//////
+        //////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        AOarYPrv4P////////////////////////DNoNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4AP////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P////////////////////////////////////DNoNd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4APrv4OarYNd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P//////////////////////
+        //////////////////////////DNoNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4APDNoPrv4OarYNd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOarYPrv
+        4P///////////////////////////////////////////////////////////+SiUNd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4APDNoP////////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4AOarYPrv4P//////////////////////////////////////////////////////
+        //////DNoNyJINd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4APDNoP//////////////
+        //////////rv4OarYNd4ANd4ANd4ANd4ANd4ANd4AOarYPrv4P//////////////////////////////
+        //////////////////////////////DNoNyJINd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4APDNoP////////////////////////////////////rv4OarYNd4ANd4AOarYPrv4P//////
+        //////////////////////////////////////////////////////DNoNyJINd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4AOSiUP//////////////////////////////////////
+        //////////jm0Pjm0P////////////////////////////////////////////////////////////DN
+        oNyJINd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANyJIPDN
+        oP////////////////////////////////////338N+RMN+RMP338P//////////////////////////
+        //////////////////////DNoNyJINd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANyJIPDNoP////////////////////////338N+RMNd4ANd4
+        AN+RMP338P////////////////////////////////////DNoNyJINd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANyJIPDN
+        oP////////////338N+RMNd4ANd4ANd4ANd4AN+RMP338P////////////////////////DNoNyJINd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANyJIPDNoP338N+RMNd4ANd4ANd4ANd4ANd4ANd4AN+RMP33
+        8P////////////DNoNyJINd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4AN+RMP338PDNoNyJINd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4ANd4
+        ANd4ANd4ANd4ANd4ANd4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACgAAAAoAAAAUAAAAAEAGAAAAAAA
+        wBIAAAAAAAAAAAAAAAAAAAAAAADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADmq2D67+DXeADXeAD67+Dmq2DXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADmq2D67+D////////XeADXeAD////////67+Dmq2DXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADmq2D67+D////////////////XeADXeAD////////////////67+DciSDXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADmq2D67+D////////////////////////XeADXeAD////////////////////13sDXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADmq2D6
+        7+D////////////////////////////////XeADXeAD////////////////////////XeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADmq2D67+D/////
+        ///////////////////////////////////XeADXeAD////////////////////////XeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADciSD67+D/////////////
+        ///////////////////////////////////XeADXeAD////////////////////////XeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD13sD/////////////////
+        ///////////////////////////////////XeADXeAD////////////////////////XeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/////////////////////
+        ///////////////////////////////////XeADXeAD////////////////////////XeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/////////////////////
+        ///////////////////////////////////XeADXeAD////////////////////////XeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/////////////////////
+        ///////////////////////////////////XeADXeAD////////////////////////XeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/////////////////////
+        ///////////////////////////////////XeADXeAD////////////////////////XeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/////////////////////
+        ///////////////////////////////////XeADXeAD////////////////////////XeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/////////////////////
+        ///////////////////////////////////XeADXeAD////////67+Dmq2Dmq2D67+DXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/////////////////////
+        ///////////////////////////////////XeADXeAD67+Dmq2DXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/////////////////////
+        ///////////////////////////////////XeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/////////////////////
+        ///////////////////////////////////XeADXeAD////////////////67+Dmq2DXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/////////////////////
+        ///////////////////////////67+Dmq2DXeADXeADmq2D67+D////////////////67+Dmq2DXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/////////////////////
+        ///////////////////67+Dmq2DXeADXeADXeADXeADXeADXeADmq2D67+D////////////////67+Dm
+        q2DXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/////////////////////
+        ///////////67+Dmq2DXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADmq2D67+D/////////////
+        ///67+Dmq2DXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/////////////////////
+        ///67+Dmq2DXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADmq2D67+DwzaDXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD////////////////67+Dm
+        q2DXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADmq2D67+D////////////wzaDXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD////////67+Dmq2DXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADmq2D67+D////////////////////////wzaDX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD67+Dmq2DXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADmq2D67+D////////////////////////////////////w
+        zaDXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADwzaD67+Dmq2DXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADmq2D67+D/////////////////////////////////////////////
+        ///kolDXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADwzaD////////////67+Dmq2DXeADX
+        eADXeADXeADXeADXeADmq2D67+D////////////////////////////////////////////////wzaDc
+        iSDXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADwzaD////////////////////////67+Dm
+        q2DXeADXeADmq2D67+D////////////////////////////////////////////////wzaDciSDXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADwzaD/////////////////////////////////
+        ///45tD45tD////////////////////////////////////////////////wzaDciSDXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADmq2D67+D////////////////////////////9
+        9/DfkTDfkTD99/D////////////////////////////////////wzaDciSDXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADmq2D67+D////////////////99/Df
+        kTDXeADXeADfkTD99/D////////////////////////wzaDciSDXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADmq2D67+D////99/DfkTDX
+        eADXeADXeADXeADfkTD99/D////////////wzaDciSDXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADmq2DfkTDXeADX
+        eADXeADXeADXeADXeADfkTD99/DwzaDciSDXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACgAAAAgAAAAQAAAAAEAGAAAAAAA
+        AAwAAAAAAAAAAAAAAAAAAAAAAADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADmq2D67+DXeAD67+Dmq2DXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADmq2D67+D////////XeAD////////67+Dmq2DXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADmq2D67+D////////////////XeAD/////////
+        ///////wzaDXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADmq2D67+D////////////////////////XeAD////////////////////XeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADmq2D67+D/////////////////////////////
+        ///XeAD////////////////////XeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADwzaD////////////////////////////////////////XeAD////////////////////XeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/////////////////////////
+        ///////////////////XeAD////////////////////XeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeAD////////////////////////////////////////////XeAD/////////
+        ///////////XeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/////////
+        ///////////////////////////////////XeAD////////////////////XeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/////////////////////////////////////////
+        ///XeAD////////////////////XeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeAD////////////////////////////////////////////XeAD////67+Dmq2DXeADmq2DXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/////////////////////////
+        ///////////////////XeADmq2DXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeAD////////////////////////////////////////67+DXeAD67+D/////
+        ///////wzaDciSDXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/////////
+        ///////////////////////67+Dmq2DXeADXeADXeADmq2D67+D////////////wzaDciSDXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeAD////////////////////////67+Dmq2DXeADXeADX
+        eADXeADXeADXeADXeADmq2D67+D////////////wzaDciSDXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeAD////////////////67+Dmq2DXeADXeADXeADXeADXeADXeADXeADXeADXeADmq2D67+DwzaDX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD////////67+Dmq2DXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADmq2D67+D////////////wzaDXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeAD67+Dmq2DXeADXeADXeADXeADXeADXeADXeADXeADXeADmq2D67+D/////
+        ///////////////////wzaDXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADwzaD67+Dmq2DX
+        eADXeADXeADXeADXeADXeADXeADmq2D67+D////////////////////////////////13sDciSDXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADwzaD////////////67+Dmq2DXeADXeADXeADmq2D67+D/////
+        ///////////////////////////13sDhmkDXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADwzaD/
+        ///////////////////////67+Dps3D67+D////////////////////////////////13sDhmkDXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADmq2D67+D////////////////////45tDciB/4
+        5tD////////////////////////13sDhmkDXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADmq2D67+D////////45tDagBDXeADagBD45tD////////////13sDhmkDXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADmq2Dz
+        1bDagBDXeADXeADXeADagBD45tD13sDhmkDXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACgAAAAYAAAAMAAAAAEAGAAAAAAA
+        wAYAAAAAAAAAAAAAAAAAAAAAAADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADmq2D67+DXeAD67+Dmq2DXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADmq2D67+D////////XeAD////////67+DkolDXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADmq2D67+D////////////////XeAD/////////
+        ///99/DXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADmq2D67+D/////////////////////
+        ///XeAD////////////////XeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD13sD/////////////
+        ///////////////////XeAD////////////////XeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/
+        ///////////////////////////////////XeAD////////////////XeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeAD////////////////////////////////////XeAD////////////////XeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeAD////////////////////////////////////XeAD/////////
+        ///////XeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/////////////////////////////////
+        ///XeAD////////67+D67+DXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/////////////////
+        ///////////////////XeAD67+Dmq2DXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeAD/
+        ///////////////////////////67+Dmq2DXeADmq2D67+D////67+Dmq2DXeADXeADXeADXeADXeADX
+        eADXeADXeADXeAD////////////////////67+Dmq2DXeADXeADXeADXeADXeADmq2D67+D////67+Dm
+        q2DXeADXeADXeADXeADXeADXeADXeAD////////////67+Dmq2DXeADXeADXeADXeADXeADXeADXeADm
+        q2D67+DwzaDXeADXeADXeADXeADXeADXeADXeADXeADXeAD////67+Dmq2DXeADXeADXeADXeADXeADX
+        eADXeADmq2D67+D////////////wzaDXeADXeADXeADXeADXeADXeADXeADfkTDvy5zXeADXeADXeADX
+        eADXeADXeADXeADmq2D67+D////////////////////////wzaDXeADXeADXeADXeADXeADfkTD99/D/
+        ///67+Dmq2DXeADXeADXeADmq2D67+D////////////////////////////67+Dmq2DXeADXeADXeADX
+        eADfkTD99/D////////////////67+Dps3D67+D////////////////////////////67+Dmq2DXeADX
+        eADXeADXeADXeADXeADciSDwzaD////////////////45tDciB/45tD////////////////////67+Dm
+        q2DXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADciSDwzaD////45tDagBDXeADagBD45tD/////
+        ///67+Dmq2DXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADciSDagBDXeADX
+        eADXeADagBDz1bDmq2DXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADXeADX
+        eADXeADXeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoAAAAFAAAACgAAAABABgA
+        AAAAALAEAAAAAAAAAAAAAAAAAAAAAAAA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA
+        13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA
+        13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA5qtg+u/g13gA
+        +u/g5qtg13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA5qtg+u/g////////13gA
+        ////////+ObQ13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA5qtg+u/g////////////////13gA
+        ////////////13gA13gA13gA13gA13gA13gA13gA13gA13gA+ObQ////////////////////////13gA
+        ////////////13gA13gA13gA13gA13gA13gA13gA13gA13gA////////////////////////////13gA
+        ////////////13gA13gA13gA13gA13gA13gA13gA13gA13gA////////////////////////////13gA
+        ////////////13gA13gA13gA13gA13gA13gA13gA13gA13gA////////////////////////////13gA
+        ////+u/g+u/g13gA13gA13gA13gA13gA13gA13gA13gA13gA////////////////////////////13gA
+        5qtg13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA////////////////////////+u/g13gA
+        +u/g////+u/g5qtg13gA13gA13gA13gA13gA13gA13gA13gA////////////////+u/g5qtg13gA13gA
+        13gA5qtg+u/g////+u/g5qtg13gA13gA13gA13gA13gA13gA////////+u/g5qtg13gA13gA13gA13gA
+        13gA5qtg+u/g8M2g13gA13gA13gA13gA13gA13gA13gA13gA+u/g5qtg13gA13gA13gA13gA13gA5qtg
+        +u/g////////////8M2g13gA13gA13gA13gA13gA13gA8M2g+u/g5qtg13gA13gA13gA5qtg+u/g////
+        ////////////////9d7A3Ikg13gA13gA13gA13gA8M2g////////////+u/g6bNw+u/g////////////
+        ////////9d7A4ZpA13gA13gA13gA13gA13gA13gA5qtg+u/g////////+ObQ3Igf+ObQ////////////
+        9d7A4ZpA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA5qtg89Ww2oAQ13gA2oAQ+ObQ9d7A4ZpA
+        13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA
+        13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA
+        13gA13gA13gA13gA13gA13gA13gA13gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoAAAAEAAAACAAAAABABgA
+        AAAAAAADAAAAAAAAAAAAAAAAAAAAAAAA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA
+        13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA2oAQ67yA/ffw13gA/ffw67yA2oAQ13gA13gA13gA
+        13gA13gA13gA13gA2oAQ67yA/ffw////////13gA////////+u/g13gA13gA13gA13gA13gA13gA6bNw
+        /ffw////////////////13gA////////////13gA13gA13gA13gA13gA13gA////////////////////
+        ////13gA////////////13gA13gA13gA13gA13gA13gA////////////////////////13gA////////
+        ////13gA13gA13gA13gA13gA13gA////////////////////////13gA////////////13gA13gA13gA
+        13gA13gA13gA////////////////////////13gA+u/g4ZpA5qtg13gA13gA13gA13gA13gA13gA////
+        /////////////ffw8M2g13gA/ffw////89Ww3Ikg13gA13gA13gA13gA13gA/////////ffw67yA2oAQ
+        13gA13gA2oAQ7sSQ/////ffw67yA13gA13gA13gA13gA/ffw67yA2oAQ13gA13gA13gA13gA4ZpA9d7A
+        /ffw35Ew13gA13gA13gA13gA5KJQ46BM13gA13gA13gA13gA5qtg+u/g/////////////ffw35Ew13gA
+        13gA5qtg////////9d7A4ZpA5qtg+u/g/////////////////ffw67yA2oAQ13gA13gA8M2g////////
+        ////8tOs/ffw////////////+u/g5qtg13gA13gA13gA13gA13gA13gA3Ikg8M2g8M2g13gA35Ew+ObQ
+        +u/g5qtg13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA13gA
+        13gA13gA13gA13gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAA==
+</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="blank" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\blank.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="blank_light" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\blank_light.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="blank_press" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\blank_press.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cancel" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\cancel.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cancel_back" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\cancel_back.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cancel_ban" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\cancel_ban.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cancel_ban_back" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\cancel_ban_back.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cancel_light" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\cancel_light.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cancel_press" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\cancel_press.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="max" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\max.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="max_back" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\max_back.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="max_ban" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\max_ban.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="max_ban_back" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\max_ban_back.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="max_light" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\max_light.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="max_press" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\max_press.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="min" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\min.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="min_back" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\min_back.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="min_ban" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\min_ban.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="min_ban_back" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\min_ban_back.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="min_light" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\min_light.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="min_press" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\min_press.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="options" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\options.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="options_back" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\options_back.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="options_ban" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\options_ban.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="options_ban_back" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\options_ban_back.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="options_light" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\options_light.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="options_press" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\options_press.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="restore" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\restore.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="restore_back" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\restore_back.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="restore_ban" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\restore_ban.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="restore_ban_back" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\restore_ban_back.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="restore_light" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\restore_light.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="restore_press" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\restore_press.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+</root>

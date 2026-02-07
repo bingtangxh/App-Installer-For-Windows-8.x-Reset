@@ -12,7 +12,7 @@ namespace WAShell
 {
 	[ComVisible (true)]
 	[ClassInterface (ClassInterfaceType.AutoDual)]
-	public partial class WebAppForm: Form, IScriptBridge, IWebBrowserPageScale, ITaskbarProgress
+	public partial class WebAppForm: NormalForm, IScriptBridge, IWebBrowserPageScale, ITaskbarProgress
 	{
 		SplashForm splash = new SplashForm ();
 		TaskbarProgress taskbar = null;
