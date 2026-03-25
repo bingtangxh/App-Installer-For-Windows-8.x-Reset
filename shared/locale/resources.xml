@@ -470,7 +470,7 @@
         <lang name="zh-CN">正在生成快捷方式</lang>
         <lang name="en-US">Generating Shortcut</lang>
     </resource>
-     <resource id="MANAGER_APP_SHORTCUTCREATE_BACK_TEXT_ING">
+    <resource id="MANAGER_APP_SHORTCUTCREATE_BACK_TEXT_ING">
         <lang name="zh-CN">正在生成快捷方式...</lang>
         <lang name="en-US">Generating Shortcut...</lang>
     </resource>
@@ -502,7 +502,7 @@
         <lang name="zh-CN">在这里，可以进行对应用的安装、注册等操作。</lang>
         <lang name="en-US">Here, you can perform installations, registrations, and other operations on apps.</lang>
     </resource>
-     <resource id="MANAGER_LOAD_INSTALL">
+    <resource id="MANAGER_LOAD_INSTALL">
         <lang name="zh-CN">安装</lang>
         <lang name="en-US">Install</lang>
     </resource>
@@ -510,7 +510,7 @@
         <lang name="zh-CN">安装</lang>
         <lang name="en-US">Install</lang>
     </resource>
-     <resource id="MANAGER_LOAD_INSTALL_DESC">
+    <resource id="MANAGER_LOAD_INSTALL_DESC">
         <lang name="zh-CN">将应用部署到系统中。</lang>
         <lang name="en-US">Deploy the app to the system.</lang>
     </resource>
@@ -530,7 +530,7 @@
         <lang name="zh-CN">安装所有资源 (对于捆绑包)</lang>
         <lang name="en-US">Install All Resources (for Bundle Packages)</lang>
     </resource>
-     <resource id="MANAGER_LOAD_REGISTER">
+    <resource id="MANAGER_LOAD_REGISTER">
         <lang name="zh-CN">注册</lang>
         <lang name="en-US">Register</lang>
     </resource>
@@ -538,11 +538,11 @@
         <lang name="zh-CN">注册</lang>
         <lang name="en-US">Register</lang>
     </resource>
-     <resource id="MANAGER_LOAD_REGISTER_DESC">
+    <resource id="MANAGER_LOAD_REGISTER_DESC">
         <lang name="zh-CN">将应用清单注册到系统中。</lang>
         <lang name="en-US">Register the app manifest to the system.</lang>
     </resource>
-     <resource id="MANAGER_LOAD_STAGE">
+    <resource id="MANAGER_LOAD_STAGE">
         <lang name="zh-CN">预部署</lang>
         <lang name="en-US">Stage</lang>
     </resource>
@@ -586,12 +586,32 @@
         <lang name="zh-CN">Windows 商店应用清单文件 (*.appxmanifest, *AppxManifest.xml)</lang>
         <lang name="en-US">Windows Store App Manifest File (*.appxmanifest, *AppxManifest.xml)</lang>
     </resource>
-     <resource id="MANAGER_LOAD_ALLFILES">
+    <resource id="MANAGER_LOAD_ALLFILES">
         <lang name="zh-CN">所有文件 (*.*)</lang>
         <lang name="en-US">All Files (*.*)</lang>
     </resource>
     <resource id="MANAGER_SETTINGS">
         <lang name="zh-CN">设置</lang>
         <lang name="en-US">Settings</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_UPDATE">
+        <lang name="zh-CN">更新</lang>
+        <lang name="en-US">Update</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_UPDATE_BTN">
+        <lang name="zh-CN">更新</lang>
+        <lang name="en-US">Update</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_UPDATE_DESC">
+        <lang name="zh-CN">更新已有的应用。</lang>
+        <lang name="en-US">Update existing apps.</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_UPDATE_ING">
+        <lang name="zh-CN">正在更新... {0}</lang>
+        <lang name="en-US">Updating... {0}</lang>
+    </resource>
+    <resource id="MANAGER_LOAD_UPDATE_SUCCEED">
+        <lang name="zh-CN">更新完成</lang>
+        <lang name="en-US">Update Complete.</lang>
     </resource>
 </resources>

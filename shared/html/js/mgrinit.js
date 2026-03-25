@@ -225,39 +225,55 @@
                             data.Properties.LogoBase64 === null || data.Properties.LogoBase64 === "" || data.Properties.LogoBase64 === void 0
                         ) {
                             promises.push(function(item, arr) {
+                                var ispush = false;
                                 return Package.reader.readFromInstallLocation(item.InstallLocation, true).then(function(result) {
                                     try {
                                         arr.push(processData(result.json, item));
+                                        ispush = true;
                                     } catch (e) {
+                                        if (ispush) return;
                                         item.BackgroundColor = "transparent";
                                         arr.push(item);
+                                        ispush = true;
                                     }
                                 }, function(result) {
                                     try {
+                                        if (ispush) return;
                                         arr.push(processData(result.json, item));
+                                        ispush = true;
                                     } catch (e) {
+                                        if (ispush) return;
                                         item.BackgroundColor = "transparent";
                                         arr.push(item);
+                                        ispush = true;
                                     }
                                 });
                             }(data, newDatas));
                         } else {
                             promises.push(function(item, arr) {
+                                var ispush = false;
                                 return Package.reader.readFromInstallLocation(item.InstallLocation, false).then(function(result) {
                                     try {
                                         item.BackgroundColor = result.json.applications[0].BackgroundColor;
                                         arr.push(item);
+                                        ispush = true;
                                     } catch (e) {
+                                        if (ispush) return;
                                         item.BackgroundColor = "transparent";
                                         arr.push(item);
+                                        ispush = true;
                                     }
                                 }, function(result) {
                                     try {
+                                        if (ispush) return;
                                         item.BackgroundColor = result.json.applications[0].BackgroundColor;
                                         arr.push(item);
+                                        ispush = true;
                                     } catch (e) {
+                                        if (ispush) return;
                                         item.BackgroundColor = "transparent";
                                         arr.push(item);
+                                        ispush = true;
                                     }
                                 });
                             }(data, newDatas));
@@ -383,6 +399,15 @@
             set.getKey("PackageManager:ShowFrameworks").set(showFrameworks.checked);
         });
         refreshButton.addEventListener("click", refreshAppList2);
+        var appShellButton = new AppBar.Command();
+        appShellButton.icon = "&#57622;";
+        appShellButton.label = "Applications";
+        appShellButton.element.style.display = "none";
+        appShellButton.addEventListener("click", function() {
+            appbarControl.hide();
+            external.Process.run("shell:::{4234d49b-0245-4df3-b780-3893943456e1}", "", 1, false, "");
+        });
+        appbarControl.add(appShellButton);
         appbarControl.add(refreshButton);
         refreshAppList2();
         var appDetailPage = document.getElementById("page-appinfo");

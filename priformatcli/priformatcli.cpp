@@ -563,6 +563,7 @@ void PriFileIterateTask (PCSPRIFILE pFilePri)
 	System::Runtime::InteropServices::GCHandle handle = System::Runtime::InteropServices::GCHandle::FromIntPtr (handlePtr);
 	auto pri = safe_cast <PriFileInst ^> (handle.Target);
 	auto &priFile = pri;
+	if (!priFile) return;
 	auto resmapsect = pri->inst->PriDescriptorSection->ResourceMapSections;
 	bool isallsearched = true;
 	size_t allitemslen = 0;
@@ -788,12 +789,14 @@ void PriFileIterateTaskCli (Object^ pFilePriObj)
 //		t->Start (IntPtr (pFilePri));
 //	}
 //}
+#ifdef ELDER_FUNC
 void AddPriResourceName (PCSPRIFILE pFilePri, const std::vector <std::wnstring> &urilist)
 {
 	if (!pFilePri) return;
 	if (!urilist.size ()) return;
 	{
 		CreateScopedLock (g_threadlock);
+		CreateScopedLock (g_iterlock);
 		if (g_tasklist.find (pFilePri) == g_tasklist.end ())
 		{
 			g_tasklist [pFilePri] = TASKINFO_SEARCH ();
@@ -802,11 +805,13 @@ void AddPriResourceName (PCSPRIFILE pFilePri, const std::vector <std::wnstring> 
 	TASKINFO_SEARCH *ptask = nullptr;
 	{
 		CreateScopedLock (g_threadlock);
+		CreateScopedLock (g_iterlock);
 		ptask = &g_tasklist.at (pFilePri);
 	}
 	auto &task = *ptask;
 	bool isallfined = true;
 	{
+		CreateScopedLock (g_threadlock);
 		CreateScopedLock (g_iterlock);
 		for (auto &it : urilist)
 		{
@@ -832,6 +837,7 @@ void AddPriResourceName (PCSPRIFILE pFilePri, const std::vector <std::wnstring> 
 	if (isallfined) return;
 	{
 		CreateScopedLock (g_threadlock);
+		CreateScopedLock (g_iterlock);
 		if (!task.bIsRunning)
 		{
 			System::Threading::Thread ^t = gcnew System::Threading::Thread (gcnew System::Threading::ParameterizedThreadStart (PriFileIterateTaskCli));
@@ -873,7 +879,7 @@ LPWSTR GetPriResource (PCSPRIFILE pFilePri, LPCWSTR lpswResId)
 		auto &result = task.mapTasks [TASKITEM_SEARCH (lpswResId)];
 		if (result.has_search ()) return _wcsdup (result.swValue.c_str ());
 	}
-	BYTE buf [sizeof (LPCWSTRLIST) + sizeof (LPCWSTR)] = {0};
+	BYTE buf [sizeof (LPCWSTRLIST) + sizeof (LPCWSTR)] = { 0 };
 	HLPCWSTRLIST hStrList = (HLPCWSTRLIST)buf;
 	hStrList->dwLength = 1;
 	hStrList->aswArray [0] = lpswResId;
@@ -893,6 +899,7 @@ LPWSTR GetPriResource (PCSPRIFILE pFilePri, LPCWSTR lpswResId)
 }
 LPWSTR GetPriStringResource (PCSPRIFILE pFilePri, LPCWSTR lpswUri) { return GetPriResource (pFilePri, lpswUri); }
 LPWSTR GetPriPathResource (PCSPRIFILE pFilePri, LPCWSTR lpswFilePath) { return GetPriResource (pFilePri, lpswFilePath); }
+#endif
 void ClearPriCacheData ()
 {
 	g_tasklist.clear ();
@@ -1209,3 +1216,252 @@ HWSDSPAIRLIST GetPriResourcesAllValuesList (PCSPRIFILE pPriFile, const LPCWSTR *
 	if (rnout.empty ()) return nullptr;
 	return CreateWSDSPAIRLISTFromMap (rnout);
 }
+
+#ifndef ELDER_FUNC
+size_t GetPriLocaleStringResources (
+	PCSPRIFILE pPriFile,
+	const std::vector <std::wstring> &resnames,
+	std::map <std::wnstring, std::map <std::wnstring, std::wstring>> &output
+)
+{
+	output.clear ();
+	if (!pPriFile) return 0;
+	auto inst = GetPriFileInst (pPriFile);
+	auto pri = inst->inst;
+	auto priFile = inst;
+	auto resmapsect = pri->PriDescriptorSection->ResourceMapSections;
+	std::set <std::wnstring> rnlist;
+	for (auto &it : resnames) rnlist.insert (std::wnstring (it));
+	for (size_t i = 0; i < resmapsect->Count; i ++)
+	{
+		auto resourceMapSectionRef = resmapsect [i];
+		auto resourceMapSection = pri->GetSectionByRef (resourceMapSectionRef);
+		if (resourceMapSection->HierarchicalSchemaReference != nullptr) continue;
+		auto decisionInfoSection = pri->GetSectionByRef (resourceMapSection->DecisionInfoSection);
+		for each (auto candidateSet in resourceMapSection->CandidateSets->Values)
+		{
+			auto item = pri->GetResourceMapItemByRef (candidateSet->ResourceMapItem);
+			std::wstring itemfullname = MPStringToStdW (item->FullName);
+			std::vector <std::wnstring> itempath;
+			{
+				auto ips = split_wcstok (itemfullname, L"\\");
+				for (auto &it : ips)
+				{
+					if (std::wnstring::empty (it)) continue;
+					itempath.push_back (it);
+				}
+			}
+			bool isfind = false;
+			std::wnstring taskkey = L"";
+			int tasktype = 1;
+			for (auto &it : rnlist)
+			{
+				TASKITEM_SEARCH key (it);
+				std::vector <std::wnstring> namepath;
+				key.get_path (namepath);
+				if (PathEquals (itempath, namepath))
+				{
+					taskkey = it;
+					tasktype = key.iTaskType;
+					isfind = true;
+					break;
+				}
+			}
+			if (!isfind) continue;
+			std::map <std::wnstring, std::wstring> values;
+			for each (auto candidate in candidateSet->Candidates)
+			{
+				std::wnstring resc = L"";
+				System::String ^value = nullptr;
+				if (candidate->SourceFile.HasValue)
+				{
+					// 内嵌资源，暂无法处理
+					// value = System::String::Format ("<external in {0}>", pri->GetReferencedFileByRef (candidate->SourceFile.Value)->FullName);
+					value = pri->GetReferencedFileByRef (candidate->SourceFile.Value)->FullName;
+				}
+				else
+				{
+					ByteSpan ^byteSpan = nullptr;
+					if (candidate->DataItem.HasValue) byteSpan = priFile->inst->GetDataItemByRef (candidate->DataItem.Value);
+					else byteSpan = candidate->Data.Value;
+					priFile->Seek (byteSpan->Offset, System::IO::SeekOrigin::Begin);
+					auto binaryReader = gcnew System::IO::BinaryReader (priFile, System::Text::Encoding::Default, true);
+					auto data = binaryReader->ReadBytes ((int)byteSpan->Length);
+					switch (candidate->Type)
+					{
+						case ResourceValueType::AsciiPath:
+						case ResourceValueType::AsciiString:
+							value = System::Text::Encoding::ASCII->GetString (data)->TrimEnd ('\0');
+							break;
+						case ResourceValueType::Utf8Path:
+						case ResourceValueType::Utf8String:
+							value = System::Text::Encoding::UTF8->GetString (data)->TrimEnd ('\0');
+							break;
+						case ResourceValueType::Path:
+						case ResourceValueType::String:
+							value = System::Text::Encoding::Unicode->GetString (data)->TrimEnd ('\0');
+							break;
+						case ResourceValueType::EmbeddedData:
+							value = Convert::ToBase64String (data);
+							break;
+					}
+					delete binaryReader;
+					delete data;
+					binaryReader = nullptr;
+					data = nullptr;
+				}
+				auto qualifierSet = decisionInfoSection->QualifierSets [candidate->QualifierSet];
+				auto qualis = gcnew System::Collections::Generic::Dictionary <QualifierType, Object ^> ();
+				for each (auto quali in qualifierSet->Qualifiers)
+				{
+					auto type = quali->Type;
+					auto value = quali->Value;
+					qualis->Add (type, value);
+				}
+				if (qualis->ContainsKey (QualifierType::Language))
+				{
+					resc = MPStringToStdW (qualis [QualifierType::Language]->ToString ());
+					values [resc] = MPStringToStdW (value ? value : System::String::Empty);
+				}
+				delete qualis;
+				qualis = nullptr;
+			}
+			output [taskkey] = values;
+			rnlist.erase (taskkey);
+		}
+		resourceMapSection = nullptr;
+	}
+}
+std::wstring GetConfirmLocaleResources (const std::map <std::wnstring, std::wstring> &strvalue, const std::wnstring &lang)
+{
+	for (auto &it : strvalue)
+	{
+		if (it.first.equals (lang)) return it.second;
+	}
+	for (auto &it : strvalue)
+	{
+		if (LocaleNameCompare (it.first, lang)) return it.second;
+	}
+	auto rest = GetLocaleRestrictedCode (lang);
+	for (auto &it : strvalue)
+	{
+		if (LocaleNameCompare (GetLocaleRestrictedCode (it.first), rest)) return it.second;
+	}
+	return L"";
+}
+std::wstring GetSuitableLocaleResources (const std::map <std::wnstring, std::wstring> &strvalue)
+{
+	auto ret = GetConfirmLocaleResources (strvalue, GetComputerLocaleCodeW ());
+	if (ret.empty ()) ret = GetConfirmLocaleResources (strvalue, L"en-US");
+	if (ret.empty ())
+	{
+		if (strvalue.size () > 0) ret = strvalue.begin ()->second;
+	}
+	return ret;
+}
+std::wstring GetConfirmFileResources (const std::map <DWORD, std::wnstring> &input, unsigned short dpi, unsigned short contrast)
+{
+	auto &output = input;
+	auto get_type = [] (DWORD key) -> DWORD {
+		return (key & PRI_TYPE_MASK) >> PRI_TYPE_SHIFT;
+	};
+	auto get_contrast = [] (DWORD key) -> DWORD {
+		return (key & PRI_CONTRAST_MASK) >> PRI_CONTRAST_SHIFT;
+	};
+	auto get_value = [] (DWORD key) -> DWORD {
+		return key & PRI_VALUE_MASK;
+	};
+	struct Candidate
+	{
+		DWORD scale; 
+		std::wnstring value; 
+	};
+	std::vector <Candidate> exact_contrast;
+	std::vector <Candidate> none_contrast;
+	for (const auto& kv : output) {
+		DWORD key = kv.first;
+		DWORD type = get_type (key);
+		if (type != 0) continue;  
+		DWORD cont = get_contrast (key);
+		DWORD scale = get_value (key);
+		if (StrInclude (kv.second, L"layoutdir-RTL", true)) continue;
+		if (cont == contrast) {
+			exact_contrast.push_back ({ scale, kv.second });
+		}
+		else if (cont == 0) {
+			none_contrast.push_back ({ scale, kv.second });
+		}
+	}
+	auto select_best = [dpi] (std::vector<Candidate>& candidates) -> std::wstring {
+		if (candidates.empty ()) return L"";
+		std::sort (candidates.begin (), candidates.end (),
+			[] (const Candidate& a, const Candidate& b) {
+			return a.scale < b.scale;
+		});
+		for (const auto &cand : candidates) {
+			if (cand.scale == dpi) {
+				return cand.value.c_str ();
+			}
+		}
+		for (const auto &cand : candidates) {
+			if (cand.scale > dpi) {
+				return cand.value.c_str ();
+			}
+		}
+		return candidates.back ().value.c_str ();
+	};
+	std::wstring result = select_best (exact_contrast);
+	if (!result.empty ()) return result;
+	return L"";
+}
+std::wstring GetSuitableFileResources (const std::map <DWORD, std::wnstring> &input)
+{
+	std::wstring ret = GetConfirmFileResources (input, GetDPI (), 0);
+	if (ret.empty ()) ret = GetConfirmFileResources (input, GetDPI (), 2);
+	if (ret.empty ()) ret = GetConfirmFileResources (input, GetDPI (), 1);
+	if (ret.empty ())
+	{
+		if (input.size () > 0)
+		{
+			ret = input.begin ()->second;
+		}
+	}
+	return ret;
+}
+void AddPriResourceName (PCSPRIFILE pFilePri, const std::vector <std::wnstring> &urilist) {}
+void FindPriResource (PCSPRIFILE pFilePri, HLPCWSTRLIST hUriList) {}
+void FindPriStringResource (PCSPRIFILE pFilePri, HLPCWSTRLIST hUriList) {}
+void FindPriPathResource (PCSPRIFILE pFilePri, HLPCWSTRLIST hPathList) {}
+LPWSTR GetPriResource (PCSPRIFILE pFilePri, LPCWSTR lpswResId)
+{
+	if (strnull (lpswResId)) return NULL;
+	auto resid = lpswResId ? lpswResId : L"";
+	std::vector <std::wstring> ress;
+	ress.push_back (lpswResId ? lpswResId : L"");
+	std::map <std::wnstring, std::map <std::wnstring, std::wstring>> strRes;
+	if (IsMsResourcePrefix (lpswResId))
+	{
+		GetPriLocaleStringResources (pFilePri, ress, strRes);
+		if (strRes.size () > 0)
+		{
+			auto &res = strRes [std::wnstring (resid)];
+			return _wcsdup (GetSuitableLocaleResources (res).c_str ());
+		}
+	}
+	std::map <std::wnstring, std::map <DWORD, std::wnstring>> fileRes;
+	GetPriScaleAndTargetSizeFileList (pFilePri, ress, fileRes);
+	if (fileRes.size () > 0)
+	{
+		auto &fres = fileRes [std::wnstring (resid)];
+		return _wcsdup (GetSuitableFileResources (fres).c_str ());
+	}
+	GetPriLocaleStringResources (pFilePri, ress, strRes);
+	if (strRes.size () > 0)
+	{
+		auto &res = strRes [std::wnstring (resid)];
+		return _wcsdup (GetSuitableLocaleResources (res).c_str ());
+	}
+}
+LPWSTR GetPriStringResource (PCSPRIFILE pFilePri, LPCWSTR lpswUri) { return GetPriResource (pFilePri, lpswUri); }
+LPWSTR GetPriPathResource (PCSPRIFILE pFilePri, LPCWSTR lpswFilePath) { return GetPriResource (pFilePri, lpswFilePath); }
+#endif

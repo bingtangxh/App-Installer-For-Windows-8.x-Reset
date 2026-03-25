@@ -410,6 +410,8 @@
                     if (pkgSupportVer.major == 6 && pkgSupportVer.minor == 3 && pkgSupportVer.build == 1) {
                         if (pkginfo.identity.architecture & (4 | 8)) {
                             ret.osminversionSupport = true;
+                        } else if (systemSupportVer.major >= 10) {
+                            ret.osminversionSupport = false;
                         }
                     } else {
                         ret.osminversionSupport = true;
