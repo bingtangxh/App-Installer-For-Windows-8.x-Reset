@@ -103,7 +103,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalOptions>/ZW:nostdlib /FUplatform.winmd /FUwindows.winmd %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;PKGMGR_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;PKGMGR_EXPORTS;%(PreprocessorDefinitions);_ARM_WINAPI_PARTITION_DESKTOP_SDK_AVAILABLE=1</PreprocessorDefinitions>
       <CompileAsWinRT>true</CompileAsWinRT>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
@@ -142,7 +142,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalOptions>/ZW:nostdlib /FUplatform.winmd /FUWindows.winmd %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;PKGMGR_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;PKGMGR_EXPORTS;%(PreprocessorDefinitions);_ARM_WINAPI_PARTITION_DESKTOP_SDK_AVAILABLE=1</PreprocessorDefinitions>
       <CompileAsWinRT>true</CompileAsWinRT>
     </ClCompile>
     <Link>
