@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Package Manager</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="js/module.js"></script>
+    <script type="text/javascript" src="js/polyfill-ie.js"></script>
+    <link rel="stylesheet" href="libs/winjs/1.0/css/ui-light.css" id="winjs-style-1">
+    <link rel="stylesheet" href="libs/winjs/2.0/css/ui-light.css" id="winjs-style">
+    <script type="text/javascript" src="libs/winjs/1.0/js/base.js"></script>
+    <script type="text/javascript" src="libs/winjs/1.0/js/ui.js"></script>
+    <script type="text/javascript" src="js/color.js"></script>
+    <script type="text/javascript" src="js/promise.js"></script>
+    <script type="text/javascript" src="js/bridge.js"></script>
+    <script type="text/javascript" src="js/dpimodes.js"></script>
+    <script type="text/javascript" src="js/resources.js"></script>
+    <script type="text/javascript" src="js/animation.js"></script>
+    <link rel="stylesheet" href="fonts/fonts.css">
+    <link rel="stylesheet" href="fonts/segx.css">
+    <link rel="stylesheet" href="manager/page.css">
+    <link rel="stylesheet" href="manager/appitem.css">
+    <link rel="stylesheet" href="manager/appbar.css">
+    <script type="text/javascript" src="js/handler.js"></script>
+    <script type="text/javascript" src="js/event.js"></script>
+    <script type="text/javascript" src="js/tileback.js"></script>
+    <script type="text/javascript" src="js/load.js"></script>
+    <link rel="stylesheet" type="text/css" href="libs/msgbox/msgbox.css">
+    <script type="text/javascript" src="libs/msgbox/msgbox.js"></script>
+    <script type="text/javascript" src="js/init.js"></script>
+    <script type="text/javascript" src="js/pkginfo.js"></script>
+    <script type="text/javascript" src="js/datasrc.js"></script>
+    <script type="text/javascript" src="js/appbar.js"></script>
+    <script type="text/javascript" src="js/pagemgr.js"></script>
+    <script type="text/javascript" src="js/search.js"></script>
+    <link rel="stylesheet" href="css/statusbar.css">
+    <script type="text/javascript" src="js/statusbar.js"></script>
+    <script type="text/javascript" src="js/rdinit.js"></script>
+</head>
+
+<body>
+    <div id="readerpage" class="pagecontainer full">
+        <div class="page full guide fold">
+            <main class="main padding">
+                <div id="page-reader" style="display: none;" class="ispage">
+                    <h2>读取</h2>
+                    <p>请选择一个包，获取其信息。</p>
+                    <label for="read-pkgpath">文件路径</label>
+                    <input type="file" id="read-pkgpath">
+                    <input type="checkbox" id="read-usepri">
+                    <label for="read-usepri">需要解析 PRI 资源文件</label>
+                    <button id="read-btn">读取</button>
+                    <p>读取结果：</p>
+                    <div id="read-result"></div>
+                    <script>
+                        (function() {
+                            var readBtn = document.getElementById("read-btn");
+                            var readResult = document.getElementById("read-result");
+                            var readPkgpath = document.getElementById("read-pkgpath");
+                            var readUsepri = document.getElementById("read-usepri");
+                            readBtn.onclick = function() {
+                                var self = this;
+                                var pr = Package.reader;
+                                pr.readFromPackage(readPkgpath.value, readUsepri.checked).then(function(pi) {
+                                    readResult.textContent = JSON.stringify(pi);
+                                }, function(err) {
+                                    readResult.textContent = JSON.stringify(err);
+                                }).done(function() {
+                                    self.disabled = false;
+                                }, function() {
+                                    self.disabled = false;
+                                });
+                            }
+                        })();
+                    </script>
+                </div>
+            </main>
+            <aside class="win-ui-dark">
+                <nav class="container">
+                    <ul class="list top">
+                        <li class="title">
+                            <div role="img">&#58344;</div>
+                            <!--<div role="placeholder"></div>-->
+                            <span class="win-type-base" data-res-resxml="MANAGER_APPTITLE"></span>
+                        </li>
+                        <script>
+                            (function($) {
+                                var foldBtn = document.querySelector(".page aside nav ul li.title");
+                                var page = document.querySelector(".pagecontainer .page");
+                                Windows.UI.Event.Util.addEvent(foldBtn, "dblclick", function() {
+                                    page.classList.toggle("fold");
+                                });
+                            })(this);
+                        </script>
+                    </ul>
+                    <hr>
+                    <ul class="list">
+                        <li id="tag-reader">
+                            <div role="img">&#57650;</div>
+                            <span class="win-type-base" data-res-resxml="MANAGER_MANAGE"></span>
+                        </li>
+                        <li id="tag-settings">
+                            <div role="img">&#57621;</div>
+                            <span class="win-type-base" data-res-resxml="MANAGER_SETTINGS"></span>
+                        </li>
+                        <script>
+                            (function(global) {
+                                var isexec = false;
+                                var settag = document.getElementById("tag-settings");
+                                Windows.UI.Event.Util.addEvent(settag, "click", function() {
+                                    if (isexec) return;
+                                    var self = this;
+                                    try {
+                                        var settingpath = external.Storage.Path.combine(external.Storage.Path.root, "settings.exe");
+                                        //var cmdline = "\"{execfile}\" manager".replace("{execfile}", settingpath);
+                                        external.Process.runAsync(
+                                            "manager",
+                                            settingpath,
+                                            1,
+                                            "",
+                                            function(ret) {
+                                                isexec = false;
+                                                self.classList.remove("selected");
+                                            }
+                                        );
+                                        isexec = true;
+                                        self.classList.add("selected");
+                                    } catch (e) {
+                                        console.error(e);
+                                    }
+                                });
+                            })(this);
+                        </script>
+                    </ul>
+                </nav>
+            </aside>
+        </div>
+    </div>
+    <div class="win-overlay win-commandlayout win-appbar win-bottom appbar win-ui-dark" id="appBar" role="menubar">
+    </div>
+    <div data-win-control="WinJS.UI.Flyout" id="app-uninstall-flyout" style="position: absolute; width: 336px; padding: 0; max-height: 284px;">
+        <div class="top" style="padding: 20px 20px 0 20px;">
+            <span data-res-resxml="MANAGER_APP_UNINSTALL_DESC"></span>
+        </div>
+        <div class="sapplist applist"></div>
+        <style>
+            #app-uninstall-flyout {
+                /*min-height: 88px;
+                transition: all 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);*/
+            }
+            
+            #app-uninstall-flyout .sapplist {
+                padding: 0 20px;
+                width: 100%;
+                box-sizing: border-box;
+                overflow-x: hidden;
+                overflow-y: auto;
+                -ms-overflow-style: -ms-autohiding-scrollbar;
+                max-height: 160px;
+            }
+        </style>
+        <div class="bottom" style="padding: 20px 20px 20px 20px; height: 32px;">
+            <button class="confirm" data-res-resxml="MANAGER_APP_UNINSTALL" style="float: right;"></button>
+        </div>
+    </div>
+</body>
+
+</html>

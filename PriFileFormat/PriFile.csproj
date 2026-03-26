@@ -48,6 +48,7 @@
     <Compile Include="ByteSpan.cs" />
     <Compile Include="ComStreamWrapper.cs" />
     <Compile Include="DataItemSection.cs" />
+    <Compile Include="DataTree.cs" />
     <Compile Include="DecisionInfoSection.cs" />
     <Compile Include="HierarchicalSchemaSection.cs" />
     <Compile Include="PriDescriptorSection.cs" />

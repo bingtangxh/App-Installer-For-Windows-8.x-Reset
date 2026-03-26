@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="manager/page.css">
     <link rel="stylesheet" href="manager/appitem.css">
     <link rel="stylesheet" href="manager/appbar.css">
+    <script type="text/javascript" src="js/handler.js"></script>
     <script type="text/javascript" src="js/event.js"></script>
     <script type="text/javascript" src="js/tileback.js"></script>
     <script type="text/javascript" src="js/load.js"></script>
@@ -198,6 +199,31 @@
                     </div>
                     <button id="ins-btn" data-res-resxml="MANAGER_LOAD_INSTALL_BTN"></button>
                     <br><br>
+                    <h3 data-res-resxml="MANAGER_LOAD_UPDATE"></h3>
+                    <p data-res-resxml="MANAGER_LOAD_UPDATE_DESC"></p>
+                    <div class="checklist" id="upd-deployoptions">
+                        <span class="title" data-res-resxml="MANAGER_LOAD_DEPLOY_OPTIONS"></span>
+                        <div class="item">
+                            <input type="checkbox" value="2" id="upd-devmode">
+                            <label for="upd-devmode" data-res-resxml="MANAGER_LOAD_DEPLOY_OPTIONS_DEVELOPMENT_MODE"></label>
+                        </div>
+                        <div class="item">
+                            <input type="checkbox" value="1" id="upd-force-appshutdown">
+                            <label for="upd-force-appshutdown" data-res-resxml="MANAGER_LOAD_DEPLOY_OPTIONS_FORCE_APP_SHUTDOWN"></label>
+                        </div>
+                        <div class="item">
+                            <input type="checkbox" value="32" id="upd-all-resources">
+                            <label for="upd-all-resources" data-res-resxml="MANAGER_LOAD_DEPLOY_OPTIONS_INSTALL_ALL_RESOURCES"></label>
+                        </div>
+                    </div>
+                    <div class="statusbar" id="upd-progress">
+                        <div class="container" style="padding-bottom: 10px;">
+                            <span class="status"></span><br>
+                            <progress class="win-progress progress" min="0" max="100"></progress>
+                        </div>
+                    </div>
+                    <button id="upd-btn" data-res-resxml="MANAGER_LOAD_UPDATE_BTN"></button>
+                    <br><br>
                     <h3 data-res-resxml="MANAGER_LOAD_REGISTER"></h3>
                     <p data-res-resxml="MANAGER_LOAD_REGISTER_DESC"></p>
                     <div class="checklist" id="reg-deployoptions">
@@ -246,11 +272,12 @@
                     <div class="bottom-compensate"></div>
                     <script>
                         (function(global) {
-                            var prefixs = ["ins", "reg", "sta"];
+                            var prefixs = ["ins", "reg", "sta", "upd"];
                             var statusbars = [
                                 document.getElementById("ins-progress"),
                                 document.getElementById("reg-progress"),
-                                document.getElementById("sta-progress")
+                                document.getElementById("sta-progress"),
+                                document.getElementById("upd-progress")
                             ];
                             statusbars.forEach(function(statusbar) {
                                 statusbar.bar = new TransitionPanel(statusbar, {

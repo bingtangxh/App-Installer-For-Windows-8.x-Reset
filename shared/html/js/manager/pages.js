@@ -127,21 +127,24 @@
 
     function initLoaderPage() {
         var page = document.getElementById("page-load");
-        var prefixs = ["ins", "reg", "sta"];
+        var prefixs = ["ins", "reg", "sta", "upd"];
         var opdict = {
             ins: Package.manager.add,
             reg: Package.manager.register,
-            sta: Package.manager.stage
+            sta: Package.manager.stage,
+            upd: Package.manager.update
         };
         var ingdict = {
             ins: strres.get("MANAGER_LOAD_INSTALL_ING"),
             reg: strres.get("MANAGER_LOAD_REGISTER_ING"),
-            sta: strres.get("MANAGER_LOAD_STAGE_ING")
+            sta: strres.get("MANAGER_LOAD_STAGE_ING"),
+            upd: strres.get("MANAGER_LOAD_UPDATE_ING")
         };
         var sdict = {
             ins: strres.get("MANAGER_LOAD_INSTALL_SUCCEED"),
             reg: strres.get("MANAGER_LOAD_REGISTER_SUCCEED"),
-            sta: strres.get("MANAGER_LOAD_STAGE_SUCCEED")
+            sta: strres.get("MANAGER_LOAD_STAGE_SUCCEED"),
+            upd: strres.get("MANAGER_LOAD_UPDATE_SUCCEED")
         }
         var explorer = external.Storage.Explorer;
         prefixs.forEach(function(prefix) {
@@ -195,7 +198,7 @@
                     });
                 }
 
-                if (prefix === "ins" || prefix === "sta") explorer.file(
+                if (prefix === "ins" || prefix === "sta" || prefix === "upd") explorer.file(
                     external.String.format("{0}|{1}|{2}|{3}",
                         strres.get("MANAGER_LOAD_INS_OR_STA_FILTERDISPLAY"),
                         "*.appx;*.appxbundle;*.msix;*.msixbundle",

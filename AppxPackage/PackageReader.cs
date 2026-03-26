@@ -795,7 +795,7 @@ namespace AppxPackage
 			{
 				capabilities_name = Capabilities,
 				device_capabilities = DeviceCapabilities,
-				scales = CapabilityDisplayNames
+				display_capabilities_name = CapabilityDisplayNames
 			};
 		}
 	}
@@ -917,7 +917,7 @@ namespace AppxPackage
 			{
 				var ret = new List<int> ();
 				if (!IsValid) return ret;
-				IntPtr hList = PackageReadHelper.GetResourcesLanguagesToLcid (m_hReader.Value);
+				IntPtr hList = PackageReadHelper.GetResourcesScales (m_hReader.Value);
 				if (hList == IntPtr.Zero) return ret;
 				try
 				{

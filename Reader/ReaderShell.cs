@@ -4,14 +4,14 @@ using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 
-namespace Manager
+namespace Reader
 {
-	public partial class ManagerShell: WAShell.WebAppForm
+	public partial class ReaderShell: WAShell.WebAppForm
 	{
-		public ManagerShell ()
+		public ReaderShell ()
 		{
 			InitializeComponent ();
-			this.PublicObjectForScripting = new BridgeExt (this, this, this, this);
+			//this.PublicObjectForScripting = new BridgeExt (this, this, this, this);
 			try
 			{
 				var relativePath = DataUtils.VisualElementsStore.Vemanifest.SplashScreenImage (Program.g_appId);
@@ -34,14 +34,14 @@ namespace Manager
 			uint ww = 0, wh = 0;
 			var ini = Bridge.InitFileStore.Config;
 			var setsect = ini ["Settings"];
-			var savepos = setsect.GetKey ("PackageManager:SavePosAndSizeBeforeCancel");
-			var lastw = setsect.GetKey ("PackageManager:LastWidth");
-			var lasth = setsect.GetKey ("PackageManager:LastHeight");
-			var defw = setsect.GetKey ("PackageManager:DefaultWidth");
-			var defh = setsect.GetKey ("PackageManager:DefaultHeight");
-			var minw = setsect.GetKey ("PackageManager:MinimumWidth");
-			var minh = setsect.GetKey ("PackageManager:MinimumHeight");
-			var lasts = setsect.GetKey ("PackageManager:LastWndState");
+			var savepos = setsect.GetKey ("PackageReader:SavePosAndSizeBeforeCancel");
+			var lastw = setsect.GetKey ("PackageReader:LastWidth");
+			var lasth = setsect.GetKey ("PackageReader:LastHeight");
+			var defw = setsect.GetKey ("PackageReader:DefaultWidth");
+			var defh = setsect.GetKey ("PackageReader:DefaultHeight");
+			var minw = setsect.GetKey ("PackageReader:MinimumWidth");
+			var minh = setsect.GetKey ("PackageReader:MinimumHeight");
+			var lasts = setsect.GetKey ("PackageReader:LastWndState");
 			if (savepos.ReadBool ())
 			{
 				ww = lastw.ReadUInt (defw.ReadUInt (Properties.Resources.IDS_DEFAULTWIDTH.ParseTo <uint> ()));
@@ -75,16 +75,16 @@ namespace Manager
 		private void ManagerShell_Load (object sender, EventArgs e)
 		{
 			var root = Path.GetDirectoryName (DataUtils.Utilities.GetCurrentProgramPath ());
-			WebUI.Navigate (Path.Combine (root, "html\\manager.html"));
+			WebUI.Navigate (Path.Combine (root, "html\\reader.html"));
 		}
 		private void ManagerShell_Resize (object sender, EventArgs e)
 		{
 			var ini = Bridge.InitFileStore.Config;
 			var setsect = ini ["Settings"];
-			var savepos = setsect.GetKey ("PackageManager:SavePosAndSizeBeforeCancel");
-			var lastw = setsect.GetKey ("PackageManager:LastWidth");
-			var lasth = setsect.GetKey ("PackageManager:LastHeight");
-			var lasts = setsect.GetKey ("PackageManager:LastWndState");
+			var savepos = setsect.GetKey ("PackageReader:SavePosAndSizeBeforeCancel");
+			var lastw = setsect.GetKey ("PackageReader:LastWidth");
+			var lasth = setsect.GetKey ("PackageReader:LastHeight");
+			var lasts = setsect.GetKey ("PackageReader:LastWndState");
 			switch (WindowState)
 			{
 				case FormWindowState.Normal:

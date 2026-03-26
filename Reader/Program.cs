@@ -1,24 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Manager
+namespace Reader
 {
 	static class Program
 	{
-		static public readonly string g_appUserId = "WindowsModern.PracticalToolsProject!Manager";
-		static public readonly string g_appId = "Manager";
+		static public readonly string g_appUserId = "WindowsModern.PracticalToolsProject!Reader";
+		static public readonly string g_appId = "Reader";
 		/// <summary>
 		/// 应用程序的主入口点。
 		/// </summary>
 		[STAThread]
-		static void Main (string [] args)
+		static void Main ()
 		{
 			Directory.SetCurrentDirectory (AppDomain.CurrentDomain.BaseDirectory);
-			//System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo ("en-US");
-			//System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo ("en-US");
 			AppxPackage.PackageReader.AddApplicationItem ("SmallLogo");
 			AppxPackage.PackageReader.AddApplicationItem ("Square30x30Logo");
 			AppxPackage.PackageReader.AddApplicationItem ("Logo");
@@ -26,7 +25,7 @@ namespace Manager
 			DataUtils.BrowserEmulation.SetWebBrowserEmulation ();
 			Application.EnableVisualStyles ();
 			Application.SetCompatibleTextRenderingDefault (false);
-			Application.Run (new ManagerShell ());
+			Application.Run (new ReaderShell ());
 		}
 	}
 }
