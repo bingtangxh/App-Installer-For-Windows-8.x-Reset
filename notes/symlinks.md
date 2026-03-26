@@ -14,6 +14,8 @@
 
 以上文件分别指向的是 `..\<ProjectName>\<ProjectName>.h` 。
 
+但是我将源代码当中 appxinfo.h 和 main.cpp 这两个文件的 #include 语句改为了 `#include "../<ProjectName>/<ProjectName>.h"` ，因此就不需要原来的符号链接了。
+
 # 一些最终运行所需文件位于 shared 目录
 
 此外，在生成完成后，最终生成的程序需要一些文件，但是这些文件位于的是解决方案的 `shared` 目录。

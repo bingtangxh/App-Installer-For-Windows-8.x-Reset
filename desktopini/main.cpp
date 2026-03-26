@@ -1,6 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
 #define HMODULE_MODE_EXE
-
 #include <iostream>
 #include <iomanip>
 #include <string>
