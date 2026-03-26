@@ -10,8 +10,7 @@
 #include <codecvt>
 #include <locale>
 #include "nstring.h"
-#include "priformatcli.h"
-#include "pkgread.h"
+#include "../priformatcli/priformatcli.h"
 #include <mmsyscom.h>
 #include "../pkgread/pkgread.h"
 

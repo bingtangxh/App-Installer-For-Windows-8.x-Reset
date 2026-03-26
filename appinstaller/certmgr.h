@@ -1,1 +1,0 @@
-D:/GitHub/App-Installer-For-Windows-8.x-Reset/certmgr/certmgr.h

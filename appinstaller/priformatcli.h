@@ -1,1 +1,0 @@
-D:/GitHub/App-Installer-For-Windows-8.x-Reset/priformatcli/priformatcli.h
