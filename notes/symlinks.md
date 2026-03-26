@@ -28,23 +28,47 @@
 
 最终发布时，你也需要将 `shared` 目录中的每一个子目录都复制到发布目录，再打包发布。
 
-# pkgread 项目需要引用 pugixml.cpp
+# pkgread 项目需要引用 pugixml 代码文件
 
-最后，pkgread 项目有一个 `pugixml.cpp` 的引用。
+最后，pkgread 项目引用了我新建的一个叫 pugixml 的项目，包含如下文件：
+
+- `pugixml.cpp`
+- `pugixml.hpp`
+- `pugiconfig.hpp`
+
 如果没有这个的话，链接器会报错 LNK2019 无法解析的外部符号：
 
 - `pugi::xml_document::load_file`
-- `pugi::as_utf8_`
-- `pugi::as_wide_`
+- `pugi::as_utf8`
+- `pugi::as_wide`
 
 和 LNK1120 n 个无法解析的外部命令。
 
 因为这个解决方案需要一个 NuGet 包叫 `pugixml` ，
-但是这个包默认只有 x86 和 x64 的版本，因此为了编译出 ARM32 版本，我就把 pugixml.cpp 在 pkgread 项目中加了一个引用。
+但是这个包默认只有 x86 和 x64 的版本，因此为了编译出 ARM32 版本，我就把 pugixml.cpp 等文件单开了一个项目。
 
-迁移之后，你应该需要重新添加这个“现有项”的引用。
+迁移之后，你应该需要在 pugixml 项目中重新添加这几个“现有项”的引用。
 
 路径示例：
 
 ```D:\GitHub\App-Installer-For-Windows-8.x-Reset\packages\pugixml.1.15.0\build\native\include\pugixml.cpp```
+
+我的做法是在整个解决方案中添加了一个新的项目 `pugixml`，这个项目的唯一作用就是编译 pugixml.cpp 生成 pugixml.lib 。
+
+暂时还需要手动将 Debug 和 Release 版本的 pugixml.lib 从生成的路径分别复制到项目生成时所引用的 Debug 和 Release 目录下，才能成功链接。
+
+例如：
+
+生成的目标路径：
+
+```D:\GitHub\App-Installer-For-Windows-8.x-Reset\ARM\Debug\pugixml.lib```
+
+```D:\GitHub\App-Installer-For-Windows-8.x-Reset\ARM\Release\pugixml.lib```
+
+
+你需要复制到的路径：
+
+```D:\GitHub\App-Installer-For-Windows-8.x-Reset\packages\pugixml.1.15.0\build\native\lib\ARM\v140\dynamic\Debug\pugixml.lib```
+
+```D:\GitHub\App-Installer-For-Windows-8.x-Reset\packages\pugixml.1.15.0\build\native\lib\ARM\v140\dynamic\Release\pugixml.lib```
 
