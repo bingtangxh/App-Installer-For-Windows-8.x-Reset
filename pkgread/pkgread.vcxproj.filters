@@ -89,7 +89,7 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\ninei\.nuget\packages\pugixml\1.15.0\build\native\include\pugixml.cpp">
+    <ClCompile Include="..\packages\pugixml.1.15.0\build\native\include\pugixml.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

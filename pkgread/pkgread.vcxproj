@@ -249,7 +249,7 @@
     <ClInclude Include="version.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C:\Users\ninei\.nuget\packages\pugixml\1.15.0\build\native\include\pugixml.cpp" />
+    <ClCompile Include="..\packages\pugixml.1.15.0\build\native\include\pugixml.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">false</CompileAsManaged>
