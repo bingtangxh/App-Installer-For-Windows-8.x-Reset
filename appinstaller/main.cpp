@@ -1,3 +1,7 @@
+#ifdef _M_ARM
+#define _ARM_WINAPI_PARTITION_DESKTOP_SDK_AVAILABLE 1
+#endif
+
 #include <Windows.h>
 #include <msclr/marshal_cppstd.h>
 #include <ShObjIdl.h>

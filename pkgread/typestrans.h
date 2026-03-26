@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <cstdbool>
 #include <cstring>
+#include <minwindef.h>
 #else
 #include <stdio.h>
 #include <stdlib.h>

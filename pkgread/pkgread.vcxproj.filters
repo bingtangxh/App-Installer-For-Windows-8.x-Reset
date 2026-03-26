@@ -72,6 +72,12 @@
     <ClInclude Include="strcmp.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="C:\Users\ninei\.nuget\packages\pugixml\1.15.0\build\native\include\pugixml.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\ninei\.nuget\packages\pugixml\1.15.0\build\native\include\pugiconfig.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -81,6 +87,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="dllmain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\ninei\.nuget\packages\pugixml\1.15.0\build\native\include\pugixml.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

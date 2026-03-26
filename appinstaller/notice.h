@@ -1,1 +1,1 @@
-E:/Profiles/Bruce/Documents/Visual Studio 2015/Projects/AppInstallerReset/notice/notice.h
+D:/GitHub/App-Installer-For-Windows-8.x-Reset/notice/notice.h

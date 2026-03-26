@@ -1,1 +1,1 @@
-E:/Profiles/Bruce/Documents/Visual Studio 2015/Projects/AppInstallerReset/certmgr/certmgr.h
+D:/GitHub/App-Installer-For-Windows-8.x-Reset/certmgr/certmgr.h

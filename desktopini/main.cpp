@@ -1,5 +1,10 @@
 #define _CRT_SECURE_NO_WARNINGS
 #define HMODULE_MODE_EXE
+
+#ifdef _M_ARM
+#define _ARM_WINAPI_PARTITION_DESKTOP_SDK_AVAILABLE 1
+#endif
+
 #include <iostream>
 #include <iomanip>
 #include <string>

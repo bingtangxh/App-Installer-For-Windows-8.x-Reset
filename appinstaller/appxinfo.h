@@ -12,6 +12,8 @@
 #include "nstring.h"
 #include "priformatcli.h"
 #include "pkgread.h"
+#include <mmsyscom.h>
+#include "../pkgread/pkgread.h"
 
 static std::string ws2utf8 (const std::wstring &ws)
 {
