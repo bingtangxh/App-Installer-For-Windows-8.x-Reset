@@ -246,3 +246,8 @@ ModelManifest.xml
 
 # Setup Build Files
 [Oo]thers/
+
+# Arm Build Files
+arm_build.bat
+ArmBuild.ps1
+package.zip

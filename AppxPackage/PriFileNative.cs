@@ -168,6 +168,46 @@ namespace AppxPackage
 
 			return result;
 		}
+		[StructLayout (LayoutKind.Sequential)]
+		internal struct WSTRWSTRPAIR
+		{
+			public IntPtr lpKey;   // LPWSTR
+			public IntPtr lpValue; // LPWSTR
+		}
+		[DllImport (DLL, CallingConvention = CallingConvention.Cdecl)]
+		public static extern IntPtr GetPriLocaleResourceAllValuesList (
+			PCSPRIFILE pFilePri,
+			[MarshalAs (UnmanagedType.LPWStr)] string lpResName);
+		[DllImport (DLL, CallingConvention = CallingConvention.Cdecl)]
+		public static extern void DestroyLocaleResourceAllValuesList (IntPtr list);
+		[DllImport (DLL, CallingConvention = CallingConvention.Cdecl)]
+		public static extern IntPtr GetPriFileResourceAllValuesList (
+			PCSPRIFILE pFilePri,
+			[MarshalAs (UnmanagedType.LPWStr)] string lpResName);
+		/// <summary>
+		/// 将 HWSWSPAIRLIST 解析为 Dictionary&lt;string, string&gt;（语言代码 → 字符串值）
+		/// </summary>
+		public static Dictionary<string, string> ParseWSWSPAIRLIST (IntPtr ptr)
+		{
+			if (ptr == IntPtr.Zero) return null;
+
+			uint count = (uint)Marshal.ReadInt32 (ptr);                    // dwLength
+			IntPtr pFirst = IntPtr.Add (ptr, sizeof (uint));                // 跳过 dwLength
+			int elementSize = Marshal.SizeOf (typeof (WSTRWSTRPAIR));
+
+			var dict = new Dictionary<string, string> ((int)count);
+			for (int i = 0; i < count; i++)
+			{
+				IntPtr pItem = IntPtr.Add (pFirst, i * elementSize);
+				var item = (WSTRWSTRPAIR)Marshal.PtrToStructure (pItem, typeof (WSTRWSTRPAIR));
+
+				string key = item.lpKey != IntPtr.Zero ? Marshal.PtrToStringUni (item.lpKey) : null;
+				string value = item.lpValue != IntPtr.Zero ? Marshal.PtrToStringUni (item.lpValue) : null;
+				if (key != null)
+					dict [key] = value;
+			}
+			return dict;
+		}
 	}
 	public static class LpcwstrListHelper
 	{
