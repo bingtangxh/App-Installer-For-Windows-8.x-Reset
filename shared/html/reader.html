@@ -37,6 +37,17 @@
     <link rel="stylesheet" href="css/statusbar.css">
     <script type="text/javascript" src="js/statusbar.js"></script>
     <script type="text/javascript" src="js/rdinit.js"></script>
+    <style>
+        .itemrow {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-content: center;
+            justify-content: flex-start;
+            align-items: center;
+            margin: 10px 0;
+        }
+    </style>
 </head>
 
 <body>
@@ -48,9 +59,30 @@
                     <p>请选择一个包，获取其信息。</p>
                     <div>
                         <label for="read-pkgpath">文件路径</label>
-                        <input type="file" id="read-pkgpath">
+                        <div class="itemrow">
+                            <input type="text" id="read-pkgpath">
+                            <button id="read-browse" style="margin-left: 5px;">浏览</button>
+                        </div>
+                        <script>
+                            (function() {
+                                var readBrowse = document.getElementById("read-browse");
+                                var readPkgpath = document.getElementById("read-pkgpath");
+                                var lastDir = "";
+                                readBrowse.onclick = function() {
+                                    var explorer = external.Storage.Explorer;
+                                    explorer.file(
+                                        "{appxpkg}|*.appx;*.appxbundle;*.msix;*.msixbundle|{allfiles}|*.*",
+                                        lastDir,
+                                        function(result) {
+                                            if (!result) return;
+                                            readPkgpath.value = result;
+                                        }
+                                    );
+                                };
+                            })();
+                        </script>
                     </div>
-                    <div>
+                    <div class="itemrow">
                         <input type="checkbox" id="read-usepri">
                         <label for="read-usepri">需要解析 PRI 资源文件</label>
                     </div>
