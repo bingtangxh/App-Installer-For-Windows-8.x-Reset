@@ -10,8 +10,8 @@
 #include <codecvt>
 #include <locale>
 #include "nstring.h"
-#include "priformatcli.h"
-#include "pkgread.h"
+#include "../priformatcli/priformatcli.h"
+#include "../pkgread/pkgread.h"
 
 static std::string ws2utf8 (const std::wstring &ws)
 {

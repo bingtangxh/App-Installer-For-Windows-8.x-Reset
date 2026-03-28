@@ -20,9 +20,9 @@
 #include "resmap.h"
 #include "appxinfo.h"
 #include "localeex.h"
-#include "pkgmgr.h"
-#include "notice.h"
-#include "certmgr.h"
+#include "../pkgmgr/pkgmgr.h"
+#include "../notice/notice.h"
+#include "../certmgr/certmgr.h"
 #include "bridge.h"
 #include "filepath.h"
 

@@ -72,6 +72,12 @@
     <ClInclude Include="appxinfo.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="localeex.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="bridge.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="..\certmgr\certmgr.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -82,12 +88,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\pkgread\pkgread.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="localeex.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="bridge.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\priformatcli\priformatcli.h">

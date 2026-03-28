@@ -1,0 +1,5 @@
+<Project>
+  <PropertyGroup Condition="'$(MSBuildProjectExtension)'=='.vcxproj'">
+    <ForceImportAfterCppProps>$(MSBuildThisFileDirectory)ArmDesktopSdk.props</ForceImportAfterCppProps>
+  </PropertyGroup>
+</Project>

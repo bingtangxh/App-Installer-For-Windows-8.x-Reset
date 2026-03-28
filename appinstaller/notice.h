@@ -1,1 +1,0 @@
-E:/Profiles/Bruce/Documents/Visual Studio 2015/Projects/AppInstallerReset/notice/notice.h
