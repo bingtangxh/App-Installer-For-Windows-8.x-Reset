@@ -113,6 +113,19 @@ extern "C" {
 	// µÍ 16 Î»£º
 	// Scale »ò TargetSize »ò LCID
 	PRIFORMATCLI_API HWSDSPAIRLIST GetPriResourcesAllValuesList (PCSPRIFILE pPriFile, const LPCWSTR *lpResNames, DWORD dwCount);
+	typedef struct WSTRWSTRPAIR__
+	{
+		LPWSTR lpKey _DEFAULT_VALUE_SET (NULL);
+		LPWSTR lpValue _DEFAULT_VALUE_SET (NULL);
+	} WSTRWSTRPAIR, *HWSTRWSTRPAIR;
+	typedef struct WSWSPAIRLIST__
+	{
+		DWORD dwLength _DEFAULT_VALUE_SET (0);
+		WSTRWSTRPAIR lpArray [1];
+	} WSWSPAIRLIST, *HWSWSPAIRLIST;
+	PRIFORMATCLI_API HWSWSPAIRLIST GetPriLocaleResourceAllValuesList (PCSPRIFILE pPriFile, LPCWSTR lpResName);
+	PRIFORMATCLI_API void DestroyLocaleResourceAllValuesList (HWSWSPAIRLIST list);
+	PRIFORMATCLI_API HDWSPAIRLIST GetPriFileResourceAllValuesList (PCSPRIFILE pPriFile, LPCWSTR lpResName);
 #ifdef _DEFAULT_VALUE_SET
 #undef _DEFAULT_VALUE_SET
 #endif

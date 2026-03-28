@@ -239,6 +239,69 @@ namespace AppxPackage
 
 			return task.Result;
 		}
+		/// <summary>
+		/// 获取指定字符串资源的所有语言变体（语言代码 → 字符串值）
+		/// </summary>
+		public Dictionary<string, string> LocaleResourceAllValue (string resName)
+		{
+			var task = Task.Factory.StartNew (() =>
+			{
+				IntPtr ptr = IntPtr.Zero;
+				try
+				{
+					// 修正：第一个参数应为 m_hPriFile，而不是 ptr
+					ptr = PriFileHelper.GetPriLocaleResourceAllValuesList (m_hPriFile, resName);
+					if (ptr == IntPtr.Zero)
+						return new Dictionary<string, string> ();
+
+					// 解析 HWSWSPAIRLIST 为 Dictionary<string, string>
+					var raw = PriFileHelper.ParseWSWSPAIRLIST (ptr);
+					return raw ?? new Dictionary<string, string> ();
+				}
+				finally
+				{
+					if (ptr != IntPtr.Zero)
+						PriFileHelper.DestroyLocaleResourceAllValuesList (ptr);
+				}
+			});
+			return task.Result;
+		}
+		/// <summary>
+		/// 获取指定文件资源的所有缩放/对比度/目标大小变体（PriResourceKey → 文件路径）
+		/// </summary>
+		public Dictionary<PriResourceKey, string> PathResourceAllValue (string resName)
+		{
+			var task = Task.Factory.StartNew (() =>
+			{
+				IntPtr ptr = IntPtr.Zero;
+				try
+				{
+					ptr = PriFileHelper.GetPriFileResourceAllValuesList (m_hPriFile, resName);
+					if (ptr == IntPtr.Zero)
+						return new Dictionary<PriResourceKey, string> ();
+
+					// 解析 HDWSPAIRLIST 为 Dictionary<uint, string>
+					var raw = PriFileHelper.ParseDWSPAIRLIST (ptr);
+					if (raw == null)
+						return new Dictionary<PriResourceKey, string> ();
+
+					// 将 uint 键转换为 PriResourceKey
+					var result = new Dictionary<PriResourceKey, string> ();
+					foreach (var kv in raw)
+					{
+						var key = new PriResourceKey (kv.Key);
+						result [key] = kv.Value;
+					}
+					return result;
+				}
+				finally
+				{
+					if (ptr != IntPtr.Zero)
+						PriFileHelper.DestroyPriResourceAllValueList (ptr); // 注意：使用对应的释放函数
+				}
+			});
+			return task.Result;
+		}
 	}
 	public class PriReaderBundle: IDisposable
 	{

@@ -1217,7 +1217,6 @@ HWSDSPAIRLIST GetPriResourcesAllValuesList (PCSPRIFILE pPriFile, const LPCWSTR *
 	return CreateWSDSPAIRLISTFromMap (rnout);
 }
 
-#ifndef ELDER_FUNC
 size_t GetPriLocaleStringResources (
 	PCSPRIFILE pPriFile,
 	const std::vector <std::wstring> &resnames,
@@ -1332,6 +1331,8 @@ size_t GetPriLocaleStringResources (
 		resourceMapSection = nullptr;
 	}
 }
+
+#ifndef ELDER_FUNC
 std::wstring GetConfirmLocaleResources (const std::map <std::wnstring, std::wstring> &strvalue, const std::wnstring &lang)
 {
 	for (auto &it : strvalue)
@@ -1465,3 +1466,112 @@ LPWSTR GetPriResource (PCSPRIFILE pFilePri, LPCWSTR lpswResId)
 LPWSTR GetPriStringResource (PCSPRIFILE pFilePri, LPCWSTR lpswUri) { return GetPriResource (pFilePri, lpswUri); }
 LPWSTR GetPriPathResource (PCSPRIFILE pFilePri, LPCWSTR lpswFilePath) { return GetPriResource (pFilePri, lpswFilePath); }
 #endif
+
+HWSWSPAIRLIST CreateWSWSPAIRLISTFromMap (const std::map<std::wnstring, std::wstring>& input)
+{
+	DWORD count = (DWORD)input.size ();
+	if (count == 0) return nullptr;
+
+	size_t totalSize = sizeof (WSWSPAIRLIST) + sizeof (WSTRWSTRPAIR) * (count - 1);
+	HWSWSPAIRLIST list = (HWSWSPAIRLIST)malloc (totalSize);
+	if (!list) return nullptr;
+
+	list->dwLength = count;
+	DWORD index = 0;
+	for (const auto& pair : input)
+	{
+		list->lpArray [index].lpKey = _wcsdup (pair.first.c_str ());
+		list->lpArray [index].lpValue = _wcsdup (pair.second.c_str ());
+		++index;
+	}
+	return list;
+}
+HWSWSPAIRLIST GetPriLocaleResourceAllValuesList (PCSPRIFILE pPriFile, LPCWSTR lpResName)
+{
+	if (!pPriFile || !lpResName || !*lpResName)
+	{
+		SetPriLastError (L"Invalid parameters");
+		return nullptr;
+	}
+
+	std::vector<std::wstring> resnames = { lpResName };
+	std::map<std::wnstring, std::map<std::wnstring, std::wstring>> output;
+
+	try
+	{
+		GetPriLocaleStringResources (pPriFile, resnames, output);
+	}
+	catch (System::Exception^ e)
+	{
+		SetPriLastError (MPStringToStdW (e->Message));
+		return nullptr;
+	}
+	catch (const std::exception& e)
+	{
+		SetPriLastError (StringToWString (e.what ()));
+		return nullptr;
+	}
+	catch (...)
+	{
+		SetPriLastError (L"Unknown exception in GetPriLocaleStringResources");
+		return nullptr;
+	}
+	auto it = output.find (std::wnstring (lpResName));
+	if (it == output.end () || it->second.empty ())
+	{
+		SetPriLastError (L"Resource not found or has no language variants");
+		return nullptr;
+	}
+	return CreateWSWSPAIRLISTFromMap (it->second);
+}
+void DestroyLocaleResourceAllValuesList (HWSWSPAIRLIST list)
+{
+	if (!list) return;
+	for (DWORD i = 0; i < list->dwLength; ++i)
+	{
+		if (list->lpArray [i].lpKey)
+			free (list->lpArray [i].lpKey);
+		if (list->lpArray [i].lpValue)
+			free (list->lpArray [i].lpValue);
+	}
+	free (list);
+}
+HDWSPAIRLIST GetPriFileResourceAllValuesList (PCSPRIFILE pPriFile, LPCWSTR lpResName)
+{
+	if (!pPriFile || !lpResName || !*lpResName)
+	{
+		SetPriLastError (L"Invalid parameters");
+		return nullptr;
+	}
+
+	std::vector<std::wstring> resnames = { lpResName };
+	std::map<std::wnstring, std::map<DWORD, std::wnstring>> output;
+
+	try
+	{
+		GetPriScaleAndTargetSizeFileList (pPriFile, resnames, output);
+	}
+	catch (System::Exception^ e)
+	{
+		SetPriLastError (MPStringToStdW (e->Message));
+		return nullptr;
+	}
+	catch (const std::exception& e)
+	{
+		SetPriLastError (StringToWString (e.what ()));
+		return nullptr;
+	}
+	catch (...)
+	{
+		SetPriLastError (L"Unknown exception in GetPriScaleAndTargetSizeFileList");
+		return nullptr;
+	}
+
+	auto it = output.find (std::wnstring (lpResName));
+	if (it == output.end () || it->second.empty ())
+	{
+		SetPriLastError (L"Resource not found or has no variants");
+		return nullptr;
+	}
+	return CreateDWSPAIRLISTFromMap (it->second);
+}

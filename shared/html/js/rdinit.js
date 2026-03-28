@@ -24,9 +24,6 @@
             return Bridge.String.tolower(Bridge.String.trim(item.Identity.FullName));
         });
         var themeColor = Bridge.UI.themeColor;
-        var appbar = document.getElementById("appBar");
-        var appbarControl = new AppBar.AppBar(appbar);
-        appbarControl.enabled = false;
         pagemgr.register("reader", document.getElementById("tag-reader"), document.getElementById("page-reader"));
         pagemgr.go("reader");
     });

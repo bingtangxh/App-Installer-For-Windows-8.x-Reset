@@ -21,8 +21,7 @@
     <link rel="stylesheet" href="fonts/fonts.css">
     <link rel="stylesheet" href="fonts/segx.css">
     <link rel="stylesheet" href="manager/page.css">
-    <link rel="stylesheet" href="manager/appitem.css">
-    <link rel="stylesheet" href="manager/appbar.css">
+    <link rel="stylesheet" href="reader/page.css">
     <script type="text/javascript" src="js/handler.js"></script>
     <script type="text/javascript" src="js/event.js"></script>
     <script type="text/javascript" src="js/tileback.js"></script>
@@ -47,21 +46,37 @@
                 <div id="page-reader" style="display: none;" class="ispage">
                     <h2>读取</h2>
                     <p>请选择一个包，获取其信息。</p>
-                    <label for="read-pkgpath">文件路径</label>
-                    <input type="file" id="read-pkgpath">
-                    <input type="checkbox" id="read-usepri">
-                    <label for="read-usepri">需要解析 PRI 资源文件</label>
+                    <div>
+                        <label for="read-pkgpath">文件路径</label>
+                        <input type="file" id="read-pkgpath">
+                    </div>
+                    <div>
+                        <input type="checkbox" id="read-usepri">
+                        <label for="read-usepri">需要解析 PRI 资源文件</label>
+                    </div>
                     <button id="read-btn">读取</button>
                     <p>读取结果：</p>
                     <div id="read-result"></div>
                     <script>
                         (function() {
+                            function generateHtmlReport(pi) {
+                                var pkg = pi.json;
+                                if (!pi.valid) {
+                                    var ret = document.createElement("p");
+                                    ret.textContent = "错误：无效的包文件";
+                                    return ret;
+                                }
+                            }
                             var readBtn = document.getElementById("read-btn");
                             var readResult = document.getElementById("read-result");
                             var readPkgpath = document.getElementById("read-pkgpath");
                             var readUsepri = document.getElementById("read-usepri");
                             readBtn.onclick = function() {
                                 var self = this;
+                                if (!readPkgpath.value) {
+                                    readResult.textContent = "错误：请选择一个有效文件";
+                                    return;
+                                }
                                 var pr = Package.reader;
                                 pr.readFromPackage(readPkgpath.value, readUsepri.checked).then(function(pi) {
                                     readResult.textContent = JSON.stringify(pi);
@@ -136,33 +151,6 @@
                     </ul>
                 </nav>
             </aside>
-        </div>
-    </div>
-    <div class="win-overlay win-commandlayout win-appbar win-bottom appbar win-ui-dark" id="appBar" role="menubar">
-    </div>
-    <div data-win-control="WinJS.UI.Flyout" id="app-uninstall-flyout" style="position: absolute; width: 336px; padding: 0; max-height: 284px;">
-        <div class="top" style="padding: 20px 20px 0 20px;">
-            <span data-res-resxml="MANAGER_APP_UNINSTALL_DESC"></span>
-        </div>
-        <div class="sapplist applist"></div>
-        <style>
-            #app-uninstall-flyout {
-                /*min-height: 88px;
-                transition: all 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);*/
-            }
-            
-            #app-uninstall-flyout .sapplist {
-                padding: 0 20px;
-                width: 100%;
-                box-sizing: border-box;
-                overflow-x: hidden;
-                overflow-y: auto;
-                -ms-overflow-style: -ms-autohiding-scrollbar;
-                max-height: 160px;
-            }
-        </style>
-        <div class="bottom" style="padding: 20px 20px 20px 20px; height: 32px;">
-            <button class="confirm" data-res-resxml="MANAGER_APP_UNINSTALL" style="float: right;"></button>
         </div>
     </div>
 </body>
