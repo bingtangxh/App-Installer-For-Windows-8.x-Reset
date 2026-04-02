@@ -614,4 +614,8 @@
         <lang name="zh-CN">更新完成</lang>
         <lang name="en-US">Update Complete.</lang>
     </resource>
+    <resource id="READER_APPTITLE">
+        <lang name="zh-CN">Package Reader</lang>
+        <lang name="en-US">Package Reader</lang>
+    </resource>
 </resources>

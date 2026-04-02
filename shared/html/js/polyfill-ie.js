@@ -216,3 +216,317 @@
         };
     }
 })(this);
+(function(global) {
+    if (typeof global.Map === "undefined") {
+        function Map() {
+            this.elements = new Array();
+            // 获取Map元素个数
+            this.size = function() {
+                    return this.elements.length;
+                },
+                // 判断Map是否为空
+                this.isEmpty = function() {
+                    return (this.elements.length < 1);
+                },
+                // 删除Map所有元素
+                this.clear = function() {
+                    this.elements = new Array();
+                },
+                // 向Map中增加元素（key, value)
+                this.put = function(_key, _value) {
+                    if (this.containsKey(_key) == true) {
+                        if (this.containsValue(_value)) {
+                            if (this.remove(_key) == true) {
+                                this.elements.push({
+                                    key: _key,
+                                    value: _value
+                                });
+                            }
+                        } else {
+                            this.elements.push({
+                                key: _key,
+                                value: _value
+                            });
+                        }
+                    } else {
+                        this.elements.push({
+                            key: _key,
+                            value: _value
+                        });
+                    }
+                },
+                // 向Map中增加元素（key, value)
+                this.set = function(_key, _value) {
+                    if (this.containsKey(_key) == true) {
+                        if (this.containsValue(_value)) {
+                            if (this.remove(_key) == true) {
+                                this.elements.push({
+                                    key: _key,
+                                    value: _value
+                                });
+                            }
+                        } else {
+                            this.elements.push({
+                                key: _key,
+                                value: _value
+                            });
+                        }
+                    } else {
+                        this.elements.push({
+                            key: _key,
+                            value: _value
+                        });
+                    }
+                },
+                // 删除指定key的元素，成功返回true，失败返回false
+                this.remove = function(_key) {
+                    var bln = false;
+                    try {
+                        for (i = 0; i < this.elements.length; i++) {
+                            if (this.elements[i].key == _key) {
+                                this.elements.splice(i, 1);
+                                return true;
+                            }
+                        }
+                    } catch (e) {
+                        bln = false;
+                    }
+                    return bln;
+                },
+
+                // 删除指定key的元素，成功返回true，失败返回false
+                this.delete = function(_key) {
+                    var bln = false;
+                    try {
+                        for (i = 0; i < this.elements.length; i++) {
+                            if (this.elements[i].key == _key) {
+                                this.elements.splice(i, 1);
+                                return true;
+                            }
+                        }
+                    } catch (e) {
+                        bln = false;
+                    }
+                    return bln;
+                },
+
+                // 获取指定key的元素值value，失败返回null
+                this.get = function(_key) {
+                    try {
+                        for (i = 0; i < this.elements.length; i++) {
+                            if (this.elements[i].key == _key) {
+                                return this.elements[i].value;
+                            }
+                        }
+                    } catch (e) {
+                        return null;
+                    }
+                },
+
+                // set指定key的元素值value
+                this.setValue = function(_key, _value) {
+                    var bln = false;
+                    try {
+                        for (i = 0; i < this.elements.length; i++) {
+                            if (this.elements[i].key == _key) {
+                                this.elements[i].value = _value;
+                                return true;
+                            }
+                        }
+                    } catch (e) {
+                        bln = false;
+                    }
+                    return bln;
+                },
+
+                // 获取指定索引的元素（使用element.key，element.value获取key和value），失败返回null
+                this.element = function(_index) {
+                    if (_index < 0 || _index >= this.elements.length) {
+                        return null;
+                    }
+                    return this.elements[_index];
+                },
+
+                // 判断Map中是否含有指定key的元素
+                this.containsKey = function(_key) {
+                    var bln = false;
+                    try {
+                        for (i = 0; i < this.elements.length; i++) {
+                            if (this.elements[i].key == _key) {
+                                bln = true;
+                            }
+                        }
+                    } catch (e) {
+                        bln = false;
+                    }
+                    return bln;
+                },
+
+                // 判断Map中是否含有指定key的元素
+                this.has = function(_key) {
+                    var bln = false;
+                    try {
+                        for (i = 0; i < this.elements.length; i++) {
+                            if (this.elements[i].key == _key) {
+                                bln = true;
+                            }
+                        }
+                    } catch (e) {
+                        bln = false;
+                    }
+                    return bln;
+                },
+
+                // 判断Map中是否含有指定value的元素
+                this.containsValue = function(_value) {
+                    var bln = false;
+                    try {
+                        for (i = 0; i < this.elements.length; i++) {
+                            if (this.elements[i].value == _value) {
+                                bln = true;
+                            }
+                        }
+                    } catch (e) {
+                        bln = false;
+                    }
+                    return bln;
+                },
+
+                // 获取Map中所有key的数组（array）
+                this.keys = function() {
+                    var arr = new Array();
+                    for (i = 0; i < this.elements.length; i++) {
+                        arr.push(this.elements[i].key);
+                    }
+                    return arr;
+                },
+
+                // 获取Map中所有value的数组（array）
+                this.values = function() {
+                    var arr = new Array();
+                    for (i = 0; i < this.elements.length; i++) {
+                        arr.push(this.elements[i].value);
+                    }
+                    return arr;
+                };
+
+            /**
+             * map遍历数组
+             * @param callback [function] 回调函数；
+             * @param context [object] 上下文；
+             */
+            this.forEach = function forEach(callback, context) {
+                context = context || window;
+
+                //IE6-8下自己编写回调函数执行的逻辑
+                var newAry = new Array();
+                for (var i = 0; i < this.elements.length; i++) {
+                    if (typeof callback === 'function') {
+                        var val = callback.call(context, this.elements[i].value, this.elements[i].key, this.elements);
+                        newAry.push(this.elements[i].value);
+                    }
+                }
+                return newAry;
+            }
+
+        }
+        global.Map = Map;
+    }
+})(this);
+(function(global) {
+    if (typeof global.Set === "undefined") {
+        function Set() {
+            var items = {};
+            this.size = 0;
+            // 实现has方法
+            // has(val)方法
+            this.has = function(val) {
+                // 对象都有hasOwnProperty方法，判断是否拥有特定属性
+                return items.hasOwnProperty(val);
+            };
+
+            // 实现add
+            this.add = function(val) {
+                if (!this.has(val)) {
+                    items[val] = val;
+                    this.size++; // 累加集合成员数量
+                    return true;
+                }
+                return false;
+            };
+
+            // delete(val)方法
+            this.delete = function(val) {
+                if (this.has(val)) {
+                    delete items[val]; // 将items对象上的属性删掉
+                    this.size--;
+                    return true;
+                }
+                return false;
+            };
+            // clear方法
+            this.clear = function() {
+                items = {}; // 直接将集合赋一个空对象即可
+                this.size = 0;
+            };
+
+            // keys()方法
+            this.keys = function() {
+                return Object.keys(items); // 返回遍历集合的所有键名的数组
+            };
+            // values()方法
+            this.values = function() {
+                return Object.values(items); // 返回遍历集合的所有键值的数组
+            };
+
+            // forEach(fn, context)方法
+            this.forEach = function(fn, context) {
+                for (var i = 0; i < this.size; i++) {
+                    var item = Object.keys(items)[i];
+                    fn.call(context, item, item, items);
+                }
+            };
+
+            // 并集
+            this.union = function(other) {
+                var union = new Set();
+                var values = this.values();
+                for (var i = 0; i < values.length; i++) {
+                    union.add(values[i]);
+                }
+                values = other.values(); // 将values重新赋值为新的集合
+                for (var i = 0; i < values.length; i++) {
+                    union.add(values[i]);
+                }
+
+                return union;
+            };
+            // 交集
+            this.intersect = function(other) {
+                var intersect = new Set();
+                var values = this.values();
+                for (var i = 0; i < values.length; i++) {
+                    if (other.has(values[i])) { // 查看是否也存在于other中
+                        intersect.add(values[i]); // 存在的话就像intersect中添加元素
+                    }
+                }
+                return intersect;
+            };
+
+            // 差集
+            this.difference = function(other) {
+                var difference = new Set();
+                var values = this.values();
+                for (var i = 0; i < values.length; i++) {
+                    if (!other.has(values[i])) { // 将不存在于other集合中的添加到新的集合中
+                        difference.add(values[i]);
+                    }
+                }
+                return difference;
+            };
+
+
+        }
+        global.Set = Set;
+    }
+})(this);

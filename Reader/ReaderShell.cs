@@ -26,7 +26,7 @@ namespace Reader
 			}
 			catch { }
 			InitSize ();
-			Text = Bridge.ResXmlStore.StringRes.Get ("MANAGER_APPTITLE");
+			Text = Bridge.ResXmlStore.StringRes.Get ("READER_APPTITLE");
 			this.Load += Form_Load;
 		}
 		private void InitSize ()

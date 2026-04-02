@@ -1055,6 +1055,10 @@ size_t GetPriScaleAndTargetSizeFileList (
 					auto value = quali->Value;
 					qualis->Add (type, value);
 				}
+				if (qualis->Count == 0 && tasktype == 1)
+				{
+					qualis->Add (QualifierType::Scale, 100);
+				}
 				if (qualis->ContainsKey (QualifierType::Language))
 				{
 					resc = PRI_MAKE_STRING (LocaleCodeToLcidW (MPStringToStdW (qualis [QualifierType::Language]->ToString ())));

@@ -1,0 +1,95 @@
+.notice-back {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: auto;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: center;
+    display: -ms-flexbox;
+    -ms-flex-direction: column;
+    -ms-flex-wrap: nowrap;
+    -ms-flex-line-pack: center;
+    /* align-content: center */
+    -ms-flex-pack: center;
+    /* justify-content: center */
+    transition: all 0.15s linear;
+    opacity: 0;
+    z-index: 100;
+}
+
+.notice-body {
+    background: #0078d7;
+    padding: 25px 172px;
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: auto;
+    max-height: 80%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    display: -ms-flexbox;
+    -ms-flex-direction: column;
+    -ms-flex-wrap: nowrap;
+    min-height: 0 !important;
+    box-sizing: border-box;
+}
+
+.notice-body>h1,
+.notice-body>h2,
+.notice-body>h3,
+.notice-body>h4,
+.notice-body>h5,
+.notice-body>h6,
+.notice-body>p,
+.notice-body>a,
+.notice-body>span {
+    font-family: "Microsoft YaHei", "Segoe UI", "Ebrima", "Nirmala", "Gadugi", "Segoe UI Emoji", "Segoe UI Symbol", "Meiryo", "Leelawadee", "Microsoft JhengHei", "Malgun Gothic", "Estrangelo Edessa", "Microsoft Himalaya", "Microsoft New Tai Lue", "Microsoft PhagsPa", "Microsoft Tai Le", "Microsoft Yi Baiti", "Mongolian Baiti", "MV Boli", "Myanmar Text", "Javanese Text", "Cambria Math";
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.notice-title {
+    color: white;
+    font-weight: normal;
+    white-space: pre-wrap;
+}
+
+.notice-text {
+    color: white;
+    font-weight: normal;
+    white-space: pre-wrap;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+.notice-controls {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    justify-content: flex-end;
+    align-items: center;
+    display: -ms-flexbox;
+    -ms-flex-direction: row;
+    -ms-flex-wrap: nowrap;
+    -ms-flex-line-pack: center;
+    /* align-content: center（几乎无效，保留即可） */
+    -ms-flex-pack: end;
+    /* justify-content: flex-end */
+    -ms-flex-align: center;
+    /* align-items: center */
+    margin-top: 10px;
+    /*gap: 20px;*/
+}
+
+.notice-btn {
+    margin-left: 20px;
+}

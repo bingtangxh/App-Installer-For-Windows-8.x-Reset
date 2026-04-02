@@ -3,7 +3,7 @@
 
 (function (global) {
 	"use strict";
-
+	if (typeof global.toStaticHTML === "undefined") global.toStaticHTML = function (str) { return str; };
 	if (typeof global.WinJS === "undefined" || !global.WinJS) global.WinJS = {};
 	if (typeof global.WinJS.UI === "undefined" || !global.WinJS.UI) global.WinJS.UI = {};
 
@@ -17,12 +17,12 @@
 	}
 
 	/**
-     * 表示 ContentDialog 中的一个按钮命令。
-     * @class
-     * @param {string} label 按钮显示文本
-     * @param {function(Event=): (boolean|void)} [handler] 按钮点击处理函数
-     * @param {string} [commandId] 命令唯一标识
-     */
+	 * 表示 ContentDialog 中的一个按钮命令。
+	 * @class
+	 * @param {string} label 按钮显示文本
+	 * @param {function(Event=): (boolean|void)} [handler] 按钮点击处理函数
+	 * @param {string} [commandId] 命令唯一标识
+	 */
 	function ContentDialogCommand(label, handler, commandId) {
 		this.label = label;
 		this.handler = handler;
@@ -30,16 +30,17 @@
 	}
 
 	/**
-     * 模拟 WinRT ContentDialog 的对话框
-     * @class
-     * @memberof WinJS.UI
-     * @param {HTMLElement} element 容器
-     * @param {Object} [options] 初始化选项
-     */
+	 * 模拟 WinRT ContentDialog 的对话框
+	 * @class
+	 * @memberof WinJS.UI
+	 * @param {HTMLElement} element 容器
+	 * @param {Object} [options] 初始化选项
+	 */
 	function ContentDialog(element, options) {
 		var container = element;
-		container.innerHTML = toStaticHTML('<div class="win-contentdialog-dialog"><div class="win-contentdialog-title"></div><div class="win-contentdialog-content"></div><div class="win-contentdialog-commands"></div></div>');
+		container.innerHTML = toStaticHTML('<div class="win-contentdialog-dialog notice-body"><div class="win-contentdialog-title notice-title"></div><div class="win-contentdialog-content notice-text"></div><div class="win-contentdialog-commands notice-controls"></div></div>');
 		container.classList.add("win-contentdialog");
+		container.classList.add("notice-back");
 		container.classList.add("hide");
 
 		var title = container.querySelector(".win-contentdialog-title");
@@ -62,6 +63,7 @@
 			}
 			self._commands.forEach(function (cmd, index) {
 				var btn = document.createElement("button");
+				btn.classList.add ("notice-btn");
 				btn.textContent = cmd.label;
 				btn.setAttribute("data-command-id", cmd.commandId || index);
 

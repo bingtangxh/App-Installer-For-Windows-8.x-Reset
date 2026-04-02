@@ -290,6 +290,16 @@ extern "C"
 	// 其实通过 free 释放即可，但考虑到环境问题，那么另写了个函数
 	PKGREAD_API void PackageReaderFreeString (LPWSTR lpStrFromThisDll);
 
+	PKGREAD_API HLIST_PVOID GetAppxBundleAllResourcePackageFileNames (_In_ HPKGREAD hReader);
+
+	PKGREAD_API HLIST_PVOID GetAppxBundleAllLocaleResourcePackageFileNames (_In_ HPKGREAD hReader);
+
+	PKGREAD_API HLIST_PVOID GetAppxBundleAllFileResourcePackageFileNames (_In_ HPKGREAD hReader);
+	PKGREAD_API void FreeAppxBundlePayloadsFileNameList (_In_ HLIST_PVOID hStringList);
+
+	PKGREAD_API void UpdatePackageApplicationItemGetName (_In_ LPCWSTR *lpNames, _In_ DWORD dwArrLen);
+	typedef void (*ITER_WSTRING_CALLBACK) (LPCWSTR lpString);
+	PKGREAD_API void GetPackageApplicationItemGetNameList (_In_ ITER_WSTRING_CALLBACK pfCallback);
 	// ========= 以下是针对于应用清单的读取器，一些常量和类型等是复用的 =========
 
 	TEMPLATE_STRUCT (PKGMANIFESTREAD);

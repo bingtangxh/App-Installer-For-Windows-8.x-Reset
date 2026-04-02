@@ -1221,6 +1221,124 @@ void PackageReaderFreeString (LPWSTR lpStrFromThisDll)
 	free (lpStrFromThisDll);
 }
 
+HLIST_PVOID GetAppxBundleAllResourcePackageFileNames (_In_ HPKGREAD hReader)
+{
+	auto ptr = ToPtrPackage (hReader);
+	if (!ptr) return nullptr;
+	if (ptr->type () == PackageType::bundle) 
+	{
+		auto br = ptr->bundle_reader ();
+		std::vector <appx_info::appx_iditem> rpi;
+		br.package_id_items ().resource_packages (rpi);
+		auto buf = (HLIST_PVOID)malloc (sizeof (LIST_PVOID) + sizeof (LPWSTR) * rpi.size ());
+		buf->dwSize = rpi.size ();
+		for (size_t i = 0; i < rpi.size (); i ++)
+		{
+			auto &it = rpi [i];
+			buf->alpVoid [i] = _wcsdup (it.file_name ().c_str ());
+		}
+		return buf;
+	}
+	return nullptr;
+}
+HLIST_PVOID GetAppxBundleAllLocaleResourcePackageFileNames (_In_ HPKGREAD hReader)
+{
+	auto ptr = ToPtrPackage (hReader);
+	if (!ptr) return nullptr;
+	if (ptr->type () == PackageType::bundle)
+	{
+		auto br = ptr->bundle_reader ();
+		std::vector <appx_info::appx_iditem> rpi;
+		br.package_id_items ().resource_packages (rpi);
+		std::vector <std::wstring> localePkgNames;
+		for (size_t i = 0; i < rpi.size (); i ++)
+		{
+			auto &it = rpi [i];
+			auto qres = it.qualified_resources ();
+			std::vector <std::wstring> langs;
+			std::vector <UINT32> temp;
+			std::vector <DX_FEATURE_LEVEL> dxt;
+			qres.qualified_resources (&langs, &temp, &dxt);
+			if (temp.size () > 0 || dxt.size () > 0) continue;
+			localePkgNames.push_back (it.file_name ());
+		}
+		auto buf = (HLIST_PVOID)malloc (sizeof (LIST_PVOID) + sizeof (LPWSTR) * localePkgNames.size ());
+		buf->dwSize = localePkgNames.size ();
+		for (size_t i = 0; i < localePkgNames.size (); i ++)
+		{
+			buf->alpVoid [i] = _wcsdup (localePkgNames [i].c_str ());
+		}
+		return buf;
+	}
+	return nullptr;
+}
+HLIST_PVOID GetAppxBundleAllFileResourcePackageFileNames (_In_ HPKGREAD hReader)
+{
+	auto ptr = ToPtrPackage (hReader);
+	if (!ptr) return nullptr;
+	if (ptr->type () == PackageType::bundle)
+	{
+		auto br = ptr->bundle_reader ();
+		std::vector <appx_info::appx_iditem> rpi;
+		br.package_id_items ().resource_packages (rpi);
+		std::vector <std::wstring> filePkgNames;
+		for (size_t i = 0; i < rpi.size (); i ++)
+		{
+			auto &it = rpi [i];
+			auto qres = it.qualified_resources ();
+			std::vector <std::wstring> langs;
+			std::vector <UINT32> temp;
+			std::vector <DX_FEATURE_LEVEL> dxt;
+			qres.qualified_resources (&langs, &temp, &dxt);
+			if (temp.size () > 0)
+				filePkgNames.push_back (it.file_name ());
+		}
+		auto buf = (HLIST_PVOID)malloc (sizeof (LIST_PVOID) + sizeof (LPWSTR) * filePkgNames.size ());
+		buf->dwSize = filePkgNames.size ();
+		for (size_t i = 0; i < filePkgNames.size (); i ++)
+		{
+			buf->alpVoid [i] = _wcsdup (filePkgNames [i].c_str ());
+		}
+		return buf;
+	}
+	return nullptr;
+}
+void FreeAppxBundlePayloadsFileNameList (_In_ HLIST_PVOID hStringList)
+{
+	if (!hStringList) return;
+	for (size_t i = 0; i < hStringList->dwSize; i ++)
+	{
+		auto ptr = hStringList->alpVoid [i];
+		if (!ptr) continue;
+		free (ptr);
+	}
+	free (hStringList);
+}
+void UpdatePackageApplicationItemGetName (_In_ LPCWSTR *lpNames, _In_ DWORD dwArrLen)
+{
+	bool clearAll = !lpNames || !dwArrLen;
+	if (clearAll)
+	{
+		appitems.clear ();
+		return;
+	}
+	appitems.clear ();
+	for (size_t i = 0; i < dwArrLen; i ++)
+	{
+		auto ptr = lpNames [i];
+		if (strnull (ptr)) continue;
+		push_unique (appitems, std::wstring (ptr));
+	}
+}
+void GetPackageApplicationItemGetNameList (_In_ ITER_WSTRING_CALLBACK pfCallback)
+{
+	if (!pfCallback) return;
+	for (auto &it : appitems)
+	{
+		pfCallback (it.c_str ());
+	}
+}
+
 // ========== 以下是对清单文件的读取 ==========
 #define ToHandleMRead(_cpp_ptr_) reinterpret_cast <HPKGMANIFESTREAD> (_cpp_ptr_) 
 #define ToPtrManifest(_cpp_ptr_) reinterpret_cast <manifest *> (_cpp_ptr_)

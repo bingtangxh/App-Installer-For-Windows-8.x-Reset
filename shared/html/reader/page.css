@@ -1,11 +1,11 @@
 .page>aside>nav ul li.selected {
-    background-color: #0059ff;
+    background-color: #004fe2;
 }
 
 .page>aside>nav ul li.selected:hover {
-    background-color: #1a52e0;
+    background-color: #295de0;
 }
 
 .page>aside>nav ul li.selected:active {
-    background-color: #1a52e0;
+    background-color: #0034b6;
 }

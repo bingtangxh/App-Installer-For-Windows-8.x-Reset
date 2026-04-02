@@ -20,6 +20,8 @@ namespace NativeWrappers
 	using UINT64 = System.UInt64;
 	using HRESULT = System.Int32;
 	using ULONG = System.UInt32;
+	using System.Collections.Generic;
+	using System.Linq;
 
 	public static class PackageReadHelper
 	{
@@ -304,6 +306,7 @@ namespace NativeWrappers
 			{
 			}
 		}
+
 		// ================= Manifest Reader =================
 
 		[DllImport (DllName, CallingConvention = CallConv, CharSet = CharSet.Unicode)]
@@ -404,5 +407,160 @@ namespace NativeWrappers
 		[DllImport (DllName, CallingConvention = CallConv, CharSet = CharSet.Unicode)]
 		public static extern IntPtr GetManifestPrerequistieSystemVersionName (IntPtr hReader, string lpName);
 
+		// ========== Appx Bundle Resource Packages ==========
+		[DllImport (DllName, CallingConvention = CallConv)]
+		private static extern IntPtr GetAppxBundleAllResourcePackageFileNames (IntPtr hReader);
+
+		[DllImport (DllName, CallingConvention = CallConv)]
+		private static extern void FreeAppxBundlePayloadsFileNameList (IntPtr hStringList);
+
+		/// <summary>
+		/// 获取 Bundle 包中所有资源包的文件名列表。
+		/// </summary>
+		/// <param name="hReader">由 CreatePackageReader 创建的读取器句柄</param>
+		/// <returns>资源包文件名数组，若无资源包或非 bundle 类型则返回空数组</returns>
+		public static string [] GetAppxBundleAllResourcePackageFileNameList (IntPtr hReader)
+		{
+			IntPtr hList = GetAppxBundleAllResourcePackageFileNames (hReader);
+			if (hList == IntPtr.Zero)
+				return new string [0];
+
+			try
+			{
+				return ReadWStringList (hList);
+			}
+			finally
+			{
+				FreeAppxBundlePayloadsFileNameList (hList);
+			}
+		}
+
+		[DllImport (DllName, CallingConvention = CallConv)]
+		private static extern IntPtr GetAppxBundleAllLocaleResourcePackageFileNames (IntPtr hReader);
+
+		/// <summary>
+		/// 获取 Bundle 包中所有区域设置资源包的文件名列表。
+		/// </summary>
+		/// <param name="hReader">由 CreatePackageReader 创建的读取器句柄</param>
+		/// <returns>区域设置资源包文件名数组，若无则返回空数组</returns>
+		public static string [] GetAppxBundleAllLocaleResourcePackageFileNameList (IntPtr hReader)
+		{
+			IntPtr hList = GetAppxBundleAllLocaleResourcePackageFileNames (hReader);
+			if (hList == IntPtr.Zero)
+				return new string [0];
+
+			try
+			{
+				return ReadWStringList (hList);
+			}
+			finally
+			{
+				FreeAppxBundlePayloadsFileNameList (hList);
+			}
+		}
+
+		[DllImport (DllName, CallingConvention = CallConv)]
+		private static extern IntPtr GetAppxBundleAllFileResourcePackageFileNames (IntPtr hReader);
+
+		/// <summary>
+		/// 获取 Bundle 包中所有文件资源包的文件名列表。
+		/// </summary>
+		/// <param name="hReader">由 CreatePackageReader 创建的读取器句柄</param>
+		/// <returns>文件资源包文件名数组，若无则返回空数组</returns>
+		public static string [] GetAppxBundleAllFileResourcePackageFileNameList (IntPtr hReader)
+		{
+			IntPtr hList = GetAppxBundleAllFileResourcePackageFileNames (hReader);
+			if (hList == IntPtr.Zero)
+				return new string [0];
+
+			try
+			{
+				return ReadWStringList (hList);
+			}
+			finally
+			{
+				FreeAppxBundlePayloadsFileNameList (hList);
+			}
+		}
+
+		// 用于更新应用项名称列表（设置要查询的项）
+		[DllImport (DllName, CallingConvention = CallConv, CharSet = CharSet.Unicode)]
+		public static extern void UpdatePackageApplicationItemGetName (
+			[In] IntPtr [] lpNames,   // 传入一个 IntPtr 数组，每个元素指向一个 Unicode 字符串
+			uint dwArrLen
+		);
+
+		// 回调委托声明
+		[UnmanagedFunctionPointer (CallConv)]
+		public delegate void IterWStringCallback ([MarshalAs (UnmanagedType.LPWStr)] string lpString);
+
+		// 枚举当前列表中的项（通过回调逐个返回）
+		[DllImport (DllName, CallingConvention = CallConv, CharSet = CharSet.Unicode)]
+		public static extern void GetPackageApplicationItemGetNameList (
+			IterWStringCallback pfCallback   // 回调函数指针
+		);
+		/// <summary>
+		/// 更新内部的应用项名称列表（设置要查询的项）
+		/// </summary>
+		/// <param name="names">要设置的项名称集合</param>
+		public static void SetApplicationItemNames (IEnumerable<string> names)
+		{
+			if (names == null)
+			{
+				// 传入空数组，清空列表
+				UpdatePackageApplicationItemGetName (new IntPtr [0], 0);
+				return;
+			}
+
+			var nameList = names.ToList ();
+			if (nameList.Count == 0)
+			{
+				UpdatePackageApplicationItemGetName (new IntPtr [0], 0);
+				return;
+			}
+
+			// 为每个字符串分配非托管内存
+			IntPtr [] ptrs = new IntPtr [nameList.Count];
+			try
+			{
+				for (int i = 0; i < nameList.Count; i++)
+				{
+					ptrs [i] = Marshal.StringToHGlobalUni (nameList [i]);
+				}
+
+				UpdatePackageApplicationItemGetName (ptrs, (uint)nameList.Count);
+			}
+			finally
+			{
+				// 释放分配的内存
+				foreach (var ptr in ptrs)
+				{
+					if (ptr != IntPtr.Zero)
+						Marshal.FreeHGlobal (ptr);
+				}
+			}
+		}
+		/// <summary>
+		/// 获取当前内部的应用项名称列表（通过回调收集所有项）
+		/// </summary>
+		/// <returns>应用项名称数组</returns>
+		public static string [] GetApplicationItemNames ()
+		{
+			var result = new List<string> ();
+
+			// 定义回调：将收到的字符串添加到列表
+			IterWStringCallback callback = (str) =>
+			{
+				if (!string.IsNullOrEmpty (str))
+					result.Add (str);
+			};
+
+			// 调用本机函数，传入委托
+			GetPackageApplicationItemGetNameList (callback);
+
+			// 注意：GC 需要保持 callback 的存活直到本机调用结束，这里通过局部变量引用即可，
+			// 因为本机函数是同步调用的，不会在函数返回后继续使用回调。
+			return result.ToArray ();
+		}
 	}
 }

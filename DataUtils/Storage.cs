@@ -539,8 +539,7 @@ namespace DataUtils
 		public void File (string filter, string initDir, object jsCallback)
 		{
 			IWin32Window owner = GetActiveWindowOwner ();
-			Thread t = new Thread (() =>
-			{
+			Thread t = new Thread (() => {
 				string result = string.Empty;
 				try
 				{
@@ -565,8 +564,7 @@ namespace DataUtils
 		public void Files (string filter, string initDir, object jsCallback)
 		{
 			IWin32Window owner = GetActiveWindowOwner ();
-			Thread t = new Thread (() =>
-			{
+			Thread t = new Thread (() => {
 				string result = "[]";
 				try
 				{
@@ -591,8 +589,7 @@ namespace DataUtils
 		public void Dir (string initDir, object jsCallback)
 		{
 			IWin32Window owner = GetActiveWindowOwner ();
-			Thread t = new Thread (() =>
-			{
+			Thread t = new Thread (() => {
 				string result = string.Empty;
 				try
 				{
@@ -616,8 +613,7 @@ namespace DataUtils
 		public void Dirs (string initDir, object jsCallback)
 		{
 			IWin32Window owner = GetActiveWindowOwner ();
-			Thread t = new Thread (() =>
-			{
+			Thread t = new Thread (() => {
 				string result = "[]";
 				try
 				{
@@ -649,8 +645,71 @@ namespace DataUtils
 	}
 	[ComVisible (true)]
 	[ClassInterface (ClassInterfaceType.AutoDual)]
+	public class _I_Folder
+	{
+		[DllImport ("shell32.dll")]
+		private static extern int SHGetKnownFolderPath (
+			[MarshalAs (UnmanagedType.LPStruct)] Guid rfid,
+			uint dwFlags,
+			IntPtr hToken,
+			out IntPtr ppszPath); 
+		private static string KF (Guid g)
+		{
+			IntPtr p;
+			SHGetKnownFolderPath (g, 0, IntPtr.Zero, out p);
+			string s = Marshal.PtrToStringUni (p);
+			Marshal.FreeCoTaskMem (p);
+			return s;
+		}
+		private static readonly Guid FOLDERID_Downloads = new Guid ("374DE290-123F-4565-9164-39C4925E467B");
+		private static readonly Guid FOLDERID_SavedPictures = new Guid ("3B193882-D3AD-4EAB-965A-69829D1FB59F");
+		private static readonly Guid FOLDERID_SavedGames = new Guid ("4C5C32FF-BB9D-43B0-BF90-45A0FEEB6D0E");
+		private static readonly Guid FOLDERID_Links = new Guid ("BFB9D5E0-C6A9-404C-B2B2-AE6DB6AF4968");
+		private static readonly Guid FOLDERID_Contacts = new Guid ("56784854-C6CB-462B-8169-88E350ACB882");
+		private static readonly Guid FOLDERID_Searches = new Guid ("7D1D3A04-DEBB-4115-95CF-2F29DA2920DA");
+		public string ProgramFiles => Environment.GetFolderPath (Environment.SpecialFolder.ProgramFiles);
+		public string ProgramFilesX86 => Environment.GetFolderPath (Environment.SpecialFolder.ProgramFilesX86);
+		public string Windows => Environment.GetFolderPath (Environment.SpecialFolder.Windows);
+		public string System32 => Environment.SystemDirectory;
+		public string UserProfile => Environment.GetFolderPath (Environment.SpecialFolder.UserProfile);
+		public string Desktop => Environment.GetFolderPath (Environment.SpecialFolder.Desktop);
+		public string Documents => Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments);
+		public string Pictures => Environment.GetFolderPath (Environment.SpecialFolder.MyPictures);
+		public string Music => Environment.GetFolderPath (Environment.SpecialFolder.MyMusic);
+		public string Videos => Environment.GetFolderPath (Environment.SpecialFolder.MyVideos);
+		public string AppDataRoaming => Environment.GetFolderPath (Environment.SpecialFolder.ApplicationData);
+		public string AppDataLocal => Environment.GetFolderPath (Environment.SpecialFolder.LocalApplicationData);
+		public string AppDataLocalLow => Environment.GetFolderPath (Environment.SpecialFolder.LocalApplicationData) + "\\Low";
+		public string Temp => System.IO.Path.GetTempPath ();
+		public string PublicDesktop => Environment.GetFolderPath (Environment.SpecialFolder.CommonDesktopDirectory);
+		public string PublicDocuments => Environment.GetFolderPath (Environment.SpecialFolder.CommonDocuments);
+		public string PublicPictures => Environment.GetFolderPath (Environment.SpecialFolder.CommonPictures);
+		public string PublicMusic => Environment.GetFolderPath (Environment.SpecialFolder.CommonMusic);
+		public string PublicVideos => Environment.GetFolderPath (Environment.SpecialFolder.CommonVideos);
+		public string Downloads => KF (FOLDERID_Downloads);
+		public string SavedPictures => KF (FOLDERID_SavedPictures);
+		public string SavedGames => KF (FOLDERID_SavedGames);
+		public string Links => KF (FOLDERID_Links);
+		public string Contacts => KF (FOLDERID_Contacts);
+		public string Searches => KF (FOLDERID_Searches);
+	}
+	[ComVisible (true)]
+	[ClassInterface (ClassInterfaceType.AutoDual)]
 	public class _I_Storage
 	{
+		[DllImport ("user32.dll")]
+		private static extern IntPtr GetForegroundWindow ();
+		class WindowWrapper: IWin32Window
+		{
+			private IntPtr _hwnd;
+			public WindowWrapper (IntPtr handle) { _hwnd = handle; }
+			public IntPtr Handle { get { return _hwnd; } }
+		}
+		private static IWin32Window GetActiveWindowOwner ()
+		{
+			IntPtr hWnd = GetForegroundWindow ();
+			return hWnd != IntPtr.Zero ? new WindowWrapper (hWnd) : null;
+		}
 		private static void CallJS (object jsFunc, params object [] args)
 		{
 			if (jsFunc == null) return;
@@ -680,6 +739,35 @@ namespace DataUtils
 		public _I_Directory GetDirectory (string path) { return new _I_Directory (path); }
 		public _I_Directory GetDir (string path) { return GetDirectory (path); }
 		public _I_Explorer Explorer => new _I_Explorer ();
+		public void Save (string filter, string initDir, string defaultName, object jsCallback)
+		{
+			IWin32Window owner = GetActiveWindowOwner ();
+			Thread t = new Thread (() => {
+				string result = string.Empty;
+				try
+				{
+					using (SaveFileDialog dlg = new SaveFileDialog ())
+					{
+						dlg.Filter = filter;
+						dlg.InitialDirectory = string.IsNullOrEmpty (initDir)
+							? Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments)
+							: initDir;
+						if (!string.IsNullOrEmpty (defaultName))
+							dlg.FileName = defaultName;
+						dlg.OverwritePrompt = true;
+						dlg.AddExtension = true;
+						if (dlg.ShowDialog (owner) == DialogResult.OK)
+							result = dlg.FileName;
+					}
+				}
+				catch { }
+				CallJS (jsCallback, result);
+			});
+			t.IsBackground = true;
+			t.SetApartmentState (ApartmentState.STA);
+			t.Start ();
+		}
+		public _I_Folder Folders => new _I_Folder ();
 	}
 	// Small shell helpers that P/Invoke for folder retrieval using CSIDL or Known Folder GUIDs
 	internal static class ShellHelpers

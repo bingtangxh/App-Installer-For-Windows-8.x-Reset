@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Package Infomation Report</title>
+    <style id="body-style">
+        body {
+            margin: 0px;
+            box-sizing: border-box;
+            width: 100%;
+            -ms-user-select: element;
+        }
+    </style>
+    <style>
+        table {
+            width: auto;
+            max-width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin-bottom: 1rem;
+            background-color: transparent;
+            font-size: 9pt;
+            box-sizing: border-box;
+        }
+        
+        th,
+        td {
+            padding: 5px;
+            vertical-align: top;
+            border: 1px solid #2d2d2d;
+        }
+        
+        tr.head {
+            background-color: rgb(0, 0, 124);
+            color: white;
+            font-weight: bolder;
+        }
+        
+        tr.spec {
+            background-color: yellow;
+            font-weight: normal;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <p id="msg" style="font-size: 10pt;"></p>
+    <table id="report">
+        <tbody>
+            <tr class="head">
+                <td colspan="2"><strong>Package Infomation Report</strong></td>
+            </tr>
+            <tr>
+                <td>File</td>
+                <td name="file" style="word-break: break-all;"></td>
+            </tr>
+            <tr>
+                <td>Is Valid</td>
+                <td name="valid"></td>
+            </tr>
+            <tr>
+                <td>Type</td>
+                <td name="type">Appx</td>
+            </tr>
+            <tr>
+                <td>Role</td>
+                <td name="role">Application Package</td>
+            </tr>
+            <tr class="spec">
+                <td colspan="2">Identity</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td name="name"></td>
+            </tr>
+            <tr>
+                <td>Publisher</td>
+                <td name="publisher"></td>
+            </tr>
+            <tr>
+                <td>Package Version</td>
+                <td name="version"></td>
+            </tr>
+            <tr>
+                <td>Real Version</td>
+                <td name="realver"></td>
+            </tr>
+            <tr>
+                <td>Support Processor Architecture</td>
+                <td name="architecture"></td>
+            </tr>
+            <tr>
+                <td>Package Family Name</td>
+                <td name="package_family_name"></td>
+            </tr>
+            <tr>
+                <td>Package Full Name</td>
+                <td name="package_full_name"></td>
+            </tr>
+            <tr>
+                <td>Resource ID</td>
+                <td name="resource_id"></td>
+            </tr>
+            <tr class="spec">
+                <td colspan="2">Properties</td>
+            </tr>
+            <tr>
+                <td>Display Name</td>
+                <td name="display_name"></td>
+            </tr>
+            <tr>
+                <td>Publisher Display Name</td>
+                <td name="publisher_display_name"></td>
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td name="description"></td>
+            </tr>
+            <tr>
+                <td>Logo</td>
+                <td name="logo" style="background-image: linear-gradient(to right, darkgray, lightgray);"><img src="" id="logo"></td>
+            </tr>
+            <tr>
+                <td>Framework</td>
+                <td name="framework"></td>
+            </tr>
+            <tr>
+                <td>Resource Package</td>
+                <td name="resource_package"></td>
+            </tr>
+            <tr class="spec">
+                <td colspan="2">Prerequisites</td>
+            </tr>
+            <tr>
+                <td>OS Min Version</td>
+                <td name="os_min_version"></td>
+            </tr>
+            <tr>
+                <td>OS Max Version Tested</td>
+                <td name="os_max_version_tested"></td>
+            </tr>
+            <tr class="spec">
+                <td colspan="2">Applications</td>
+            </tr>
+            <tr>
+                <td colspan="2" name="applications">
+                </td>
+            </tr>
+            <tr class="spec">
+                <td colspan="2">Capabilities</td>
+            </tr>
+            <tr>
+                <td>Capabilities</td>
+                <td>
+                    <ul name="capabilities"></ul>
+                </td>
+            </tr>
+            <tr>
+                <td>Device Capabilities</td>
+                <td>
+                    <ul name="device_capabilities"></ul>
+                </td>
+            </tr>
+            <tr class="spec">
+                <td colspan="2">Dependencies</td>
+            </tr>
+            <tr>
+                <td colspan="2" name="dependencies">
+                </td>
+            </tr>
+            <tr class="spec">
+                <td colspan="2">Resources</td>
+            </tr>
+            <tr>
+                <td>Languages</td>
+                <td>
+                    <ul name="languages"></ul>
+                </td>
+            </tr>
+            <tr>
+                <td>Scales</td>
+                <td>
+                    <ul name="scales"></ul>
+                </td>
+            </tr>
+            <tr>
+                <td>DirectX Feature Levels</td>
+                <td>
+                    <ul name="dx_feature_levels"></ul>
+                </td>
+            </tr>
+    </table>
+    <script>
+        (function(global) {
+            if (typeof Array.prototype.forEach !== "function") {
+                Array.prototype.forEach = function(callback, thisArg) {
+                    var T, k;
+                    if (this === null) {
+                        throw new TypeError(" this is null or not defined");
+                    }
+                    var O = Object(this);
+                    var len = O.length >>> 0;
+                    if (typeof callback !== "function") {
+                        throw new TypeError(callback + " is not a function");
+                    }
+                    if (arguments.length > 1) {
+                        T = thisArg;
+                    }
+                    k = 0;
+                    while (k < len) {
+                        var kValue;
+                        if (k in O) {
+                            kValue = O[k];
+                            callback.call(T, kValue, k, O);
+                        }
+                        k++;
+                    }
+                };
+            }
+
+            function formatVersion(v) {
+                return v.major + "." + v.minor + "." + v.build + "." + v.revision;
+            }
+            global.setReport = function(rep) {
+                if (!rep.status) {
+                    document.getElementById("msg").textContent = rep.message;
+                    document.getElementById("report").style.display = "none";
+                    return;
+                }
+                document.getElementById("msg").textContent = "";
+                document.getElementById("report").style.display = "";
+                var pi = rep.json;
+                var t = document.getElementById("report");
+                t.querySelector("[name='file']").textContent = pi.filepath;
+                t.querySelector("[name='valid']").textContent = pi.valid;
+                t.querySelector("[name='type']").textContent = (function(t) {
+                    switch (t) {
+                        case 1:
+                            return "Appx";
+                        case 2:
+                            return "Bundle";
+                        default:
+                        case 0:
+                            return "Unknown";
+                    }
+                })(pi.type);
+                t.querySelector("[name='role']").textContent = (function(r) {
+                    switch (r) {
+                        case 1:
+                            return "Application Package";
+                        case 2:
+                            return "Framework";
+                        case 3:
+                            return "Resource Package";
+                        default:
+                        case 0:
+                            return "Unknown";
+                    }
+                })(pi.role);
+                t.querySelector("[name='name']").textContent = pi.identity.name;
+                t.querySelector("[name='publisher']").textContent = pi.identity.publisher;
+                t.querySelector("[name='version']").textContent = formatVersion(pi.identity.version);
+                t.querySelector("[name='realver']").textContent = formatVersion(pi.identity.realver);
+                t.querySelector("[name='architecture']").textContent = pi.identity.architecture.map(function(item) {
+                    switch (item) {
+                        case 0:
+                            return "x86";
+                        case 5:
+                            return "ARM";
+                        case 9:
+                            return "x64";
+                        case 11:
+                            return "Neutral";
+                        case 12:
+                            return "ARM64";
+                        default:
+                            return "Unknown";
+                    }
+                }).join(", ");
+                t.querySelector("[name='package_family_name']").textContent = pi.identity.package_family_name;
+                t.querySelector("[name='package_full_name']").textContent = pi.identity.package_full_name;
+                t.querySelector("[name='resource_id']").textContent = pi.identity.resource_id;
+                t.querySelector("[name='display_name']").textContent = pi.properties.display_name;
+                t.querySelector("[name='publisher_display_name']").textContent = pi.properties.publisher_display_name;
+                t.querySelector("[name='description']").textContent = pi.properties.description;
+                document.getElementById("logo").src = pi.properties.logo_base64;
+                document.getElementById("logo").setAttribute("alt", pi.properties.logo);
+                document.getElementById("logo").setAttribute("title", pi.properties.logo);
+                t.querySelector("[name='framework']").textContent = pi.properties.framework;
+                t.querySelector("[name='resource_package']").textContent = pi.properties.resource_package;
+                t.querySelector("[name='os_min_version']").textContent = formatVersion(pi.prerequisites.os_min_version);
+                t.querySelector("[name='os_min_version']").title = pi.prerequisites.os_min_version_description;
+                t.querySelector("[name='os_max_version_tested']").textContent = formatVersion(pi.prerequisites.os_max_version_tested);
+                t.querySelector("[name='os_max_version_tested']").title = pi.prerequisites.os_max_version_tested_description;
+                var appsRep = t.querySelector("[name='applications']");
+                appsRep.innerHTML = "";
+                (pi.applications || []).forEach(function(t, i) {
+                    var sub = document.createElement("table");
+                    var tb = document.createElement("tbody");
+                    sub.appendChild(tb);
+                    var tr = document.createElement("tr");
+                    var td = document.createElement("td");
+                    tr.classList.add("head");
+                    td.colSpan = 2;
+                    td.textContent = t.AppUserModelID;
+                    tr.appendChild(td);
+                    tb.appendChild(tr);
+                    var keys = Object.keys(t);
+                    keys.forEach(function(key) {
+                        if (key == "AppUserModelID") return;
+                        if ((key || "").indexOf("_Base64") >= 0) return;
+                        var tr = document.createElement("tr");
+                        var tdk = document.createElement("td");
+                        var tdv = document.createElement("td");
+                        tdk.textContent = key;
+                        tdv.textContent = t[key];
+                        if (typeof t[key + "_Base64"] !== "undefined") {
+                            tdv.innerHTML = "";
+                            var img = document.createElement("img");
+                            img.src = t[key + "_Base64"];
+                            img.alt = t[key];
+                            img.title = t[key];
+                            img.style.maxWidth = "300px";
+                            img.style.maxHeight = "300px";
+                            img.style.aspectRatio = "auto";
+                            if (typeof t["BackgroundColor"] !== "undefined") {
+                                tdv.style.backgroundColor = t["BackgroundColor"];
+                            }
+                            tdv.appendChild(img);
+                        }
+                        tr.appendChild(tdk);
+                        tr.appendChild(tdv);
+                        tb.appendChild(tr);
+                    });
+                    appsRep.appendChild(sub);
+                });
+                var capsRep = t.querySelector("[name='capabilities']");
+                capsRep.innerHTML = "";
+                (pi.capabilities.capabilities_name || []).forEach(function(t) {
+                    var li = document.createElement("li");
+                    li.textContent = t;
+                    capsRep.appendChild(li);
+                });
+                var dcapsRep = t.querySelector("[name='device_capabilities']");
+                dcapsRep.innerHTML = "";
+                (pi.capabilities.device_capabilities || []).forEach(function(t) {
+                    var li = document.createElement("li");
+                    li.textContent = t;
+                    dcapsRep.appendChild(li);
+                });
+                var depsRep = t.querySelector("[name='dependencies']");
+                depsRep.innerHTML = "";
+                (pi.dependencies || []).forEach(function(t) {
+                    var sub = document.createElement("table");
+                    var tb = document.createElement("tbody");
+                    sub.appendChild(tb);
+                    var tr = document.createElement("tr");
+                    var tdk = document.createElement("td");
+                    var tdv = document.createElement("td");
+                    tdk.textContent = "Name";
+                    tdv.textContent = t.name;
+                    tr.appendChild(tdk);
+                    tr.appendChild(tdv);
+                    tb.appendChild(tr);
+                    var tr = document.createElement("tr");
+                    var tdk = document.createElement("td");
+                    var tdv = document.createElement("td");
+                    tdk.textContent = "Publisher";
+                    tdv.textContent = t.publisher;
+                    tr.appendChild(tdk);
+                    tr.appendChild(tdv);
+                    tb.appendChild(tr);
+                    var tr = document.createElement("tr");
+                    var tdk = document.createElement("td");
+                    var tdv = document.createElement("td");
+                    tdk.textContent = "Min Version";
+                    tdv.textContent = formatVersion(t.vermin);
+                    tr.appendChild(tdk);
+                    tr.appendChild(tdv);
+                    tb.appendChild(tr);
+                    depsRep.appendChild(sub);
+                });
+                var langsRep = t.querySelector("[name='languages']");
+                langsRep.innerHTML = "";
+                (pi.resources.languages || []).forEach(function(t) {
+                    var li = document.createElement("li");
+                    li.textContent = t;
+                    li.title = external.System.Locale.localeInfoEx(t, 2);
+                    langsRep.appendChild(li);
+                });
+                var scalesRep = t.querySelector("[name='scales']");
+                scalesRep.innerHTML = "";
+                (pi.resources.scales || []).forEach(function(t) {
+                    var li = document.createElement("li");
+                    li.textContent = t;
+                    scalesRep.appendChild(li);
+                });
+                var dxflsRep = t.querySelector("[name='dx_feature_levels']");
+                dxflsRep.innerHTML = "";
+                (pi.resources.dx_feature_levels || []).forEach(function(t) {
+                    var li = document.createElement("li");
+                    li.textContent = (function(d) {
+                        switch (d) {
+                            case 1:
+                                return "9";
+                            case 2:
+                                return "10";
+                            case 4:
+                                return "11";
+                            case 8:
+                                return "12";
+                        }
+                    })(t);
+                    dxflsRep.appendChild(li);
+                });
+            };
+            global.getReport = function() {
+                var bodyStyle = document.getElementById("body-style");
+                var bodyStyleHTML = bodyStyle.innerHTML;
+                bodyStyle.innerHTML = "";
+                var ret = document.documentElement.outerHTML;
+                bodyStyle.innerHTML = bodyStyleHTML;
+                return ret;
+            };
+        })(this);
+    </script>
+</body>
+
+</html>

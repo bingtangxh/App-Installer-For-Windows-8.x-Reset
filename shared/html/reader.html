@@ -26,6 +26,8 @@
     <script type="text/javascript" src="js/event.js"></script>
     <script type="text/javascript" src="js/tileback.js"></script>
     <script type="text/javascript" src="js/load.js"></script>
+    <link rel="stylesheet" type="text/css" href="libs/msgbox/contentdlg.css">
+    <script type="text/javascript" src="libs/msgbox/contentdlg.js"></script>
     <link rel="stylesheet" type="text/css" href="libs/msgbox/msgbox.css">
     <script type="text/javascript" src="libs/msgbox/msgbox.js"></script>
     <script type="text/javascript" src="js/init.js"></script>
@@ -60,14 +62,14 @@
                     <div>
                         <label for="read-pkgpath">文件路径</label>
                         <div class="itemrow">
-                            <input type="text" id="read-pkgpath">
-                            <button id="read-browse" style="margin-left: 5px;">浏览</button>
+                            <input type="text" id="read-pkgpath" style="margin-right: 10px;">
+                            <button id="read-browse">浏览</button>
                         </div>
                         <script>
                             (function() {
                                 var readBrowse = document.getElementById("read-browse");
                                 var readPkgpath = document.getElementById("read-pkgpath");
-                                var lastDir = "";
+                                var lastDir = external.Storage.Folders.desktop;
                                 readBrowse.onclick = function() {
                                     var explorer = external.Storage.Explorer;
                                     explorer.file(
@@ -76,6 +78,7 @@
                                         function(result) {
                                             if (!result) return;
                                             readPkgpath.value = result;
+                                            lastDir = external.Storage.Path.getDir(result);
                                         }
                                     );
                                 };
@@ -83,44 +86,283 @@
                         </script>
                     </div>
                     <div class="itemrow">
-                        <input type="checkbox" id="read-usepri">
+                        <input type="checkbox" id="read-usepri" style="margin-left: 0;">
                         <label for="read-usepri">需要解析 PRI 资源文件</label>
                     </div>
-                    <button id="read-btn">读取</button>
-                    <p>读取结果：</p>
-                    <div id="read-result"></div>
+                    <style>
+                        .part-read-button {
+                            margin-bottom: 5px;
+                        }
+                    </style>
+                    <button id="read-btn" class="part-read-button">读取</button>
+                    <button id="read-result-save" class="part-read-button">将读取结果保存为文件</button>
+                    <button id="read-result-xml" class="part-read-button">保存为 XML 文件</button>
+                    <button id="read-result-json" class="part-read-button">保存为 JSON 文件</button>
+                    <br>
+                    <progress id="read-loading" style="display: none;"></progress>
+                    <p style="margin-bottom: 2px; margin-top: 5px;">读取结果：</p>
+                    <iframe id="read-result" width="100%" frameborder="0" src="report.html"></iframe>
                     <script>
                         (function() {
-                            function generateHtmlReport(pi) {
-                                var pkg = pi.json;
-                                if (!pi.valid) {
-                                    var ret = document.createElement("p");
-                                    ret.textContent = "错误：无效的包文件";
-                                    return ret;
-                                }
+                            var readResult = document.getElementById("read-result");
+                            var de = DomEvent;
+
+                            function readResultResizeEvent(e) {
+                                var parent = readResult.parentElement.parentElement;
+                                var newHeight = parent.getBoundingClientRect().height - readResult.getBoundingClientRect().top - 24;
+                                //console.log(e, parent.getBoundingClientRect().height, readResult.getBoundingClientRect().top, newHeight);
+                                readResult.style.height = parseInt(newHeight) + "px";
                             }
+                            var de_rrre = de.Utils.debounce(readResultResizeEvent, 200);
+                            de.Monitor.observe(readResult, de.Types.position, de_rrre);
+                            de.Monitor.observe(readResult.parentElement.parentElement, de.Types.resize, de_rrre);
+                        })();
+                    </script>
+                    <script>
+                        (function(global) {
                             var readBtn = document.getElementById("read-btn");
                             var readResult = document.getElementById("read-result");
                             var readPkgpath = document.getElementById("read-pkgpath");
+                            var readBrowse = document.getElementById("read-browse");
                             var readUsepri = document.getElementById("read-usepri");
+                            var readLoading = document.getElementById("read-loading");
+                            var readSave = document.getElementById("read-result-save");
+                            var readToXml = document.getElementById("read-result-xml");
+                            var readToJson = document.getElementById("read-result-json");
+                            readResult.style.display = "none";
                             readBtn.onclick = function() {
                                 var self = this;
+                                self.disabled = true;
+                                readResult.style.display = "none";
+                                readLoading.style.display = "";
+                                readPkgpath.disabled = true;
+                                readBrowse.disabled = true;
+                                readSave.disabled = true;
+                                readToXml.disabled = true;
+                                readToJson.disabled = true;
+                                readUsepri.disabled = true;
+
+                                function onCompleted() {
+                                    self.disabled = false;
+                                    readPkgpath.disabled = false;
+                                    readBrowse.disabled = false;
+                                    readSave.disabled = false;
+                                    readToXml.disabled = false;
+                                    readToJson.disabled = false;
+                                    readUsepri.disabled = false;
+                                }
                                 if (!readPkgpath.value) {
-                                    readResult.textContent = "错误：请选择一个有效文件";
+                                    readResult.style.display = "";
+                                    readLoading.style.display = "none";
+                                    onCompleted();
+                                    readResult.contentWindow.setReport({
+                                        status: false,
+                                        message: "请选择一个有效文件"
+                                    });
+                                    self.disabled = false;
                                     return;
                                 }
                                 var pr = Package.reader;
+
                                 pr.readFromPackage(readPkgpath.value, readUsepri.checked).then(function(pi) {
-                                    readResult.textContent = JSON.stringify(pi);
+                                    readLoading.style.display = "none";
+                                    readResult.style.display = "";
+                                    readResult.contentWindow.setReport(pi);
                                 }, function(err) {
-                                    readResult.textContent = JSON.stringify(err);
-                                }).done(function() {
-                                    self.disabled = false;
-                                }, function() {
-                                    self.disabled = false;
+                                    readLoading.style.display = "none";
+                                    readResult.style.display = "";
+                                    readResult.contentWindow.setReport(err);
+                                }).done(onCompleted, onCompleted);
+                            };
+                            readSave.onclick = function() {
+                                var container = document.createElement("div");
+                                document.body.appendChild(container);
+                                var dlg = new WinJS.UI.ContentDialog(container);
+                                dlg.content = (function() {
+                                    var cont = document.createElement("div");
+                                    var progress = document.createElement("progress");
+                                    progress.classList.add("win-ring");
+                                    progress.style.color = "white";
+                                    var span = document.createElement("span");
+                                    span.textContent = "正在保存文件";
+                                    progress.style.marginRight = "10px";
+                                    cont.setAttribute("style", "display: flex; flex-direction: row; align-items: center; display: -ms-flexbox; -ms-flex-direction: row; -ms-align-items: center;")
+                                    cont.appendChild(progress);
+                                    cont.appendChild(span);
+                                    return cont;
+                                })();
+                                dlg.commands.splice(0, dlg.commands.length);
+                                var lastDir = external.Storage.Folders.desktop;
+                                return dlg.show().then(function(id) {
+                                    return new Promise(function(c, e) {
+                                        external.Storage.save(
+                                            "{htmlfile}|*.html;*.htm",
+                                            lastDir,
+                                            "report-" + new Date().getTime(),
+                                            c
+                                        );
+                                    });
+                                }).then(function(filepath) {
+                                    if (!filepath) return dlg.hide().then(function() {
+                                        return dlg.dispose();
+                                    });
+                                    var file = external.Storage.getFile(filepath);
+                                    file.content = readResult.contentWindow.getReport();
+                                    return dlg.hide().then(function() {
+                                        return dlg.dispose();
+                                    });
+                                }).then(null, function(err) {
+                                    dlg.hide().then(function() {
+                                        dlg.title = "保存时发生问题";
+                                        dlg.content = err.message || err;
+                                        dlg.commands.push(new WinJS.UI.ContentDialogCommand(
+                                            getPublicRes(800)
+                                        ));
+                                        return dlg.showAsync().then(function() {
+                                            return dlg.dispose();
+                                        });
+                                    })
                                 });
-                            }
-                        })();
+                            };
+                            readToJson.onclick = function() {
+                                var self = this;
+                                var container = document.createElement("div");
+                                document.body.appendChild(container);
+                                var dlg = new WinJS.UI.ContentDialog(container);
+                                dlg.content = (function() {
+                                    var cont = document.createElement("div");
+                                    var progress = document.createElement("progress");
+                                    progress.classList.add("win-ring");
+                                    progress.style.color = "white";
+                                    var span = document.createElement("span");
+                                    span.textContent = "正在生成 JSON 文件，请稍候... \n这可能需要比较长的时间。";
+                                    progress.style.marginRight = "10px";
+                                    cont.setAttribute("style", "display: flex; flex-direction: row; align-items: center; display: -ms-flexbox; -ms-flex-direction: row; -ms-align-items: center;")
+                                    cont.appendChild(progress);
+                                    cont.appendChild(span);
+                                    return cont;
+                                })();
+                                dlg.commands.splice(0, dlg.commands.length);
+                                var lastDir = external.Storage.Folders.desktop;
+                                return dlg.show().then(function(id) {
+                                    return new Promise(function(c, e) {
+                                        external.Storage.save(
+                                            "{jsonzipfile}|*.zip",
+                                            lastDir,
+                                            "report-" + new Date().getTime(),
+                                            c
+                                        );
+                                    });
+                                }).then(function(filepath) {
+                                    return new Promise(function(c, e) {
+                                        if (!readPkgpath.value) {
+                                            e(new Error("请选择一个有效文件"));
+                                            return;
+                                        }
+                                        try {
+                                            var pkg = Package.reader.package(readPkgpath.value);
+                                            pkg.saveJsonFileAsync(filepath, function() {
+                                                try {
+                                                    pkg.dispose();
+                                                } catch (ex) {}
+                                                c();
+                                            }, function(ex) {
+                                                try {
+                                                    pkg.dispose();
+                                                } catch (ex2) {}
+                                                e(ex);
+                                            });
+                                        } catch (pex) {
+                                            e(pex);
+                                        }
+                                    }).then(function() {
+                                        return dlg.hide().then(function() {
+                                            return dlg.dispose();
+                                        });
+                                    }).then(null, function(err) {
+                                        dlg.hide().then(function() {
+                                            dlg.title = "保存时发生问题";
+                                            dlg.content = err.message || err;
+                                            dlg.commands.push(new WinJS.UI.ContentDialogCommand(
+                                                getPublicRes(800)
+                                            ));
+                                            return dlg.showAsync().then(function() {
+                                                return dlg.dispose();
+                                            });
+                                        })
+                                    });
+                                });
+                            };
+                            readToXml.onclick = function() {
+                                var self = this;
+                                var container = document.createElement("div");
+                                document.body.appendChild(container);
+                                var dlg = new WinJS.UI.ContentDialog(container);
+                                dlg.content = (function() {
+                                    var cont = document.createElement("div");
+                                    var progress = document.createElement("progress");
+                                    progress.classList.add("win-ring");
+                                    progress.style.color = "white";
+                                    var span = document.createElement("span");
+                                    span.textContent = "正在生成 XML 文件，请稍候... \n这可能需要比较长的时间。";
+                                    progress.style.marginRight = "10px";
+                                    cont.setAttribute("style", "display: flex; flex-direction: row; align-items: center; display: -ms-flexbox; -ms-flex-direction: row; -ms-align-items: center;")
+                                    cont.appendChild(progress);
+                                    cont.appendChild(span);
+                                    return cont;
+                                })();
+                                dlg.commands.splice(0, dlg.commands.length);
+                                var lastDir = external.Storage.Folders.desktop;
+                                return dlg.show().then(function(id) {
+                                    return new Promise(function(c, e) {
+                                        external.Storage.save(
+                                            "{xmlzipfile}|*.zip",
+                                            lastDir,
+                                            "report-" + new Date().getTime(),
+                                            c
+                                        );
+                                    });
+                                }).then(function(filepath) {
+                                    return new Promise(function(c, e) {
+                                        try {
+                                            if (!readPkgpath.value) {
+                                                e(new Error("请选择一个有效文件"));
+                                                return;
+                                            }
+                                            var pkg = Package.reader.package(readPkgpath.value);
+                                            pkg.saveXmlFileAsync(filepath, function() {
+                                                try {
+                                                    pkg.dispose();
+                                                } catch (ex) {}
+                                                c();
+                                            }, function(ex) {
+                                                try {
+                                                    pkg.dispose();
+                                                } catch (ex2) {}
+                                                e(ex);
+                                            });
+                                        } catch (pex) {
+                                            e(pex);
+                                        }
+                                    }).then(function() {
+                                        return dlg.hide().then(function() {
+                                            return dlg.dispose();
+                                        });
+                                    }).then(null, function(err) {
+                                        dlg.hide().then(function() {
+                                            dlg.title = "保存时发生问题";
+                                            dlg.content = err.message || err;
+                                            dlg.commands.push(new WinJS.UI.ContentDialogCommand(
+                                                getPublicRes(800)
+                                            ));
+                                            return dlg.showAsync().then(function() {
+                                                return dlg.dispose();
+                                            });
+                                        })
+                                    });
+                                });
+                            };
+                        })(this);
                     </script>
                 </div>
             </main>
@@ -130,7 +372,7 @@
                         <li class="title">
                             <div role="img">&#58344;</div>
                             <!--<div role="placeholder"></div>-->
-                            <span class="win-type-base" data-res-resxml="MANAGER_APPTITLE"></span>
+                            <span class="win-type-base" data-res-resxml="READER_APPTITLE"></span>
                         </li>
                         <script>
                             (function($) {
@@ -163,7 +405,7 @@
                                         var settingpath = external.Storage.Path.combine(external.Storage.Path.root, "settings.exe");
                                         //var cmdline = "\"{execfile}\" manager".replace("{execfile}", settingpath);
                                         external.Process.runAsync(
-                                            "manager",
+                                            "reader",
                                             settingpath,
                                             1,
                                             "",
