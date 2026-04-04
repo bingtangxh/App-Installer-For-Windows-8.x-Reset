@@ -162,15 +162,16 @@
                     }
                     oldTags.push(k);
                     promises.push(
-                        anime.runAsync(p.page, [
-                            anime.Keyframes.Opacity.hidden
-                        ]).then((function(page, key) {
-                            return function() {
-                                page.style.display = "none";
-                                page.style.opacity = 0;
-                                emit("unload", key);
-                            };
-                        })(p.page, k))
+                        (function(page, key) {
+                            // 返回 anime.runAsync 产生的 Promise
+                            return anime.runAsync(page, [anime.Keyframes.Opacity.hidden])
+                                .then(function() {
+                                    page.style.display = "none";
+                                    page.style.opacity = 0;
+                                    page.style.height = 0;
+                                    emit("unload", key);
+                                });
+                        })(p.page, k)
                     );
                     p.guide.classList.remove("selected");
                 }

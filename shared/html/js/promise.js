@@ -502,6 +502,22 @@
         if (!p.removeEventListener) p.removeEventListener = PromisePolyfill.removeEventListener;
         if (!p.dispatchEvent) p.dispatchEvent = PromisePolyfill.dispatchEvent;
         if (!p.onerror) p.onerror = null;
+        if (typeof p.prototype.then !== "function") {
+            p.prototype.then = function(onFulfilled, onRejected) {
+                return new p(function(resolve, reject) {
+                    this.then(resolve, reject);
+                }).then(onFulfilled, onRejected);
+            };
+        }
+        if (typeof p.prototype.done !== "function") {
+            p.prototype.done = function(onFulfilled, onRejected) {
+                this.then(onFulfilled, onRejected)["catch"](function(ex) {
+                    setTimeout(function() {
+                        throw ex;
+                    }, 0);
+                });
+            };
+        }
     }
     if (typeof global.WinJS !== "undefined" && typeof global.WinJS.Promise !== "undefined") {
         var wp = global.WinJS.Promise;

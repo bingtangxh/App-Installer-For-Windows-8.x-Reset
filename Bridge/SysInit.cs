@@ -11,6 +11,8 @@ using ModernNotice;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Bridge
 {
@@ -762,6 +764,44 @@ namespace Bridge
 		}
 		public bool AddApplicationItem (string itemName) => PackageReader.AddApplicationItem (itemName);
 		public bool RemoveApplicationItem (string itemName) => PackageReader.RemoveApplicationItem (itemName);
+		private List<object> JsArrayToList (object jsArray)
+		{
+			var result = new List<object> ();
+
+			if (jsArray == null)
+				return result;
+
+			// JS Array 有 length 属性和数字索引器
+			var type = jsArray.GetType ();
+
+			int length = (int)type.InvokeMember (
+				"length",
+				BindingFlags.GetProperty,
+				null,
+				jsArray,
+				null);
+
+			for (int i = 0; i < length; i++)
+			{
+				object value = type.InvokeMember (
+					i.ToString (),
+					BindingFlags.GetProperty,
+					null,
+					jsArray,
+					null);
+
+				result.Add (value);
+			}
+
+			return result;
+		}
+		public void UpdateApplicationItems (object items)
+		{
+			var stritems = JsArrayToList (items).Select (e => e?.ToString ()).ToList ();
+			PackageReader.UpdateApplicationItems (stritems);
+		}
+		public string [] GetApplicationItems () => PackageReader.GetApplicationItems ();
+		public string GetApplicationItemsToJson () => JsonConvert.SerializeObject (GetApplicationItems ());
 		// Cache about
 		private const int MaxCacheItems = 64;              // 最大缓存数量
 		private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes (30);
@@ -895,6 +935,7 @@ namespace Bridge
 		public _I_System System => system;
 		public _I_Notice Notice => new _I_Notice ();
 		public _I_Process Process => proc;
+		public _I_Web Web => new _I_Web ();
 		public string CmdArgs
 		{
 			get

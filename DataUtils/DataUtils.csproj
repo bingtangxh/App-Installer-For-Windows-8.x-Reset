@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Download.cs" />
+    <Compile Include="Enumerable.cs" />
     <Compile Include="HResult.cs" />
     <Compile Include="IE.cs" />
     <Compile Include="Locale.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Utils.cs" />
     <Compile Include="Version.cs" />
     <Compile Include="VisualElements.cs" />
+    <Compile Include="Web.cs" />
     <Compile Include="WebBrowser.cs" />
     <Compile Include="Window.cs" />
   </ItemGroup>

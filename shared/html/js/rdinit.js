@@ -25,6 +25,7 @@
         });
         var themeColor = Bridge.UI.themeColor;
         pagemgr.register("reader", document.getElementById("tag-reader"), document.getElementById("page-reader"));
+        pagemgr.register("acquire", document.getElementById("tag-acquire"), document.getElementById("page-acquire"));
         pagemgr.go("reader");
     });
 })(this);

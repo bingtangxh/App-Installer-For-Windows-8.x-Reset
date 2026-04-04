@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Package Manager</title>
+    <title>Package Reader</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,6 +32,9 @@
     <script type="text/javascript" src="libs/msgbox/msgbox.js"></script>
     <script type="text/javascript" src="js/init.js"></script>
     <script type="text/javascript" src="js/pkginfo.js"></script>
+    <script type="text/javascript" src="js/http.js"></script>
+    <script type="text/javascript" src="js/storergapi.js"></script>
+    <script type="text/javascript" src="js/dboxapi.js"></script>
     <script type="text/javascript" src="js/datasrc.js"></script>
     <script type="text/javascript" src="js/appbar.js"></script>
     <script type="text/javascript" src="js/pagemgr.js"></script>
@@ -55,8 +58,8 @@
 <body>
     <div id="readerpage" class="pagecontainer full">
         <div class="page full guide fold">
-            <main class="main padding">
-                <div id="page-reader" style="display: none;" class="ispage">
+            <main class="main">
+                <div id="page-reader" style="display: none;" class="ispage padding">
                     <h2>读取</h2>
                     <p>请选择一个包，获取其信息。</p>
                     <div>
@@ -365,6 +368,292 @@
                         })(this);
                     </script>
                 </div>
+                <div id="page-acquire" style="display: none;" class="ispage padding">
+                    <h2>获取</h2>
+                    <div id="acquire-forbidden" style="width: 100%;">
+                        <p>由于来自 store.rg-adguard.net 的限制，现在暂时无法实现对包的获取。请自行打开下面 URL 进行访问。</p>
+                        <a onclick="external.Process.open ('https://store.rg-adguard.net')">store.rg-adguard.net</a>
+                    </div>
+                    <div id="acquire-enable" style="width: 100%;">
+                        <p>请在下面的输入框中输入要查询的内容，设置好参数后将进行查询。</p>
+                        <div>
+                            <div>
+                                <input type="text" id="acquire-input">
+                                <select id="acquire-valuetype" name="type">
+                                    <option value="url">分享链接</option>
+                                    <option value="ProductId">产品 ID</option>
+                                    <option value="PackageFamilyName">包系列名</option>
+                                    <option value="CategoryId">类别 ID</option>
+                                </select>
+                                <select id="acquire-channel" name="ring">
+                                    <option title="Windows Insider Fast" value="WIF">快速</option>
+                                    <option title="Windows Insider Slow" value="WIS">慢速</option>
+                                    <option title="Release Preview" value="RP" selected>发布预览</option>
+                                    <option title="Default OS" value="Retail">正式</option>
+                                </select>
+                            </div>
+                            <div>
+                                <div class="itemrow">
+                                    <input type="checkbox" id="acquire-smartquery" style="margin-left: 0px;">
+                                    <label for="acquire-smartquery">自动查询</label>
+                                </div>
+                                <button id="acquire-query">查询</button>
+                            </div>
+                        </div>
+                        <style>
+                            .acquire-item {
+                                display: flex;
+                                flex-direction: column;
+                                flex-wrap: nowrap;
+                                align-content: flex-start;
+                                justify-content: flex-start;
+                                width: 100%;
+                                margin: 5px 0;
+                                box-sizing: border-box;
+                                padding: 5px;
+                                border: 1px solid #ccc;
+                                -ms-user-select: element;
+                                user-select: all;
+                            }
+                            
+                            .acquire-item #name {
+                                font-size: 11pt;
+                                width: 100%;
+                                line-height: 1.3em;
+                                overflow-x: hidden;
+                                overflow-y: hidden;
+                                text-overflow: ellipsis;
+                                font-weight: normal;
+                            }
+                            
+                            .acquire-item .medium {
+                                width: 100%;
+                                font-size: 10pt;
+                                line-height: 1.2em;
+                                font-weight: normal;
+                                display: flex;
+                                flex-direction: row;
+                                flex-wrap: wrap;
+                                align-content: center;
+                                justify-content: space-between;
+                                align-items: center;
+                                margin-top: 3px;
+                                margin-bottom: 3px;
+                            }
+                            
+                            .acquire-item .medium div {
+                                text-align: center;
+                                flex: 0 0 auto;
+                            }
+                            
+                            .acquire-item .medium #ext {
+                                text-align: left;
+                                max-width: 100px;
+                                /*min-width: 97px;*/
+                            }
+                            
+                            .acquire-item .medium div:nth-child(1),
+                            .acquire-item .medium div:nth-child(3),
+                            .acquire-item .medium div:nth-child(5) {
+                                background-color: #e9fff5;
+                            }
+                            
+                            .acquire-item .medium div:nth-child(2),
+                            .acquire-item .medium div:nth-child(4),
+                            .acquire-item .medium div:nth-child(6) {
+                                background-color: #ffffef;
+                            }
+                            
+                            .acquire-item .bottom {
+                                font-weight: bold;
+                                font-size: 9pt;
+                                display: flex;
+                                flex-direction: row;
+                                align-content: center;
+                                flex-wrap: wrap;
+                                justify-content: space-between;
+                                align-items: center;
+                            }
+                            
+                            .acquire-item #hashpart {
+                                flex: 1;
+                                overflow-y: hidden;
+                                overflow-x: hidden;
+                                text-overflow: ellipsis;
+                            }
+                            
+                            .acquire-item:hover {
+                                background-color: rgba(0, 0, 0, 0.122);
+                            }
+                            
+                            .acquire-item #download {
+                                cursor: pointer;
+                                font-size: 10pt;
+                            }
+                        </style>
+                        <div id="acquire-template" class="acquire-item" style="display: none;">
+                            <div id="name" class="top" title="Identity Name">Identity Name</div>
+                            <div class="medium">
+                                <div id="ext" title="File Type">Appx</div>
+                                <div id="version" title="Version">1.0.0.0</div>
+                                <div id="architecture" title="Processor Architecture">neutral</div>
+                                <div id="publisherId" title="Identity Publisher Id"></div>
+                                <div id="size" title="File Size"></div>
+                            </div>
+                            <div class="bottom">
+                                <div id="hashpart"><span>SHA-1: </span><span id="hash"></span></div>
+                                <div><a download id="download" href="">点击下载</a></div>
+                            </div>
+                        </div>
+                        <div id="acquire-loading">
+                            <br>
+                            <div class="container itemrow">
+                                <progress class="win-ring" style="margin-right: 10px;"></progress>
+                                <span class="win-label title" data-res-resxml="MANAGER_APP_INSTALLEDAPPS_LOADING"></span>
+                                <br>
+                            </div>
+                        </div>
+                        <div id="acquire-result" style="width: 100%;">
+                            <p style="font-weight: normal;" title="Category ID"><span>类别 ID</span>: <span id="acquire-categoryid" style="user-select: text; -ms-user-select: element;"></span></p>
+                            <h3>以下可能为检索到的应用</h3>
+                            <div id="acquire-list-app" style="width: 100%;"></div>
+                            <h3>以下可能为检索到的依赖项</h3>
+                            <div id="acquire-list-dep" style="width: 100%;"></div>
+                        </div>
+                        <script>
+                            (function(global) {
+                                var conf = external.Config.current;
+                                var set = conf.getSection("Settings");
+                                var isForbidden = !set.getKey("EnableAcquire").readBool(false);
+                                var acquireInput = document.getElementById("acquire-input");
+                                var acquireValuetype = document.getElementById("acquire-valuetype");
+                                var acquireChannel = document.getElementById("acquire-channel");
+                                var acquireSmartquery = document.getElementById("acquire-smartquery");
+                                var acquireQuery = document.getElementById("acquire-query");
+                                var acquireResult = document.getElementById("acquire-result");
+                                var acquireListApp = document.getElementById("acquire-list-app");
+                                var acquireListDep = document.getElementById("acquire-list-dep");
+                                var acquireForbidden = document.getElementById("acquire-forbidden");
+                                var acquireEnable = document.getElementById("acquire-enable");
+                                var acquireCategoryid = document.getElementById("acquire-categoryid");
+                                var acquireTemplate = document.getElementById("acquire-template");
+                                var acquireLoading = document.getElementById("acquire-loading");
+                                var acquireLoadingRing = acquireLoading.querySelector(".win-ring");
+                                var acquireLoadingLabel = acquireLoading.querySelector(".win-label");
+                                acquireForbidden.style.display = isForbidden ? "" : "none";
+                                acquireEnable.style.display = isForbidden ? "none" : "";
+                                acquireResult.style.display = isForbidden ? "none" : "none";
+                                var dataSrc = {
+                                    apps: new DataView.DataSource(),
+                                    deps: new DataView.DataSource()
+                                };
+                                var putils = Package.Utils;
+                                var templateFunc = function(item, index) {
+                                    var node = acquireTemplate.cloneNode(true);
+                                    node.style.display = "";
+                                    node.id = "";
+                                    var lastDotIndex = item.file.lastIndexOf(".");
+                                    var fileNamePart = lastDotIndex !== -1 ? item.file.substring(0, lastDotIndex) : item.file;
+                                    var fileExtension = lastDotIndex !== -1 ? item.file.substring(lastDotIndex + 1) : "";
+                                    var identityName = putils.parsePackageFullName(fileNamePart);
+                                    node.querySelector("#name").textContent = identityName.name;
+                                    node.querySelector("#ext").textContent = fileExtension;
+                                    node.querySelector("#version").textContent = identityName.version;
+                                    node.querySelector("#architecture").textContent = identityName.architecture;
+                                    node.querySelector("#publisherId").textContent = identityName.publisherId;
+                                    node.querySelector("#size").textContent = item.size;
+                                    node.querySelector("#hash").textContent = item.sha1;
+                                    node.title = item.file;
+                                    node.querySelector("#download").href = item.url;
+                                    node.querySelector("#download").title = item.url;
+                                    return node;
+                                };
+                                var listView = {
+                                    apps: new DataView.ListView(acquireListApp, templateFunc),
+                                    deps: new DataView.ListView(acquireListDep, templateFunc)
+                                };
+                                listView.apps.bind(dataSrc.apps);
+                                listView.deps.bind(dataSrc.deps);
+                                var keys = Object.keys(listView);
+                                keys.forEach(function(k, i) {
+                                    var listview = listView[k];
+                                    var p = document.createElement("p");
+                                    p.textContent = "还没有内容...";
+                                    listview.emptyView = p;
+                                });
+                                acquireLoading.statusBar = new TransitionPanel(acquireLoading, {
+                                    axis: "y",
+                                    speed: 500,
+                                });
+                                acquireSmartquery.onchange = function() {
+                                    acquireValuetype.disabled =
+                                        acquireChannel.disabled = this.checked;
+                                };
+                                acquireSmartquery.checked = set.getKey("AcquireSmartQuery").readBool(false);
+                                acquireValuetype.disabled =
+                                    acquireChannel.disabled = acquireSmartquery.checked;
+                                acquireQuery.onclick = function() {
+                                    var self = this;
+                                    self.disabled = true;
+                                    acquireResult.style.display = "none";
+                                    acquireLoadingRing.style.display = "";
+                                    acquireLoading.statusBar.show();
+                                    var queryFunc = StoreRG.xhr.parse;
+                                    if (acquireSmartquery.checked) {
+                                        queryFunc = StoreRG.xhr.smartQuery;
+                                    }
+                                    acquireInput.disabled =
+                                        acquireSmartquery.disabled =
+                                        acquireValuetype.disabled =
+                                        acquireChannel.disabled = true;
+                                    queryFunc = StoreRG.test;
+                                    acquireLoadingLabel.textContent = "正在查询...";
+                                    queryFunc(acquireInput.value, acquireValuetype.value, acquireChannel.value).then(function(result) {
+                                        acquireCategoryid.textContent = result.categoryId;
+                                        var applist = [];
+                                        var deplist = [];
+                                        result.datas.forEach(function(item, index) {
+                                            if (item.file.indexOf(".BlockMap") >= 0) return;
+                                            if (putils.isDependency(item.file)) {
+                                                deplist.push(item);
+                                            } else {
+                                                applist.push(item);
+                                            }
+                                        });
+                                        dataSrc.apps.updateList(applist, function(item) {
+                                            return item.file;
+                                        });
+                                        listView.apps.refresh();
+                                        dataSrc.deps.updateList(deplist, function(item) {
+                                            return item.file;
+                                        });
+                                        listView.deps.refresh();
+                                        acquireLoadingLabel.textContent = "已获取到 {0} 个信息"
+                                            .replace("{0}", applist.length + deplist.length);
+                                    }, function(err) {
+                                        dataSrc.apps.clear();
+                                        dataSrc.deps.clear();
+                                        listView.apps.refresh();
+                                        listView.deps.refresh();
+                                        acquireLoadingLabel.textContent = err.message || err;
+                                        return Promise.wrap();
+                                    }).done(function() {
+                                        acquireResult.style.display = "";
+                                        setTimeout(function() {
+                                            acquireLoading.statusBar.hide();
+                                        }, 10000);
+                                        self.disabled = false;
+                                        acquireLoadingRing.style.display = "none";
+                                        acquireInput.disabled =
+                                            acquireSmartquery.disabled = false;
+                                        acquireValuetype.disabled =
+                                            acquireChannel.disabled = acquireSmartquery.checked;
+                                    });
+                                }
+                            })(this);
+                        </script>
+                    </div>
+                </div>
             </main>
             <aside class="win-ui-dark">
                 <nav class="container">
@@ -388,6 +677,10 @@
                     <ul class="list">
                         <li id="tag-reader">
                             <div role="img">&#57650;</div>
+                            <span class="win-type-base" data-res-resxml="MANAGER_MANAGE"></span>
+                        </li>
+                        <li id="tag-acquire">
+                            <div role="img">&#57624;</div>
                             <span class="win-type-base" data-res-resxml="MANAGER_MANAGE"></span>
                         </li>
                         <li id="tag-settings">

@@ -1240,6 +1240,8 @@ namespace AppxPackage
 			};
 		}
 	}
+	[ComVisible (true)]
+	[ClassInterface (ClassInterfaceType.AutoDual)]
 	public class PRPrerequisites: BaseInfoSection, IPrerequisites
 	{
 		public PRPrerequisites (ref IntPtr hReader) : base (ref hReader) { }
@@ -1487,7 +1489,7 @@ namespace AppxPackage
 		}
 		public static bool AddApplicationItem (string itemName) => PackageReadHelper.AddPackageApplicationItemGetName (itemName);
 		public static bool RemoveApplicationItem (string itemName) => PackageReadHelper.RemovePackageApplicationItemGetName (itemName);
-		public static string [] GetApplicationItem () => PackageReadHelper.GetApplicationItemNames ();
+		public static string [] GetApplicationItems () => PackageReadHelper.GetApplicationItemNames ();
 		public static void UpdateApplicationItems (IEnumerable<string> items) => PackageReadHelper.SetApplicationItemNames (items);
 		public string BuildJsonForUse ()
 		{

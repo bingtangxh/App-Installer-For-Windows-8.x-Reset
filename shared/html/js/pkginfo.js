@@ -52,7 +52,13 @@
             },
             cancelAll: function() { external.Package.Reader.cancelAll(); },
             addApplicationReadItem: function(swItemName) { return external.Package.Reader.addApplicationItem(swItemName); },
-            removeApplicationReadItem: function(swItemName) { return external.Package.Reader.removeApplicationItem(swItemName); }
+            removeApplicationReadItem: function(swItemName) { return external.Package.Reader.removeApplicationItem(swItemName); },
+            updateApplicationReadItems: function(aswArray) {
+                external.Package.Reader.updateApplicationItems(aswArray);
+            },
+            getApplicationReadItems: function() {
+                return JSON.parse(external.Package.Reader.getApplicationItemsToJson());
+            },
         },
         manager: {
             add: function(swPkgPath, uOptions) {
@@ -169,5 +175,76 @@
             cancelAll: function() { mgr.cancelAll(); },
             active: function(swAppUserModelID, swArgs) { return mgr.activeApp(swAppUserModelID, swArgs || null); }
         },
+        utils: (function() {
+            // 解析包全名，格式: <name>_<version>_<processorArchitecture>_<resourceId>_<publisherId>
+            // resourceId 可能为空（表现为两个连续下划线）
+            function parsePackageFullName(fullName) {
+                var parts = fullName.split('_');
+                // 按格式应有5部分: [name, version, architecture, resourceId, publisherId]
+                return {
+                    name: parts[0],
+                    version: parts[1],
+                    architecture: parts[2],
+                    resourceId: parts[3],
+                    publisherId: parts[4]
+                };
+            }
+
+            // 解析包系列名，格式: <name>_<publisherId>
+            function parsePackageFamilyName(familyName) {
+                var underscoreIndex = familyName.indexOf('_');
+                if (underscoreIndex === -1) {
+                    // 异常情况，按原字符串处理，但题目不会出现
+                    return { name: familyName, publisherId: '' };
+                }
+                return {
+                    name: familyName.substring(0, underscoreIndex),
+                    publisherId: familyName.substring(underscoreIndex + 1)
+                };
+            }
+
+            // 将对象转换为包全名字符串
+            // 对象应包含 name, version, architecture, publisherId 字段，resourceId 可选
+            function stringifyPackageFullName(pkg) {
+                var resourcePart = (pkg.resourceId === undefined || pkg.resourceId === null) ? '' : pkg.resourceId;
+                return pkg.name + '_' + pkg.version + '_' + pkg.architecture + '_' + resourcePart + '_' + pkg.publisherId;
+            }
+
+            // 将对象转换为包系列名字符串
+            // 对象应包含 name, publisherId 字段
+            function stringifyPackageFamilyName(pkgFamily) {
+                return pkgFamily.name + '_' + pkgFamily.publisherId;
+            }
+            return {
+                parsePackageFullName: parsePackageFullName,
+                parsePackageFamilyName: parsePackageFamilyName,
+                stringifyPackageFullName: stringifyPackageFullName,
+                stringifyPackageFamilyName: stringifyPackageFamilyName,
+                isDependency: function(swPkgIdentityName) {
+                    var list = [
+                        "Microsoft.Net.Native.Framework",
+                        "Microsoft.Net.Native.Runtime",
+                        "Microsoft.Net.CoreRuntime",
+                        "WindowsPreview.Kinect",
+                        "Microsoft.VCLibs",
+                        "Microsoft.WinJS",
+                        "Microsoft.UI.Xaml",
+                        "Microsoft.WindowsAppRuntime",
+                        "Microsoft.Advertising.XAML",
+                        "Microsoft.Midi.Gmdls",
+                        "Microsoft.Services.Store.Engagement",
+                        "Microsoft.Media.PlayReadyClient"
+                    ];
+                    for (var i = 0; i < list.length; i++) {
+                        if (swPkgIdentityName.toLowerCase().indexOf(list[i].toLowerCase()) !== -1)
+                            return true;
+                    }
+                    return false;
+                }
+            }
+        })()
     };
+    global.Package.Reader = global.Package.reader;
+    global.Package.Manager = global.Package.manager;
+    global.Package.Utils = global.Package.utils;
 })(this);

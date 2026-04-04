@@ -131,6 +131,8 @@ namespace DataUtils
 	[ClassInterface (ClassInterfaceType.AutoDual)]
 	public class _I_Process
 	{
+		public Process Start (string filename, string args) => Process.Start (filename, args);
+		public Process Open (string url) => Process.Start (url);
 		public int Run (
 			string cmdline,
 			string filepath,

@@ -352,6 +352,13 @@ aside>nav ul li div[role=img] {
 }
 
 .ispage {
+    width: 100%;
+    height: auto;
+    box-sizing: border-box;
     opacity: 1;
     transition: all 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+
+.ispage.padding {
+    padding: 44px 60px;
 }

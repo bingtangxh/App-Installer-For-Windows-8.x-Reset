@@ -60,9 +60,9 @@ namespace WAShell
 			if (!issetdpi)
 			{
 				issetdpi = true;
-				ExecScript ("Bridge.Frame.scale = Bridge.Frame.scale * Bridge.UI.dpi");
+				ExecScript ("if (typeof Bridge !== \"undefined\") Bridge.Frame.scale = Bridge.Frame.scale * Bridge.UI.dpi");
 			}
-			ExecScript ("Windows.UI.DPI.mode = 1");
+			ExecScript ("if (typeof Windows !== \"undefined\") Windows.UI.DPI.mode = 1");
 			if (e.Url.ToString () == webui.Url.ToString ())
 			{
 				splash.FadeOut ();

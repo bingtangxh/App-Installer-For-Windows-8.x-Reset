@@ -49,6 +49,17 @@ bool IsURI (const std::wstring &str)
 	}
 	catch (...) { return false; }
 }
+std::wstring TrimQuotes (const std::wstring& str) {
+	if (str.empty ()) return str;
+	size_t len = str.size ();
+	size_t start = (str.front () == L'"') ? 1 : 0; 
+	size_t end = len; 
+	if (str.back () == L'"') 
+	{
+		if (end > start) end = len - 1;
+	}
+	return str.substr (start, end - start);
+}
 enum class paramtype
 {
 	string,
@@ -87,7 +98,8 @@ void ParseCmdArgs (LPWSTR *argv, DWORD argc, std::map <cmdkey, cmdvalue> &parser
 		arg = arg.trim ();
 		if (IsFile (arg)) parseresult [cmdkey (arg, paramtype::file)] = cmdvalue {L"", paramtype::file, true};
 		else if (IsURI (arg)) parseresult [cmdkey (arg, paramtype::uri)] = cmdvalue {L"", paramtype::uri, true};
-		else
+		else if (IsFile (TrimQuotes (arg))) parseresult [cmdkey (TrimQuotes (arg), paramtype::file)] = cmdvalue { L"", paramtype::file, true };
+		else 
 		{
 			for (auto &it : g_argslist)
 			{
@@ -140,6 +152,11 @@ void ParseCmdArgs (LPWSTR *argv, DWORD argc, std::map <cmdkey, cmdvalue> &parser
 						auto value = rightpart.substr (valuehead);
 						paramtype ptype = paramtype::string;
 						if (IsFile (value)) ptype = paramtype::file;
+						else if (IsFile (TrimQuotes (value)))
+						{
+							value = TrimQuotes (value);
+							ptype = paramtype::file;
+						}
 						else if (IsURI (StringTrim (value))) ptype = paramtype::uri;
 						parseresult [cmdkey (it.uniquelabel, paramtype::string)] = cmdvalue {value, ptype, false};
 					}

@@ -363,6 +363,19 @@
                 ));
             }
         };
+        Object.defineProperty(this, "length", {
+            get: function() {
+                return _list.length;
+            },
+            enumerable: true,
+        });
+        this.getDatas = function() { return _list; }
+        this.forEach = function(callback, args) {
+            if (typeof callback !== "function") return;
+            for (var i = 0; i < _list.length; i++) {
+                callback.apply(this, [_list[i], i].concat(Array.prototype.slice.call(arguments, 1)));
+            }
+        };
         this._getKey = getKey;
     }
     var MAX_ANIMATE_COUNT = 100;
@@ -609,10 +622,16 @@
     });
     PMDataListView.prototype._updateEmptyView = function() {
         if (!this._emptyView) return;
-
-        // container 中是否还有 item
         var hasItem = this.container.children.length > 0;
-
+        var itemVisibleLength = 0;
+        for (var i = 0; i < this.container.children.length; i++) {
+            var child = this.container.children[i];
+            if (!child) continue;
+            if (child.style.display !== "none" && child.style.display !== "hidden" && child.style.opacity !== 0 && child.style.visibility !== "hidden") {
+                itemVisibleLength++;
+            }
+        }
+        hasItem = hasItem && itemVisibleLength > 0;
         if (hasItem) {
             if (this._emptyView.parentNode) {
                 this._emptyView.style.display = "none";
@@ -802,6 +821,7 @@
     };
     PMDataListView.prototype.refresh = function() {
         this._refreshVisibility();
+        this._updateEmptyView();
     };
     global.DataView.ChangeEvent = PMChangeEvent;
     global.DataView.DataSource = PMDataSource;

@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 using Newtonsoft.Json;
 
@@ -184,6 +188,196 @@ namespace DataUtils
 		public interface IJsonBuild
 		{
 			object BuildJSON ();
+		}
+	}
+	public static class JsUtils
+	{
+		/// <summary>
+		/// 调用 JS 函数。第一个参数作为 this，其余作为 JS 函数参数。
+		/// </summary>
+		/// <param name="callback">JS 函数对象</param>
+		/// <param name="args">JS 函数参数，可选</param>
+		/// <returns>JS 函数返回值</returns>
+		public static void Call (object jsFunc, params object [] args)
+		{
+			if (jsFunc == null) return;
+			object [] invokeArgs = new object [(args?.Length ?? 0) + 1];
+			invokeArgs [0] = jsFunc; // this
+			if (args != null)
+				for (int i = 0; i < args.Length; i++)
+					invokeArgs [i + 1] = args [i];
+			jsFunc.GetType ().InvokeMember (
+				"call",
+				BindingFlags.InvokeMethod,
+				null,
+				jsFunc,
+				invokeArgs);
+		}
+	}
+	[ComVisible (true)]
+	[InterfaceType (ComInterfaceType.InterfaceIsDual)]
+	public interface _I_IAsyncAction
+	{
+		_I_IAsyncAction Then (object resolve, object reject = null, object progress = null);
+		void Done (object resolve, object reject = null);
+		void Catch (object reject);
+		bool IsCompleted { get; }
+		bool IsCancelled { get; }
+		bool IsError { get; }
+		void Cancel ();
+		void ReportProgress (object progress);
+		object Error { get; }
+	}
+	[ComVisible (true)]
+	[ClassInterface (ClassInterfaceType.AutoDual)]
+	public class _I_Task: _I_IAsyncAction
+	{
+		private object _result;
+		private Exception _error;
+		private bool _completed;
+		private bool _cancelled;
+		private List<object> _resolveCallbacks = new List<object> ();
+		private List<object> _rejectCallbacks = new List<object> ();
+		private List<object> _progressCallbacks = new List<object> ();
+		private CancellationTokenSource _cts = new CancellationTokenSource ();
+		public _I_Task (Func<object> func)
+		{
+			ThreadPool.QueueUserWorkItem (_ => {
+				try
+				{
+					if (_cts.Token.IsCancellationRequested)
+					{
+						_cancelled = true;
+						return;
+					}
+
+					_result = func ();
+					_completed = true;
+
+					foreach (var cb in _resolveCallbacks)
+						JsUtils.Call (cb, _result);
+				}
+				catch (Exception ex)
+				{
+					_error = ex;
+					foreach (var cb in _rejectCallbacks)
+						JsUtils.Call (cb, ex);
+				}
+			});
+		}
+		public _I_IAsyncAction Then (object resolve, object reject = null, object progress = null)
+		{
+			if (resolve != null) _resolveCallbacks.Add (resolve);
+			if (reject != null) _rejectCallbacks.Add (reject);
+			if (progress != null) _progressCallbacks.Add (progress);
+			return this;
+		}
+		public void Done (object resolve, object reject = null)
+		{
+			if (resolve != null) _resolveCallbacks.Add (resolve);
+			if (reject != null) _rejectCallbacks.Add (reject);
+		}
+
+		public void Catch (object reject)
+		{
+			if (reject != null) _rejectCallbacks.Add (reject);
+		}
+
+		public bool IsCompleted => _completed;
+		public bool IsCancelled => _cancelled;
+		public bool IsError => _error != null;
+
+		public object Error => _error;
+
+		public void Cancel ()
+		{
+			_cts.Cancel ();
+			_cancelled = true;
+		}
+
+		public void ReportProgress (object progress)
+		{
+			foreach (var cb in _progressCallbacks)
+				JsUtils.Call (cb, progress);
+		}
+
+		public object Result => _result;
+	}
+	[ComVisible (true)]
+	[ClassInterface (ClassInterfaceType.AutoDual)]
+	public class _I_Thread: _I_IAsyncAction
+	{
+		private Thread _thread;
+		private bool _completed;
+		private bool _cancelled;
+		private Exception _error;
+		private List<object> _resolveCallbacks = new List<object> ();
+		private List<object> _rejectCallbacks = new List<object> ();
+		private List<object> _progressCallbacks = new List<object> ();
+		private CancellationTokenSource _cts = new CancellationTokenSource ();
+
+		public _I_Thread (Action action)
+		{
+			_thread = new Thread (() => {
+				try
+				{
+					if (_cts.Token.IsCancellationRequested)
+					{
+						_cancelled = true;
+						return;
+					}
+
+					action ();
+					_completed = true;
+
+					foreach (var cb in _resolveCallbacks)
+						JsUtils.Call (cb);
+				}
+				catch (Exception ex)
+				{
+					_error = ex;
+					foreach (var cb in _rejectCallbacks)
+						JsUtils.Call (cb, ex);
+				}
+			});
+			_thread.IsBackground = true;
+			_thread.Start ();
+		}
+
+		public _I_IAsyncAction Then (object resolve, object reject = null, object progress = null)
+		{
+			if (resolve != null) _resolveCallbacks.Add (resolve);
+			if (reject != null) _rejectCallbacks.Add (reject);
+			if (progress != null) _progressCallbacks.Add (progress);
+			return this;
+		}
+
+		public void Done (object resolve, object reject = null)
+		{
+			if (resolve != null) _resolveCallbacks.Add (resolve);
+			if (reject != null) _rejectCallbacks.Add (reject);
+		}
+
+		public void Catch (object reject)
+		{
+			if (reject != null) _rejectCallbacks.Add (reject);
+		}
+
+		public bool IsCompleted => _completed;
+		public bool IsCancelled => _cancelled;
+		public bool IsError => _error != null;
+		public object Error => _error;
+
+		public void Cancel ()
+		{
+			_cts.Cancel ();
+			_cancelled = true;
+		}
+
+		public void ReportProgress (object progress)
+		{
+			foreach (var cb in _progressCallbacks)
+				JsUtils.Call (cb, progress);
 		}
 	}
 }
