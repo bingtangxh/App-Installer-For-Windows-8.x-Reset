@@ -380,4 +380,7 @@ namespace DataUtils
 				JsUtils.Call (cb, progress);
 		}
 	}
+	[ComVisible (true)]
+	[ClassInterface (ClassInterfaceType.AutoDual)]
+	public class _I_Exception: IExcep
 }

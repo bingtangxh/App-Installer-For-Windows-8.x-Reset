@@ -39,7 +39,7 @@ enum class CMDPARAM: DWORD
 {
 	NONE = 0b000,
 	SILENT = 0b001,
-	VERYSILENT = 0b011,
+	VERYSILENT = 0b010,
 	MULTIPLE = 0b100
 };
 
@@ -1810,6 +1810,8 @@ std::vector <std::wstring> LoadFileListW (const std::wstring &filePath)
 	{
 		if (!line.empty () && line.back () == L'\r') line.pop_back ();
 		if (!line.empty () && !std::wnstring::empty (line) && IsFileExists (line)) result.push_back (line);
+		auto fullFile = CombinePath (GetFileDirectoryW (filePath), line);
+		if (!line.empty () && !std::wnstring::empty (fullFile) && IsFileExists (fullFile)) result.push_back (fullFile);
 	}
 	return result;
 }
@@ -1844,7 +1846,7 @@ DWORD CmdMapsToFlags (std::map <cmdkey, cmdvalue> cmdpairs, std::vector <std::wn
 				auto &key = it.first;
 				auto &value = it.second;
 				if (key.key.equals (L"silent")) dwret |= (DWORD)CMDPARAM::SILENT;
-				else if (key.key.equals (L"verysilent")) dwret |= (DWORD)CMDPARAM::SILENT;
+				else if (key.key.equals (L"verysilent")) dwret |= (DWORD)CMDPARAM::VERYSILENT;
 				else if (key.key.equals (L"multiple"))
 				{
 					if (value.type == paramtype::file)
