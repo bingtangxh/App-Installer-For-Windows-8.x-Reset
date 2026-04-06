@@ -30,6 +30,7 @@
 }
 
 .win-contentdialog .win-contentdialog-title {
+    width: 100%;
     font-size: 20pt;
     font-weight: normal;
     padding: 0 172px;
@@ -38,6 +39,7 @@
 }
 
 .win-contentdialog .win-contentdialog-content {
+    width: 100%;
     padding: 0 172px;
     overflow-y: auto;
     box-sizing: border-box;
@@ -47,6 +49,7 @@
 }
 
 .win-contentdialog .win-contentdialog-commands {
+    width: 100%;
     padding: 0 172px;
     box-sizing: border-box;
     display: flex;
