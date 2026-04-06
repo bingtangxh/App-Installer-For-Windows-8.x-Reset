@@ -509,7 +509,7 @@
                 supportDisplay.classList.add("not-support");
                 supportDisplay.classList.remove("support");
             }
-            supportDisplay.setAttribute("title", strutils.format("OS Min Version: {0}, Architecture: {1}", support.showOsminversionText, support.showArchitectureText));
+            supportDisplay.setAttribute("title", strutils.format(Bridge.Resources.byname("IDS_PREINSTALL_SUITCONDITION"), support.showOsminversionText, support.showArchitectureText));
         }
     }
 

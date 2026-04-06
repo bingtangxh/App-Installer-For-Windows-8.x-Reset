@@ -47,11 +47,17 @@
     <script type="text/javascript" src="js/rdinit.js"></script>
     <style>
         .itemrow {
+            display: -ms-flexbox;
             display: flex;
+            -ms-flex-direction: row;
             flex-direction: row;
+            -ms-flex-wrap: wrap;
             flex-wrap: wrap;
+            -ms-flex-line-pack: center;
             align-content: center;
+            -ms-flex-pack: start;
             justify-content: flex-start;
+            -ms-flex-align: center;
             align-items: center;
             margin: 10px 0;
         }
@@ -165,6 +171,7 @@
                                 }
                                 reader.updateApplicationReadItems(metaitemlist);
                             }
+                            refreshMetadataItems();
                             var refreshMetadataButton = document.getElementById("read-refreshmetadata");
                             refreshMetadataButton.onclick = function() {
                                 refreshMetadataItems();
@@ -516,10 +523,15 @@
                         </div>
                         <style>
                             .acquire-item {
+                                display: -ms-flexbox;
                                 display: flex;
+                                -ms-flex-direction: column;
                                 flex-direction: column;
+                                -ms-flex-wrap: none;
                                 flex-wrap: nowrap;
+                                -ms-flex-line-pack: start;
                                 align-content: flex-start;
+                                -ms-flex-pack: start;
                                 justify-content: flex-start;
                                 width: 100%;
                                 margin: 5px 0;
@@ -545,11 +557,17 @@
                                 font-size: 10pt;
                                 line-height: 1.2em;
                                 font-weight: normal;
+                                display: -ms-flexbox;
                                 display: flex;
+                                -ms-flex-direction: row;
                                 flex-direction: row;
+                                -ms-flex-wrap: wrap;
                                 flex-wrap: wrap;
+                                -ms-flex-line-pack: center;
                                 align-content: center;
+                                -ms-flex-pack: justify;
                                 justify-content: space-between;
+                                -ms-flex-align: center;
                                 align-items: center;
                                 margin-top: 3px;
                                 margin-bottom: 3px;
@@ -557,13 +575,13 @@
                             
                             .acquire-item .medium div {
                                 text-align: center;
+                                -ms-flex: 0 0 auto;
                                 flex: 0 0 auto;
                             }
                             
                             .acquire-item .medium #ext {
                                 text-align: left;
                                 max-width: 100px;
-                                /*min-width: 97px;*/
                             }
                             
                             .acquire-item .medium div:nth-child(1),
@@ -581,15 +599,22 @@
                             .acquire-item .bottom {
                                 font-weight: bold;
                                 font-size: 9pt;
+                                display: -ms-flexbox;
                                 display: flex;
+                                -ms-flex-direction: row;
                                 flex-direction: row;
+                                -ms-flex-line-pack: center;
                                 align-content: center;
+                                -ms-flex-wrap: wrap;
                                 flex-wrap: wrap;
+                                -ms-flex-pack: justify;
                                 justify-content: space-between;
+                                -ms-flex-align: center;
                                 align-items: center;
                             }
                             
                             .acquire-item #hashpart {
+                                -ms-flex: 1 1 auto;
                                 flex: 1;
                                 overflow-y: hidden;
                                 overflow-x: hidden;
@@ -722,7 +747,7 @@
                                         acquireSmartquery.disabled =
                                         acquireValuetype.disabled =
                                         acquireChannel.disabled = true;
-                                    queryFunc = StoreRG.test;
+                                    //queryFunc = StoreRG.test;
                                     acquireLoadingLabel.textContent = stringRes("READER_ACQUIRE_QUERYING");
                                     queryFunc(acquireInput.value, acquireValuetype.value, acquireChannel.value).then(function(result) {
                                         acquireCategoryid.textContent = result.categoryId;
