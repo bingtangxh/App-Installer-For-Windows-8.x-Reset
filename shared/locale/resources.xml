@@ -910,4 +910,12 @@
     <lang name="zh-CN">所有文件</lang>
     <lang name="en-US">All Files</lang>
   </resource>
+  <resource id="READER_READER_REFRESHMETADATA">
+    <lang name="zh-CN">刷新应用数据元项</lang>
+    <lang name="en-US">Refresh App Metadata Items</lang>
+  </resource>
+  <resource id="READER_READER_HASREFRESHMETADATA">
+    <lang name="zh-CN">已刷新应用数据元项</lang>
+    <lang name="en-US">Application data metadata has been refreshed</lang>
+  </resource>
 </resources>

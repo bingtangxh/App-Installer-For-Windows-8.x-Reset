@@ -45,56 +45,6 @@
             return Bridge.String.tolower(Bridge.String.trim(item.Identity.FullName));
         });
         var themeColor = Bridge.UI.themeColor;
-        var reader = Package.reader;
-        var appitems = [
-            "Id",
-            "StartPage",
-            "EntryPoint",
-            "Executable",
-            "BackgroundColor",
-            "DisplayName",
-            "Description",
-            "ShortName",
-            "ForegroundText",
-            "SmallLogo",
-            "Square30x30Logo",
-            "Square44x44Logo",
-            "Square70x70Logo",
-            "Square71x71Logo",
-            "Logo",
-            "Square150x150Logo",
-            "WideLogo",
-            "Wide310x150Logo",
-            "Square310x310Logo",
-            "Tall150x310Logo",
-            "LockScreenLogo",
-            "LockScreenNotification",
-            "DefaultSize",
-            "AppListEntry",
-            "VisualGroup",
-            "MinWidth",
-        ];
-        var defaultItems = [
-            "Id",
-            "DisplayName",
-            "BackgroundColor",
-            "ForegroundText",
-            "ShortName",
-            "Square44x44Logo",
-            "SmallLogo"
-        ];
-        var metaitemlist = [];
-        for (var i = 0; i < appitems.length; i++) {
-            var item = appitems[i];
-            var isenable = metadata.getKey(item).value;
-            if (isenable === null || isenable === void 0 || isenable === "") {
-                isenable = defaultItems.indexOf(item) >= 0;
-            }
-            if (parseBool(isenable) == true) {
-                metaitemlist.push(item);
-            }
-        }
-        reader.updateApplicationReadItems(metaitemlist);
         pagemgr.register("reader", document.getElementById("tag-reader"), document.getElementById("page-reader"));
         pagemgr.register("acquire", document.getElementById("tag-acquire"), document.getElementById("page-acquire"));
         pagemgr.register("search", document.getElementById("tag-search"), document.getElementById("page-search"));

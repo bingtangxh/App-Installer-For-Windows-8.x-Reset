@@ -626,11 +626,11 @@ progress.win-ring:indeterminate::-ms-fill {
 @keyframes scale-visible {
     from {
         transform: translateX(50px) scale(0.8);
-        opacity: 0;
+        /*opacity: 0;*/
     }
     to {
         transform: translateX(0) scale(1);
-        opacity: 1;
+        /*opacity: 1;*/
     }
 }
 

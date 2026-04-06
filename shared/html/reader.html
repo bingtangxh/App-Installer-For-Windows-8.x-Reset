@@ -106,6 +106,112 @@
                     <button id="read-result-save" class="part-read-button" data-res-resxml="READER_READER_SAVEFILE"></button>
                     <button id="read-result-xml" class="part-read-button" data-res-resxml="READER_READER_SAVEXML"></button>
                     <button id="read-result-json" class="part-read-button" data-res-resxml="READER_READER_SAVEJSON"></button>
+                    <button id="read-refreshmetadata" class="part-read-button" data-res-resxml="READER_READER_REFRESHMETADATA"></button>
+                    <script>
+                        (function(global) {
+                            var conf = external.Config.current;
+                            var set = conf.getSection("Settings");
+                            var metadata = conf.getSection("PackageReader:AppMetadatas");
+                            var reader = Package.reader;
+                            var appitems = [
+                                "Id",
+                                "StartPage",
+                                "EntryPoint",
+                                "Executable",
+                                "BackgroundColor",
+                                "DisplayName",
+                                "Description",
+                                "ShortName",
+                                "ForegroundText",
+                                "SmallLogo",
+                                "Square30x30Logo",
+                                "Square44x44Logo",
+                                "Square70x70Logo",
+                                "Square71x71Logo",
+                                "Logo",
+                                "Square150x150Logo",
+                                "WideLogo",
+                                "Wide310x150Logo",
+                                "Square310x310Logo",
+                                "Tall150x310Logo",
+                                "LockScreenLogo",
+                                "LockScreenNotification",
+                                "DefaultSize",
+                                "AppListEntry",
+                                "VisualGroup",
+                                "MinWidth",
+                            ];
+                            var defaultItems = [
+                                "Id",
+                                "DisplayName",
+                                "BackgroundColor",
+                                "ForegroundText",
+                                "ShortName",
+                                "Square44x44Logo",
+                                "SmallLogo"
+                            ];
+
+                            function refreshMetadataItems() {
+                                var metaitemlist = [];
+                                for (var i = 0; i < appitems.length; i++) {
+                                    var item = appitems[i];
+                                    var isenable = metadata.getKey(item).value;
+                                    if (isenable === null || isenable === void 0 || isenable === "") {
+                                        isenable = defaultItems.indexOf(item) >= 0;
+                                    }
+                                    if (parseBool(isenable) == true) {
+                                        metaitemlist.push(item);
+                                    }
+                                }
+                                reader.updateApplicationReadItems(metaitemlist);
+                            }
+                            var refreshMetadataButton = document.getElementById("read-refreshmetadata");
+                            refreshMetadataButton.onclick = function() {
+                                refreshMetadataItems();
+                                var container = document.createElement("div");
+                                document.body.appendChild(container);
+                                var contentdlg = new WinJS.UI.ContentDialog(container);
+                                contentdlg.title = stringRes("READER_READER_HASREFRESHMETADATA");
+                                var content = document.createElement("div");
+                                content.style.width = "100%";
+                                var stylenode = document.createElement("style");
+                                stylenode.textContent = "table { border-collapse: collapse; max-width: 100%; -ms-user-select: element; } th, td { border: 1px solid white; padding: 5px; }";
+                                content.appendChild(stylenode);
+                                var table = document.createElement("table");
+                                var thead = document.createElement("thead");
+                                var htr = document.createElement("tr");
+                                var thitem = document.createElement("th");
+                                var thdesc = document.createElement("th");
+                                thitem.textContent = stringRes("READER_SETTINGS_APPITEMS_ITEM");
+                                thdesc.textContent = stringRes("READER_SETTINGS_APPITEMS_DESCRIPTION");
+                                var tbody = document.createElement("tbody");
+                                htr.appendChild(thitem);
+                                htr.appendChild(thdesc);
+                                thead.appendChild(htr);
+                                table.appendChild(thead);
+                                table.appendChild(tbody);
+                                content.appendChild(table);
+                                contentdlg.content = content;
+                                contentdlg.commands.push(new WinJS.UI.ContentDialogCommand(
+                                    getPublicRes(800)
+                                ));
+                                var items = Package.reader.getApplicationReadItems();
+                                items.forEach(function(item) {
+                                    var tr = document.createElement("tr");
+                                    var tditem = document.createElement("td");
+                                    var tddesc = document.createElement("td");
+                                    tditem.textContent = item;
+                                    tddesc.textContent = stringRes("APPMETADATA_" + item.toUpperCase());
+                                    tr.appendChild(tditem);
+                                    tr.appendChild(tddesc);
+                                    tbody.appendChild(tr);
+                                });
+                                contentdlg.showAsync().then(function() {
+                                    contentdlg.dispose();
+                                });
+                            };
+                        })(this);
+                    </script>
                     <br>
                     <progress id="read-loading" style="display: none;"></progress>
                     <p style="margin-bottom: 2px; margin-top: 5px;" data-res-resxml="READER_READER_RESULT"></p>
