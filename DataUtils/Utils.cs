@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -382,5 +384,236 @@ namespace DataUtils
 	}
 	[ComVisible (true)]
 	[ClassInterface (ClassInterfaceType.AutoDual)]
-	public class _I_Exception: IExcep
+	public class _I_Exception: Exception, IDisposable
+	{
+		private Exception bex = null;
+		public _I_Exception (Exception ex) { bex = ex; }
+		public _I_Exception (string message) { bex = new Exception (message); }
+		public _I_Exception (string msg, Exception innerEx) { bex = new Exception (msg, innerEx); }
+		public override IDictionary Data => bex.Data;
+		public override Exception GetBaseException () => bex.GetBaseException ();
+		public override void GetObjectData (SerializationInfo info, StreamingContext context) => bex.GetObjectData (info, context);
+		public override string HelpLink
+		{
+			get { return bex.HelpLink; }
+			set { bex.HelpLink = value; }
+		}
+		public override string Message => bex.Message;
+		public override string Source
+		{
+			get { return bex.Source; }
+			set { bex.Source = value; }
+		}
+		public override string StackTrace => bex.StackTrace;
+		public override string ToString () => bex.ToString ();
+		public override int GetHashCode () => bex.GetHashCode ();
+		public override bool Equals (object obj) => bex.Equals (obj);
+		public void Dispose () { bex = null; }
+	}
+	[ComVisible (true)]
+	[ClassInterface (ClassInterfaceType.AutoDual)]
+	public class _I_KeyValuePair: IDisposable
+	{
+		object key = null;
+		object value = null;
+		public _I_KeyValuePair (object k, object v)
+		{
+			key = k;
+			value = v;
+		}
+		public object Key { get { return key; } set { key = value; } }
+		public object Value { get { return value; } set { this.value = value; } }
+		public void Dispose ()
+		{
+			key = null;
+			value = null;
+		}
+		~_I_KeyValuePair ()
+		{
+			key = null;
+			value = null;
+		}
+	}
+	[ComVisible (true)]
+	[ClassInterface (ClassInterfaceType.AutoDual)]
+	public class _I_WwwFormUrlDecoder
+	{
+		private readonly Dictionary<string, string> _params = new Dictionary<string, string> ();
+		public _I_WwwFormUrlDecoder (string query)
+		{
+			if (string.IsNullOrEmpty (query)) return;
+			if (query.StartsWith ("?")) query = query.Substring (1);
+			foreach (var pair in query.Split ('&'))
+			{
+				var kv = pair.Split ('=');
+				if (kv.Length == 2)
+					_params [Uri.UnescapeDataString (kv [0])] = Uri.UnescapeDataString (kv [1]);
+			}
+		}
+		public string GetFirstValueByName (string name)
+		{
+			string value = null;
+			return _params.TryGetValue (name, out value) ? value : null;
+		}
+		public int Size => _params.Count;
+		public _I_KeyValuePair GetAt (uint index)
+		{
+			var pair = _params.ElementAt ((int)index);
+			return new _I_KeyValuePair (pair.Key, pair.Value);
+		}
+	}
+	[ComVisible (true)]
+	[ClassInterface (ClassInterfaceType.AutoDual)]
+	public class _I_Uri: Uri
+	{
+		public _I_Uri (string uri): base (uri) { }
+		public _I_Uri (string baseUri, string relativeUri) : base (new Uri (baseUri), relativeUri) { }
+		public string AbsoluteCanonicalUri => this.GetLeftPart (UriPartial.Authority) + this.PathAndQuery + this.Fragment;
+		public string DisplayIri => Uri.UnescapeDataString (this.OriginalString);
+		public string DisplayUri => Uri.UnescapeDataString (this.OriginalString);
+		public string Domain => ExtractDomain (this.Host);
+		public string Extension => System.IO.Path.GetExtension (this.AbsolutePath)?.TrimStart ('.') ?? "";
+		public string Password => ExtractPassword (this.UserInfo);
+		public string Path => this.AbsolutePath;
+		public object QueryParsed => new _I_WwwFormUrlDecoder (this.Query);
+		public string RawUri => this.OriginalString;
+		public string SchemeName => this.Scheme;
+		public bool Suspicious => !Uri.IsWellFormedUriString (this.OriginalString, UriKind.Absolute);
+		public string UserName => ExtractUserName (this.UserInfo);
+		public _I_Uri CombineUri (string relativeUri)
+		{
+			return new _I_Uri (this.AbsoluteUri, relativeUri);
+		}
+		public static string EscapeComponent (string component)
+		{
+			return Uri.EscapeDataString (component);
+		}
+		public static string UnescapeComponent (string component)
+		{
+			return Uri.UnescapeDataString (component);
+		}
+		private static string ExtractDomain (string host)
+		{
+			var parts = host.Split ('.');
+			if (parts.Length >= 2)
+				return string.Join (".", parts.Skip (1));
+			return host;
+		}
+		private static string ExtractUserName (string userInfo)
+		{
+			if (string.IsNullOrEmpty (userInfo)) return "";
+			var parts = userInfo.Split (':');
+			return parts [0];
+		}
+		private static string ExtractPassword (string userInfo)
+		{
+			if (string.IsNullOrEmpty (userInfo)) return "";
+			var parts = userInfo.Split (':');
+			return parts.Length > 1 ? parts [1] : "";
+		}
+	}
+	[ComVisible (true)]
+	[ClassInterface (ClassInterfaceType.AutoDual)]
+	public class _I_Utilities
+	{
+		public _I_Uri CreateUri (string uri) => new _I_Uri (uri);
+		public _I_Uri CreateUri2 (string baseUri, string relaUri) => new _I_Uri (baseUri, relaUri);
+		public _I_Exception CreateException (string message) => new _I_Exception (message);
+		public _I_Exception CreateException2 (string message, _I_Exception innerEx) => new _I_Exception (message, innerEx);
+		public _I_Calendar CreateCalendar () => new _I_Calendar ();
+		public _I_Calendar CreateCalendar2 (object list) => new _I_Calendar (list);
+		public _I_Calendar CreateCalendar3 (object list, string arg1, string arg2) => new _I_Calendar (list, arg1, arg2);
+		public _I_Calendar CreateCalendar4 (object list, string arg1, string arg2, string arg3) => new _I_Calendar (list, arg1, arg2, arg3);
+		public _I_DateTimeFormatter CreateDateTimeFormatterFromTemplate (string formatTemplate)
+		{
+			return new _I_DateTimeFormatter (formatTemplate);
+		}
+		public _I_DateTimeFormatter CreateDateTimeFormatterFromTemplateAndLanguages (string formatTemplate, object languagesArray)
+		{
+			List<string> languages = JsArrayToStringList (languagesArray);
+			return new _I_DateTimeFormatter (formatTemplate, languages);
+		}
+		public _I_DateTimeFormatter CreateDateTimeFormatterFromTemplateFull (string formatTemplate, object languagesArray,
+																			string geographicRegion, string calendar, string clock)
+		{
+			List<string> languages = JsArrayToStringList (languagesArray);
+			return new _I_DateTimeFormatter (formatTemplate, languages, geographicRegion, calendar, clock);
+		}
+		public _I_DateTimeFormatter CreateDateTimeFormatterFromDateEnums (int year, int month, int day, int dayOfWeek)
+		{
+			return new _I_DateTimeFormatter (
+				(YearFormat)year,
+				(MonthFormat)month,
+				(DayFormat)day,
+				(DayOfWeekFormat)dayOfWeek
+			);
+		}
+		public _I_DateTimeFormatter CreateDateTimeFormatterFromTimeEnums (int hour, int minute, int second)
+		{
+			return new _I_DateTimeFormatter (
+				(HourFormat)hour,
+				(MinuteFormat)minute,
+				(SecondFormat)second
+			);
+		}
+		public _I_DateTimeFormatter CreateDateTimeFormatterFromDateTimeEnums (int year, int month, int day, int dayOfWeek,
+																			int hour, int minute, int second, object languagesArray)
+		{
+			List<string> languages = JsArrayToStringList (languagesArray);
+			return new _I_DateTimeFormatter (
+				(YearFormat)year,
+				(MonthFormat)month,
+				(DayFormat)day,
+				(DayOfWeekFormat)dayOfWeek,
+				(HourFormat)hour,
+				(MinuteFormat)minute,
+				(SecondFormat)second,
+				languages
+			);
+		}
+		public _I_DateTimeFormatter CreateDateTimeFormatterFromDateTimeEnumsFull (int year, int month, int day, int dayOfWeek,
+																				int hour, int minute, int second, object languagesArray,
+																				string geographicRegion, string calendar, string clock)
+		{
+			List<string> languages = JsArrayToStringList (languagesArray);
+			return new _I_DateTimeFormatter (
+				(YearFormat)year,
+				(MonthFormat)month,
+				(DayFormat)day,
+				(DayOfWeekFormat)dayOfWeek,
+				(HourFormat)hour,
+				(MinuteFormat)minute,
+				(SecondFormat)second,
+				languages,
+				geographicRegion,
+				calendar,
+				clock
+			);
+		}
+		private List<string> JsArrayToStringList (object jsArray)
+		{
+			var result = new List<string> ();
+			if (jsArray == null) return result;
+
+			Type type = jsArray.GetType ();
+			try
+			{
+				int length = (int)type.InvokeMember ("length", BindingFlags.GetProperty, null, jsArray, null);
+				for (int i = 0; i < length; i++)
+				{
+					object value = type.InvokeMember (i.ToString (), BindingFlags.GetProperty, null, jsArray, null);
+					if (value != null)
+						result.Add (value.ToString ());
+				}
+			}
+			catch
+			{
+				// 如果无法获取 length，则假设是单个字符串
+				string single = jsArray.ToString ();
+				if (!string.IsNullOrEmpty (single))
+					result.Add (single);
+			}
+			return result;
+		}
+	}
 }

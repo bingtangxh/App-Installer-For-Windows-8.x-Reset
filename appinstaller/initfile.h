@@ -502,6 +502,7 @@ namespace Win32
 	using namespace System;
 	using namespace System::Runtime::InteropServices;
 	[ComVisible (true)]
+	[ClassInterface (ClassInterfaceType::AutoDual)]
 	public ref class Key
 	{
 		private:
@@ -523,6 +524,7 @@ namespace Win32
 			);
 			return CStringToMPString (res);
 		}
+		Object ^GetWithDefault (Object ^dflt) { return Get (dflt); }
 		Object ^Get ()
 		{
 			auto res = GetPrivateProfileStringW (

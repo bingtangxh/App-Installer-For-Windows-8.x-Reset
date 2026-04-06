@@ -8,10 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="text/javascript" src="js/module.js"></script>
     <script type="text/javascript" src="js/polyfill-ie.js"></script>
+    <script type="text/javascript" src="js/polyfill-winrt.js"></script>
     <link rel="stylesheet" href="libs/winjs/1.0/css/ui-light.css" id="winjs-style-1">
     <link rel="stylesheet" href="libs/winjs/2.0/css/ui-light.css" id="winjs-style">
     <script type="text/javascript" src="libs/winjs/1.0/js/base.js"></script>
     <script type="text/javascript" src="libs/winjs/1.0/js/ui.js"></script>
+    <script type="text/javascript" src="libs/winjs/1.0/js/en-us/base.strings.js"></script>
+    <script type="text/javascript" src="libs/winjs/1.0/js/en-us/ui.strings.js"></script>
     <script type="text/javascript" src="js/color.js"></script>
     <script type="text/javascript" src="js/promise.js"></script>
     <script type="text/javascript" src="js/bridge.js"></script>
@@ -60,13 +63,13 @@
         <div class="page full guide fold">
             <main class="main">
                 <div id="page-reader" style="display: none;" class="ispage padding">
-                    <h2>读取</h2>
-                    <p>请选择一个包，获取其信息。</p>
+                    <h2 data-res-resxml="READER_READER_TITLE"></h2>
+                    <p data-res-resxml="READER_READER_DESC"></p>
                     <div>
-                        <label for="read-pkgpath">文件路径</label>
+                        <label for="read-pkgpath" data-res-resxml="READER_READER_FILEPATH"></label>
                         <div class="itemrow">
                             <input type="text" id="read-pkgpath" style="margin-right: 10px;">
-                            <button id="read-browse">浏览</button>
+                            <button id="read-browse" data-res-resxml="READER_READER_BROWSER"></button>
                         </div>
                         <script>
                             (function() {
@@ -76,7 +79,9 @@
                                 readBrowse.onclick = function() {
                                     var explorer = external.Storage.Explorer;
                                     explorer.file(
-                                        "{appxpkg}|*.appx;*.appxbundle;*.msix;*.msixbundle|{allfiles}|*.*",
+                                        "{appxpkg}|*.appx;*.appxbundle;*.msix;*.msixbundle|{allfiles}|*.*"
+                                        .replace("{appxpkg}", stringRes("READER_READER_APPXFILE"))
+                                        .replace("{allfiles}", stringRes("READER_READER_ALLFILES")),
                                         lastDir,
                                         function(result) {
                                             if (!result) return;
@@ -90,20 +95,20 @@
                     </div>
                     <div class="itemrow">
                         <input type="checkbox" id="read-usepri" style="margin-left: 0;">
-                        <label for="read-usepri">需要解析 PRI 资源文件</label>
+                        <label for="read-usepri" data-res-resxml="READER_READER_USEPRI"></label>
                     </div>
                     <style>
                         .part-read-button {
                             margin-bottom: 5px;
                         }
                     </style>
-                    <button id="read-btn" class="part-read-button">读取</button>
-                    <button id="read-result-save" class="part-read-button">将读取结果保存为文件</button>
-                    <button id="read-result-xml" class="part-read-button">保存为 XML 文件</button>
-                    <button id="read-result-json" class="part-read-button">保存为 JSON 文件</button>
+                    <button id="read-btn" class="part-read-button" data-res-resxml="READER_READER_READ"></button>
+                    <button id="read-result-save" class="part-read-button" data-res-resxml="READER_READER_SAVEFILE"></button>
+                    <button id="read-result-xml" class="part-read-button" data-res-resxml="READER_READER_SAVEXML"></button>
+                    <button id="read-result-json" class="part-read-button" data-res-resxml="READER_READER_SAVEJSON"></button>
                     <br>
                     <progress id="read-loading" style="display: none;"></progress>
-                    <p style="margin-bottom: 2px; margin-top: 5px;">读取结果：</p>
+                    <p style="margin-bottom: 2px; margin-top: 5px;" data-res-resxml="READER_READER_RESULT"></p>
                     <iframe id="read-result" width="100%" frameborder="0" src="report.html"></iframe>
                     <script>
                         (function() {
@@ -112,7 +117,7 @@
 
                             function readResultResizeEvent(e) {
                                 var parent = readResult.parentElement.parentElement;
-                                var newHeight = parent.getBoundingClientRect().height - readResult.getBoundingClientRect().top - 24;
+                                var newHeight = parent.getBoundingClientRect().height - readResult.getBoundingClientRect().top - 60;
                                 //console.log(e, parent.getBoundingClientRect().height, readResult.getBoundingClientRect().top, newHeight);
                                 readResult.style.height = parseInt(newHeight) + "px";
                             }
@@ -123,6 +128,8 @@
                     </script>
                     <script>
                         (function(global) {
+                            var conf = external.Config.current;
+                            var set = conf.getSection("Settings");
                             var readBtn = document.getElementById("read-btn");
                             var readResult = document.getElementById("read-result");
                             var readPkgpath = document.getElementById("read-pkgpath");
@@ -132,6 +139,7 @@
                             var readSave = document.getElementById("read-result-save");
                             var readToXml = document.getElementById("read-result-xml");
                             var readToJson = document.getElementById("read-result-json");
+                            readUsepri.checked = set.getKey("PackageReader:DefaultParsingPriFile").readBool();
                             readResult.style.display = "none";
                             readBtn.onclick = function() {
                                 var self = this;
@@ -160,7 +168,7 @@
                                     onCompleted();
                                     readResult.contentWindow.setReport({
                                         status: false,
-                                        message: "请选择一个有效文件"
+                                        message: stringRes("READER_READER_PLEASESELECT")
                                     });
                                     self.disabled = false;
                                     return;
@@ -187,7 +195,7 @@
                                     progress.classList.add("win-ring");
                                     progress.style.color = "white";
                                     var span = document.createElement("span");
-                                    span.textContent = "正在保存文件";
+                                    span.textContent = stringRes("READER_READER_SAVINGHTML");
                                     progress.style.marginRight = "10px";
                                     cont.setAttribute("style", "display: flex; flex-direction: row; align-items: center; display: -ms-flexbox; -ms-flex-direction: row; -ms-align-items: center;")
                                     cont.appendChild(progress);
@@ -199,7 +207,7 @@
                                 return dlg.show().then(function(id) {
                                     return new Promise(function(c, e) {
                                         external.Storage.save(
-                                            "{htmlfile}|*.html;*.htm",
+                                            "{htmlfile}|*.html;*.htm".replace("{htmlfile}", stringRes("READER_READER_HTMLFILE")),
                                             lastDir,
                                             "report-" + new Date().getTime(),
                                             c
@@ -216,7 +224,7 @@
                                     });
                                 }).then(null, function(err) {
                                     dlg.hide().then(function() {
-                                        dlg.title = "保存时发生问题";
+                                        dlg.title = stringRes("READER_READER_SAVEERR");
                                         dlg.content = err.message || err;
                                         dlg.commands.push(new WinJS.UI.ContentDialogCommand(
                                             getPublicRes(800)
@@ -238,7 +246,7 @@
                                     progress.classList.add("win-ring");
                                     progress.style.color = "white";
                                     var span = document.createElement("span");
-                                    span.textContent = "正在生成 JSON 文件，请稍候... \n这可能需要比较长的时间。";
+                                    span.textContent = stringRes("READER_READER_SAVEINGJSON");
                                     progress.style.marginRight = "10px";
                                     cont.setAttribute("style", "display: flex; flex-direction: row; align-items: center; display: -ms-flexbox; -ms-flex-direction: row; -ms-align-items: center;")
                                     cont.appendChild(progress);
@@ -250,7 +258,7 @@
                                 return dlg.show().then(function(id) {
                                     return new Promise(function(c, e) {
                                         external.Storage.save(
-                                            "{jsonzipfile}|*.zip",
+                                            "{jsonzipfile}|*.zip".replace("{jsonzipfile}", stringRes("READER_READER_JSONFILE")),
                                             lastDir,
                                             "report-" + new Date().getTime(),
                                             c
@@ -259,7 +267,7 @@
                                 }).then(function(filepath) {
                                     return new Promise(function(c, e) {
                                         if (!readPkgpath.value) {
-                                            e(new Error("请选择一个有效文件"));
+                                            e(new Error(stringRes("READER_READER_PLEASESELECT")));
                                             return;
                                         }
                                         try {
@@ -284,7 +292,7 @@
                                         });
                                     }).then(null, function(err) {
                                         dlg.hide().then(function() {
-                                            dlg.title = "保存时发生问题";
+                                            dlg.title = stringRes("READER_READER_SAVEERR");
                                             dlg.content = err.message || err;
                                             dlg.commands.push(new WinJS.UI.ContentDialogCommand(
                                                 getPublicRes(800)
@@ -307,7 +315,7 @@
                                     progress.classList.add("win-ring");
                                     progress.style.color = "white";
                                     var span = document.createElement("span");
-                                    span.textContent = "正在生成 XML 文件，请稍候... \n这可能需要比较长的时间。";
+                                    span.textContent = stringRes("READER_READER_SAVEINGXML");
                                     progress.style.marginRight = "10px";
                                     cont.setAttribute("style", "display: flex; flex-direction: row; align-items: center; display: -ms-flexbox; -ms-flex-direction: row; -ms-align-items: center;")
                                     cont.appendChild(progress);
@@ -319,7 +327,7 @@
                                 return dlg.show().then(function(id) {
                                     return new Promise(function(c, e) {
                                         external.Storage.save(
-                                            "{xmlzipfile}|*.zip",
+                                            "{xmlzipfile}|*.zip".replace("{xmlzipfile}", stringRes("READER_READER_XMLFILE")),
                                             lastDir,
                                             "report-" + new Date().getTime(),
                                             c
@@ -329,7 +337,7 @@
                                     return new Promise(function(c, e) {
                                         try {
                                             if (!readPkgpath.value) {
-                                                e(new Error("请选择一个有效文件"));
+                                                e(new Error(stringRes("READER_READER_PLEASESELECT")));
                                                 return;
                                             }
                                             var pkg = Package.reader.package(readPkgpath.value);
@@ -353,7 +361,7 @@
                                         });
                                     }).then(null, function(err) {
                                         dlg.hide().then(function() {
-                                            dlg.title = "保存时发生问题";
+                                            dlg.title = stringRes("READER_READER_SAVEERR");
                                             dlg.content = err.message || err;
                                             dlg.commands.push(new WinJS.UI.ContentDialogCommand(
                                                 getPublicRes(800)
@@ -369,35 +377,35 @@
                     </script>
                 </div>
                 <div id="page-acquire" style="display: none;" class="ispage padding">
-                    <h2>获取</h2>
+                    <h2 data-res-resxml="READER_ACQUIRE_TITLE"></h2>
                     <div id="acquire-forbidden" style="width: 100%;">
-                        <p>由于来自 store.rg-adguard.net 的限制，现在暂时无法实现对包的获取。请自行打开下面 URL 进行访问。</p>
+                        <p data-res-resxml="READER_ACQUIRE_PROHIBIT"></p>
                         <a onclick="external.Process.open ('https://store.rg-adguard.net')">store.rg-adguard.net</a>
                     </div>
                     <div id="acquire-enable" style="width: 100%;">
-                        <p>请在下面的输入框中输入要查询的内容，设置好参数后将进行查询。</p>
+                        <p data-res-resxml="READER_ACQUIRE_DESC"></p>
                         <div>
                             <div>
                                 <input type="text" id="acquire-input">
-                                <select id="acquire-valuetype" name="type">
-                                    <option value="url">分享链接</option>
-                                    <option value="ProductId">产品 ID</option>
-                                    <option value="PackageFamilyName">包系列名</option>
-                                    <option value="CategoryId">类别 ID</option>
+                                <select id="acquire-valuetype" name="type" value="url">
+                                    <option value="url" data-res-resxml="READER_ACQUIRE_SHAREDURL"></option>
+                                    <option value="ProductId" data-res-resxml="READER_ACQUIRE_PRODUCTID"></option>
+                                    <option value="PackageFamilyName" data-res-resxml="READER_ACQUIRE_PFN"></option>
+                                    <option value="CategoryId" data-res-resxml="READER_ACQUIRE_CATEGORYID"></option>
                                 </select>
-                                <select id="acquire-channel" name="ring">
-                                    <option title="Windows Insider Fast" value="WIF">快速</option>
-                                    <option title="Windows Insider Slow" value="WIS">慢速</option>
-                                    <option title="Release Preview" value="RP" selected>发布预览</option>
-                                    <option title="Default OS" value="Retail">正式</option>
+                                <select id="acquire-channel" name="ring" value="RP">
+                                    <option title="Windows Insider Fast" value="WIF" data-res-resxml="READER_ACQUIRE_WIF"></option>
+                                    <option title="Windows Insider Slow" value="WIS" data-res-resxml="READER_ACQUIRE_WIS"></option>
+                                    <option title="Release Preview" value="RP" data-res-resxml="READER_ACQUIRE_RP"></option>
+                                    <option title="Default OS" value="Retail" data-res-resxml="READER_ACQUIRE_RETAIL"></option>
                                 </select>
                             </div>
                             <div>
                                 <div class="itemrow">
                                     <input type="checkbox" id="acquire-smartquery" style="margin-left: 0px;">
-                                    <label for="acquire-smartquery">自动查询</label>
+                                    <label for="acquire-smartquery" data-res-resxml="READER_ACQUIRE_SMARTQUERY"></label>
                                 </div>
-                                <button id="acquire-query">查询</button>
+                                <button id="acquire-query" data-res-resxml="READER_ACQUIRE_QUERY"></button>
                             </div>
                         </div>
                         <style>
@@ -492,17 +500,19 @@
                             }
                         </style>
                         <div id="acquire-template" class="acquire-item" style="display: none;">
-                            <div id="name" class="top" title="Identity Name">Identity Name</div>
+                            <div id="name" class="top" title="Identity Name"></div>
                             <div class="medium">
-                                <div id="ext" title="File Type">Appx</div>
-                                <div id="version" title="Version">1.0.0.0</div>
-                                <div id="architecture" title="Processor Architecture">neutral</div>
+                                <div id="ext" title="File Type"></div>
+                                <div id="version" title="Version"></div>
+                                <div id="architecture" title="Processor Architecture"></div>
                                 <div id="publisherId" title="Identity Publisher Id"></div>
                                 <div id="size" title="File Size"></div>
                             </div>
                             <div class="bottom">
                                 <div id="hashpart"><span>SHA-1: </span><span id="hash"></span></div>
-                                <div><a download id="download" href="">点击下载</a></div>
+                                <div>
+                                    <a download id="download" href="" data-res-resxml="READER_ACQUIRE_CLICKDOWNLOAD"></a>
+                                </div>
                             </div>
                         </div>
                         <div id="acquire-loading">
@@ -514,17 +524,17 @@
                             </div>
                         </div>
                         <div id="acquire-result" style="width: 100%;">
-                            <p style="font-weight: normal;" title="Category ID"><span>类别 ID</span>: <span id="acquire-categoryid" style="user-select: text; -ms-user-select: element;"></span></p>
-                            <h3>以下可能为检索到的应用</h3>
+                            <p style="font-weight: normal;" title="Category ID"><span data-res-resxml="READER_ACQUIRE_CATEGORYID"></span>: <span id="acquire-categoryid" style="user-select: text; -ms-user-select: element;"></span></p>
+                            <h3 data-res-resxml="READER_ACQUIRE_RESULTAPPS"></h3>
                             <div id="acquire-list-app" style="width: 100%;"></div>
-                            <h3>以下可能为检索到的依赖项</h3>
+                            <h3 data-res-resxml="READER_ACQUIRE_RESULTDEPS"></h3>
                             <div id="acquire-list-dep" style="width: 100%;"></div>
                         </div>
                         <script>
                             (function(global) {
                                 var conf = external.Config.current;
                                 var set = conf.getSection("Settings");
-                                var isForbidden = !set.getKey("EnableAcquire").readBool(false);
+                                var isForbidden = !set.getKey("PackageReader:EnableAcquire").readBool(false);
                                 var acquireInput = document.getElementById("acquire-input");
                                 var acquireValuetype = document.getElementById("acquire-valuetype");
                                 var acquireChannel = document.getElementById("acquire-channel");
@@ -578,7 +588,7 @@
                                 keys.forEach(function(k, i) {
                                     var listview = listView[k];
                                     var p = document.createElement("p");
-                                    p.textContent = "还没有内容...";
+                                    p.textContent = stringRes("READER_ACQUIRE_NOCONTENT");
                                     listview.emptyView = p;
                                 });
                                 acquireLoading.statusBar = new TransitionPanel(acquireLoading, {
@@ -607,7 +617,7 @@
                                         acquireValuetype.disabled =
                                         acquireChannel.disabled = true;
                                     queryFunc = StoreRG.test;
-                                    acquireLoadingLabel.textContent = "正在查询...";
+                                    acquireLoadingLabel.textContent = stringRes("READER_ACQUIRE_QUERYING");
                                     queryFunc(acquireInput.value, acquireValuetype.value, acquireChannel.value).then(function(result) {
                                         acquireCategoryid.textContent = result.categoryId;
                                         var applist = [];
@@ -628,7 +638,7 @@
                                             return item.file;
                                         });
                                         listView.deps.refresh();
-                                        acquireLoadingLabel.textContent = "已获取到 {0} 个信息"
+                                        acquireLoadingLabel.textContent = stringRes("READER_ACQUIRE_RESULTCNT")
                                             .replace("{0}", applist.length + deplist.length);
                                     }, function(err) {
                                         dataSrc.apps.clear();
@@ -654,6 +664,13 @@
                         </script>
                     </div>
                 </div>
+                <div id="page-search" style="display: none;" class="ispage padding">
+                    <h2 data-res-resxml="READER_SEARCH_TITLE"></h2>
+                    <div id="search-forbidden" style="width: 100%;">
+                        <p data-res-resxml="READER_SEARCH_PROHIBIT"></p>
+                        <a onclick="external.Process.open ('https://dbox.tools')">dbox.tools</a>
+                    </div>
+                </div>
             </main>
             <aside class="win-ui-dark">
                 <nav class="container">
@@ -677,15 +694,19 @@
                     <ul class="list">
                         <li id="tag-reader">
                             <div role="img">&#57650;</div>
-                            <span class="win-type-base" data-res-resxml="MANAGER_MANAGE"></span>
+                            <span class="win-type-base" data-res-resxml="READER_READER_TITLE"></span>
                         </li>
                         <li id="tag-acquire">
                             <div role="img">&#57624;</div>
-                            <span class="win-type-base" data-res-resxml="MANAGER_MANAGE"></span>
+                            <span class="win-type-base" data-res-resxml="READER_ACQUIRE_TITLE"></span>
+                        </li>
+                        <li id="tag-search">
+                            <div role="img">&#57626;</div>
+                            <span class="win-type-base" data-res-resxml="READER_SEARCH_TITLE"></span>
                         </li>
                         <li id="tag-settings">
                             <div role="img">&#57621;</div>
-                            <span class="win-type-base" data-res-resxml="MANAGER_SETTINGS"></span>
+                            <span class="win-type-base" data-res-resxml="READER_SETTINGS_TITLE"></span>
                         </li>
                         <script>
                             (function(global) {

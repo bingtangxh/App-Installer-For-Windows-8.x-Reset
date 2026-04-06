@@ -10,7 +10,7 @@ namespace DataUtils
 {
 	[ComVisible (true)]
 	[InterfaceType (ComInterfaceType.InterfaceIsDual)]
-	public interface _I_Enumerable
+	public interface _I_Enumerable: IDisposable
 	{
 		int Length { get; set; }
 		object this [int index] { get; set; }
@@ -33,6 +33,9 @@ namespace DataUtils
 		int IndexOfKey (int key);             // 按内部 key 查找
 		void Move (int index, int newIndex);  // 移动元素
 		void PushAll (object [] items);        // 一次性 push 多个
+		object Get (int index);
+		object Set (int index, object value);
+		object At (int index);
 	}
 	public class _I_List: _I_Enumerable, IList
 	{
@@ -43,6 +46,9 @@ namespace DataUtils
 			IsReadOnly = readOnly;
 			IsSynchronized = sync;
 		}
+		public _I_List (bool readOnly = false, bool fixedSize = false, bool sync = true) :
+			this (null, readOnly, fixedSize, sync)
+		{ }
 		protected List<object> _list;
 		protected object _lock = new object ();
 		public object this [int index] { get { return _list [index]; } set { _list [index] = value; } }
@@ -155,5 +161,13 @@ namespace DataUtils
 			return first;
 		}
 		public void Unshift (object value) => _list.Insert (0, value);
+		public void Dispose ()
+		{
+			_list?.Clear ();
+			_list = null;
+		}
+		public object Get (int index) => this [index];
+		public object Set (int index, object value) => this [index] = value;
+		public object At (int index) => this [index];
 	}
 }

@@ -57,6 +57,7 @@
                         try {
                             var obj = nodes[i].getAttribute('data-res-resxml');
                             var strres = external.StringResources;
+                            if (!strres) strres = Bridge.External.WinJsStringRes;
                             if (strres) {
                                 try {
                                     nodes[i].textContent = strres.get(obj);

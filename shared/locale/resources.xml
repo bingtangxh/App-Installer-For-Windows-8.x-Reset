@@ -1,621 +1,913 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <resource id="ms-resource://Microsoft.WinJS.1.0/ui/off">
-        <lang name="zh-CN">关</lang>
-        <lang name="en-US">Off</lang>
-        <lang name="af-ZA">Af</lang>
-        <lang name="am-ET">አጥፋ</lang>
-        <lang name="ar-SA">إيقاف التشغيل</lang>
-        <lang name="as-IN">অফ</lang>
-        <lang name="az-LATN-AZ">Qeyri-aktiv</lang>
-        <lang name="be-BY">Выкл.</lang>
-        <lang name="bg-BG">Изключено</lang>
-        <lang name="bn-BD">বন্ধ</lang>
-        <lang name="bn-IN">বন্ধ</lang>
-        <lang name="bs-LATN-BA">Isključeno</lang>
-        <lang name="ca-ES">Inactiva</lang>
-        <lang name="ca-ES-VALENCIA">Inactiva</lang>
-        <lang name="chr-CHER-US">ᎠᏍᏚᏗ</lang>
-        <lang name="cs-CZ">Vypnuto</lang>
-        <lang name="cy-GB">Diffodd</lang>
-        <lang name="da-DK">Fra</lang>
-        <lang name="de-DE">Aus</lang>
-        <lang name="el-GR">Ανενεργό</lang>
-        <lang name="en-GB">Off</lang>
-        <lang name="es-ES">Desactivado</lang>
-        <lang name="et-EE">Väljas</lang>
-        <lang name="eu-ES">Desaktibatuta</lang>
-        <lang name="fa-IR">خاموش</lang>
-        <lang name="fi-FI">Ei käytössä</lang>
-        <lang name="fil-PH">Naka-off</lang>
-        <lang name="fr-FR">Inactif</lang>
-        <lang name="ga-IE">As</lang>
-        <lang name="gd-GB">Dheth</lang>
-        <lang name="gl-ES">Desactivado</lang>
-        <lang name="gu-IN">બંધ</lang>
-        <lang name="ha-LATN-NG">Kashe</lang>
-        <lang name="he-IL">לא פעיל</lang>
-        <lang name="hi-IN">बंद</lang>
-        <lang name="hr-HR">Isključeno</lang>
-        <lang name="hu-HU">Kikapcsolva</lang>
-        <lang name="hy-AM">Անջատ</lang>
-        <lang name="id-ID">Nonaktif</lang>
-        <lang name="ig-NG">Gbanyọ</lang>
-        <lang name="is-IS">Óvirkt</lang>
-        <lang name="it-IT">Disattivato</lang>
-        <lang name="iu-LATN-CA">Qaminngajuq</lang>
-        <lang name="ja-JP">オフ</lang>
-        <lang name="ka-GE">გამორთვა</lang>
-        <lang name="kk-KZ">Өшірілген</lang>
-        <lang name="km-KH">បិទ</lang>
-        <lang name="kn-IN">ಆಫ್</lang>
-        <lang name="ko-KR">해제</lang>
-        <lang name="kok-IN">ऑफ करचें</lang>
-        <lang name="ku-ARAB-IQ">کوژاوە</lang>
-        <lang name="ky-KG">Өчүрулгөн</lang>
-        <lang name="lb-LU">Aus</lang>
-        <lang name="lt-LT">Išjungta</lang>
-        <lang name="lv-LV">Izslēgts</lang>
-        <lang name="mi-NZ">Weto ana</lang>
-        <lang name="mk-MK">Исклучено</lang>
-        <lang name="ml-IN">ഓഫ്</lang>
-        <lang name="mn-MN">Idəvxgüĭ</lang>
-        <lang name="mr-IN">बंद</lang>
-        <lang name="ms-MY">Mati</lang>
-        <lang name="mt-MT">Mitfi</lang>
-        <lang name="nb-NO">Av</lang>
-        <lang name="ne-NP">निभाउनुहोस्</lang>
-        <lang name="nl-NL">Uit</lang>
-        <lang name="nn-NO">Av</lang>
-        <lang name="nso-ZA">Timilwe</lang>
-        <lang name="or-IN">ଅଫ୍</lang>
-        <lang name="pa-ARAB-PK">بند</lang>
-        <lang name="pa-IN">ਬੰਦ ਕਰੋ</lang>
-        <lang name="pl-PL">Wyłączone</lang>
-        <lang name="prs-AF">خاموش</lang>
-        <lang name="pt-BR">Desligado</lang>
-        <lang name="pt-PT">Desativado</lang>
-        <lang name="qps-PLOC">[3Hcgw][Ǿƒƒ ]</lang>
-        <lang name="qps-PLOCM">‏‏أبع[Off]לף</lang>
-        <lang name="qut-GT">Q'atetalik</lang>
-        <lang name="quz-PE">Tukuchisqa</lang>
-        <lang name="ro-RO">Dezactivat</lang>
-        <lang name="ru-RU">Откл.</lang>
-        <lang name="rw-RW">Irafunze</lang>
-        <lang name="sd-ARAB-PK">بند کوليو</lang>
-        <lang name="si-LK">අක්‍රීය</lang>
-        <lang name="sk-SK">Vypnuté</lang>
-        <lang name="sl-SI">Izklopljeno</lang>
-        <lang name="sq-AL">Joaktiv</lang>
-        <lang name="sr-CYRL-BA">Искључено</lang>
-        <lang name="sr-CYRL-CS">Искључено</lang>
-        <lang name="sr-LATN-CS">Isključeno</lang>
-        <lang name="sv-SE">Av</lang>
-        <lang name="sw-KE">Zima</lang>
-        <lang name="ta-IN">அணை</lang>
-        <lang name="te-IN">ఆఫ్ చేయి</lang>
-        <lang name="tg-CYRL-TJ">Хомӯш</lang>
-        <lang name="th-TH">ปิด</lang>
-        <lang name="ti-ET">ኣጥፍእ</lang>
-        <lang name="tk-TM">Öçürilen</lang>
-        <lang name="tn-ZA">Timilwe</lang>
-        <lang name="tr-TR">Kapalı</lang>
-        <lang name="tt-RU">Сүндерелгән</lang>
-        <lang name="ug-CN">يېپىق</lang>
-        <lang name="uk-UA">Вимк.</lang>
-        <lang name="ur-PK">آف</lang>
-        <lang name="uz-LATN-UZ">O‘ch</lang>
-        <lang name="vi-VN">Tắt</lang>
-        <lang name="wo-SN">Fay</lang>
-        <lang name="xh-ZA">Cimile</lang>
-        <lang name="yo-NG">Pa</lang>
-        <lang name="zh-HK">關閉</lang>
-        <lang name="zh-TW">關閉</lang>
-        <lang name="zu-ZA">Cishile</lang>
-    </resource>
-    <resource id="ms-resource://Microsoft.WinJS.1.0/ui/on">
-        <lang name="zh-CN">开</lang>
-        <lang name="en-US">On</lang>
-        <lang name="af-ZA">Aan</lang>
-        <lang name="am-ET">አብራ</lang>
-        <lang name="ar-SA">تشغيل</lang>
-        <lang name="as-IN">অন</lang>
-        <lang name="az-LATN-AZ">Aktiv</lang>
-        <lang name="be-BY">Укл.</lang>
-        <lang name="bg-BG">Включено</lang>
-        <lang name="bn-BD">চালু</lang>
-        <lang name="bn-IN">চালু</lang>
-        <lang name="bs-LATN-BA">Uključeno</lang>
-        <lang name="ca-ES">Activa</lang>
-        <lang name="ca-ES-VALENCIA">Activa</lang>
-        <lang name="chr-CHER-US">ᎠᏍᏚᎢᏍᏗ</lang>
-        <lang name="cs-CZ">Zapnuto</lang>
-        <lang name="cy-GB">Ar waith</lang>
-        <lang name="da-DK">Til</lang>
-        <lang name="de-DE">Ein</lang>
-        <lang name="el-GR">Ενεργό</lang>
-        <lang name="en-GB">On</lang>
-        <lang name="es-ES">Activado</lang>
-        <lang name="et-EE">Sees</lang>
-        <lang name="eu-ES">Aktibatuta</lang>
-        <lang name="fa-IR">روشن</lang>
-        <lang name="fi-FI">Käytössä</lang>
-        <lang name="fil-PH">Naka-on</lang>
-        <lang name="fr-FR">Actif</lang>
-        <lang name="ga-IE">Air</lang>
-        <lang name="gd-GB">Air</lang>
-        <lang name="gl-ES">Activado</lang>
-        <lang name="gu-IN">ચાલુ</lang>
-        <lang name="ha-LATN-NG">Kunna</lang>
-        <lang name="he-IL">פעיל</lang>
-        <lang name="hi-IN">चालू</lang>
-        <lang name="hr-HR">Uključeno</lang>
-        <lang name="hu-HU">Bekapcsolva</lang>
-        <lang name="hy-AM">Միաց</lang>
-        <lang name="id-ID">Aktif</lang>
-        <lang name="ig-NG">Gbanye</lang>
-        <lang name="is-IS">Virkt</lang>
-        <lang name="it-IT">Attivato</lang>
-        <lang name="iu-LATN-CA">Ikumajuq</lang>
-        <lang name="ja-JP">オン</lang>
-        <lang name="ka-GE">ჩართვა</lang>
-        <lang name="kk-KZ">Қосылған</lang>
-        <lang name="km-KH">បើក</lang>
-        <lang name="kn-IN">ಆನ್</lang>
-        <lang name="ko-KR">설정</lang>
-        <lang name="kok-IN">ऑन करचें</lang>
-        <lang name="ku-ARAB-IQ">هەڵکراو</lang>
-        <lang name="ky-KG">Күйгүзүлгөн</lang>
-        <lang name="lb-LU">Un</lang>
-        <lang name="lt-LT">Įjungta</lang>
-        <lang name="lv-LV">Ieslēgts</lang>
-        <lang name="mi-NZ">Kā ana</lang>
-        <lang name="mk-MK">Вклученo</lang>
-        <lang name="ml-IN">ഓൺ</lang>
-        <lang name="mn-MN">Идэвхтэй</lang>
-        <lang name="mr-IN">चालू</lang>
-        <lang name="ms-MY">Hidup</lang>
-        <lang name="mt-MT">Mixgħul</lang>
-        <lang name="nb-NO">På</lang>
-        <lang name="ne-NP">खोल्नुहोस्</lang>
-        <lang name="nl-NL">Aan</lang>
-        <lang name="nn-NO">På</lang>
-        <lang name="nso-ZA">Goteditšwe</lang>
-        <lang name="or-IN">ଅନ୍</lang>
-        <lang name="pa-ARAB-PK">چالُو</lang>
-        <lang name="pa-IN">ਚਾਲੂ ਕਰੋ</lang>
-        <lang name="pl-PL">Włączone</lang>
-        <lang name="prs-AF">روشن</lang>
-        <lang name="pt-BR">Ligado</lang>
-        <lang name="pt-PT">Ativado</lang>
-        <lang name="qps-PLOC">[Aj8Pp][Őņ ]</lang>
-        <lang name="qps-PLOCM">‏‏أبع[On]לף</lang>
-        <lang name="qut-GT">Tzijtalik</lang>
-        <lang name="quz-PE">Kawsarichisqa</lang>
-        <lang name="ro-RO">Activat</lang>
-        <lang name="ru-RU">Вкл.</lang>
-        <lang name="rw-RW">Irafunguye</lang>
-        <lang name="sd-ARAB-PK">شروع ڪريو</lang>
-        <lang name="si-LK">සක්‍රීය</lang>
-        <lang name="sk-SK">Zapnuté</lang>
-        <lang name="sl-SI">Vklopljeno</lang>
-        <lang name="sq-AL">Aktiv</lang>
-        <lang name="sr-CYRL-BA">Укључено</lang>
-        <lang name="sr-CYRL-CS">Укључено</lang>
-        <lang name="sr-LATN-CS">Uključeno</lang>
-        <lang name="sv-SE">På</lang>
-        <lang name="sw-KE">Washa</lang>
-        <lang name="ta-IN">இயக்கு</lang>
-        <lang name="te-IN">ఆన్ చేయి</lang>
-        <lang name="tg-CYRL-TJ">Фаъол</lang>
-        <lang name="th-TH">เปิด</lang>
-        <lang name="ti-ET">ወልዕ</lang>
-        <lang name="tk-TM">Açyk</lang>
-        <lang name="tn-ZA">Tshubilwe</lang>
-        <lang name="tr-TR">Açık</lang>
-        <lang name="tt-RU">Кабызылган</lang>
-        <lang name="ug-CN">ئوچۇق</lang>
-        <lang name="uk-UA">Увімк.</lang>
-        <lang name="ur-PK">آن</lang>
-        <lang name="uz-LATN-UZ">Yoq</lang>
-        <lang name="vi-VN">Bật</lang>
-        <lang name="wo-SN">Taal</lang>
-        <lang name="xh-ZA">Layitile</lang>
-        <lang name="yo-NG">Tàn</lang>
-        <lang name="zh-HK">開啟</lang>
-        <lang name="zh-TW">開啟</lang>
-        <lang name="zu-ZA">Vuliwe</lang>
-    </resource>
-    <resource id="license">
-        <lang name="zh-CN">license_cn.html</lang>
-        <lang name="en-US">license_en.html</lang>
-    </resource>
-    <resource id="MANAGER_APPTITLE">
-        <lang name="zh-CN">Package Manager</lang>
-        <lang name="en-US">Package Manager</lang>
-    </resource>
-    <resource id="MANAGER_MANAGE">
-        <lang name="zh-CN">管理</lang>
-        <lang name="en-US">Manage</lang>
-    </resource>
-    <resource id="MANAGER_APP_TITLE">
-        <lang name="zh-CN">应用</lang>
-        <lang name="en-US">Application</lang>
-    </resource>
-    <resource id="MANAGER_APP_DESCRIPTION">
-        <lang name="zh-CN">在这里，可以对安装的 Windows 商店应用进行管理。</lang>
-        <lang name="en-US">Here you can manage the installed Windows Store apps.</lang>
-    </resource>
-    <resource id="MANAGER_APP_INSTALLEDAPPS">
-        <lang name="zh-CN">安装的应用</lang>
-        <lang name="en-US">Installed Apps</lang>
-    </resource>
-    <resource id="MANAGER_APP_INSTALLEDAPPS_LOADING">
-        <lang name="zh-CN">正在加载应用...</lang>
-        <lang name="en-US">Loading apps...</lang>
-    </resource>
-    <resource id="MANAGER_APP_INSTALLEDAPPS_SUCCEED">
-        <lang name="zh-CN">已经加载了应用。</lang>
-        <lang name="en-US">Loaded apps.</lang>
-    </resource>
-    <resource id="MANAGER_APP_INSTALLEDAPPS_FAILED">
-        <lang name="zh-CN">加载时发生错误: {0}</lang>
-        <lang name="en-US">Error loading apps: {0}</lang>
-    </resource>
-    <resource id="MANAGER_APP_REFRESH">
-        <lang name="zh-CN">刷新</lang>
-        <lang name="en-US">Refresh</lang>
-    </resource>
-    <resource id="MANAGER_APP_ADVANCEOPTIONS">
-        <lang name="zh-CN">高级选项</lang>
-        <lang name="en-US">Advanced Options</lang>
-    </resource>
-    <resource id="MANAGER_APP_UNINSTALL">
-        <lang name="zh-CN">卸载</lang>
-        <lang name="en-US">Uninstall</lang>
-    </resource>
-    <resource id="MANAGER_APP_LAUNCH">
-        <lang name="zh-CN">启动</lang>
-        <lang name="en-US">Launch</lang>
-    </resource>
-    <resource id="MANAGER_APP_CREATESHORTCUT">
-        <lang name="zh-CN">创建桌面快捷方式</lang>
-        <lang name="en-US">创建桌面快捷方式</lang>
-    </resource>
-    <resource id="MANAGER_MANAGE_FINDAPPS">
-        <lang name="zh-CN">找到 {0} 个应用</lang>
-        <lang name="en-US">Found {0} apps.</lang>
-    </resource>
-    <resource id="MANAGER_MANAGE_LISTEMPTY">
-        <lang name="zh-CN">还没有内容...</lang>
-        <lang name="en-US">No content...</lang>
-    </resource>
-    <resource id="MANAGER_MANAGE_SEARCHPLACEHOLDER">
-        <lang name="zh-CN">搜索此列表</lang>
-        <lang name="en-US">Search this list</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHOWSYSTEMAPP">
-        <lang name="zh-CN">显示系统应用</lang>
-        <lang name="en-US">Show system apps</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHOWFRAMEWORK">
-        <lang name="zh-CN">显示依赖项</lang>
-        <lang name="en-US">Show dependencies</lang>
-    </resource>
-    <resource id="MANAGER_APP_IDENTITY">
-        <lang name="zh-CN">标识</lang>
-        <lang name="en-US">Identity</lang>
-    </resource>
-    <resource id="MANAGER_APP_IDENTITY_NAME">
-        <lang name="zh-CN">名称</lang>
-        <lang name="en-US">Name</lang>
-    </resource>
-    <resource id="MANAGER_APP_IDENTITY_PUBLISHER">
-        <lang name="zh-CN">发布者</lang>
-        <lang name="en-US">Publisher</lang>
-    </resource>
-    <resource id="MANAGER_APP_IDENTITY_PUBLISHERID">
-        <lang name="zh-CN">发布者 ID</lang>
-        <lang name="en-US">Publisher ID</lang>
-    </resource>
-    <resource id="MANAGER_APP_IDENTITY_FAMILYNAME">
-        <lang name="zh-CN">系列名</lang>
-        <lang name="en-US">Family Name</lang>
-    </resource>
-    <resource id="MANAGER_APP_IDENTITY_FULLNAME">
-        <lang name="zh-CN">全名</lang>
-        <lang name="en-US">Full Name</lang>
-    </resource>
-    <resource id="MANAGER_APP_IDENTITY_ARCHITECTURE">
-        <lang name="zh-CN">支持的处理器架构</lang>
-        <lang name="en-US">Supported processor architectures</lang>
-    </resource>
-    <resource id="MANAGER_APP_HASAPPS">
-        <lang name="zh-CN">具有的应用</lang>
-        <lang name="en-US">Has Apps</lang>
-    </resource>
-    <resource id="MANAGER_APP_HASAPPS_DESC">
-        <lang name="zh-CN">下面是包具有的应用。现在可以直接在这里启动程序，或者创建桌面快捷方式。</lang>
-        <lang name="en-US">Below are the apps that are included in this package. You can launch the apps directly from here, or create desktop shortcuts.</lang>
-    </resource>
-    <resource id="MANAGER_APP_UNINSTALL_DESC">
-        <lang name="zh-CN">卸载此应用及其设置。</lang>
-        <lang name="en-US">Uninstall this app and its settings.</lang>
-    </resource>
-    <resource id="MANAGER_APP_UNINSTALL_DESC">
-        <lang name="zh-CN">将从这台电脑中卸载此应用及其相关信息。</lang>
-        <lang name="en-US">This app and its related information will be uninstalled from this computer.</lang>
-    </resource>
-    <resource id="MANAGER_APP_UNINSTALL_ING">
-        <lang name="zh-CN">正在卸载...</lang>
-        <lang name="en-US">Uninstalling...</lang>
-    </resource>
-    <resource id="MANAGER_APP_UNINSTALL_PROGRESSING">
-        <lang name="zh-CN">正在卸载... {0}%</lang>
-        <lang name="en-US">Uninstalling... {0}%</lang>
-    </resource>
-    <resource id="MANAGER_APP_UNINSTALL_SUCCEED">
-        <lang name="zh-CN">已成功卸载。</lang>
-        <lang name="en-US">Uninstall succeeded.</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_TITLE">
-        <lang name="zh-CN">创建桌面快捷方式</lang>
-        <lang name="en-US">Create Desktop Shortcut</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_DESC">
-        <lang name="zh-CN">桌面上将创建一个快捷方式，作为启动 Windows 商店应用的入口点。由于 Windows 8.x 的限制，此操作将通过启动程序（使用参数）来实现；请勿将其固定到“开始”菜单。</lang>
-        <lang name="en-US">A shortcut to the Windows Store app will be created on the desktop as the entry point for launching the app. Due to limitations in Windows 8.x, this will be achieved through launching the program (using parameters); please do not pin it to the Start Menu.</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_ICONTYPE">
-        <lang name="zh-CN">请选择设置图标设置模式。</lang>
-        <lang name="en-US">Please select the icon settings mode.</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_ICONTYPE_GEN">
-        <lang name="zh-CN">生成新的图标</lang>
-        <lang name="en-US">Generate new icon</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_ICONTYPE_SEL">
-        <lang name="zh-CN">选择现有图标</lang>
-        <lang name="en-US">Select existing icon</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_ICONTYPE_SEL_ICONPATH">
-        <lang name="zh-CN">请选择图标路径: </lang>
-        <lang name="en-US">Please select icon path: </lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_BROWSE">
-        <lang name="zh-CN">浏览...</lang>
-        <lang name="en-US">Browse...</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_PREVIEW">
-        <lang name="zh-CN">预览:</lang>
-        <lang name="en-US">Preview:</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_SELECT">
-        <lang name="zh-CN">选择</lang>
-        <lang name="en-US">Select</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_GENERATE">
-        <lang name="zh-CN">创建</lang>
-        <lang name="en-US">Create</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_CANCEL">
-        <lang name="zh-CN">取消</lang>
-        <lang name="en-US">Cancel</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_BACKGROUNDCOLOR">
-        <lang name="zh-CN">背景颜色</lang>
-        <lang name="en-US">Background Color</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_RATIO">
-        <lang name="zh-CN">背景与前景的边长比</lang>
-        <lang name="en-US">Background-to-foreground edge ratio</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_RATIO_CUSTOM">
-        <lang name="zh-CN">自定义</lang>
-        <lang name="en-US">Custom</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_RATIO_CUSTOMRATIO">
-        <lang name="zh-CN">自定义比例</lang>
-        <lang name="en-US">Custom Ratio</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_DISPLAYNAME">
-        <lang name="zh-CN">快捷方式显示名</lang>
-        <lang name="en-US">Shortcut Display Name</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_IMAGELIST">
-        <lang name="zh-CN">图片列表</lang>
-        <lang name="en-US">Image List</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_SIZE">
-        <lang name="zh-CN">尺寸</lang>
-        <lang name="en-US">Size</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_IMAGE">
-        <lang name="zh-CN">图像</lang>
-        <lang name="en-US">Image</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_LOADING">
-        <lang name="zh-CN">请稍候...</lang>
-        <lang name="en-US">Please wait...</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_SETIMG_TITLE">
-        <lang name="zh-CN">设置当前图片</lang>
-        <lang name="en-US">Set Current Image</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_SETIMG_CURRSIZE">
-        <lang name="zh-CN">当前尺寸</lang>
-        <lang name="en-US">Current Size</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_SETIMG_USEDEF">
-        <lang name="zh-CN">使用预设资源</lang>
-        <lang name="en-US">Use Default Resources</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_SETIMG_USEFILE">
-        <lang name="zh-CN">使用自定义文件</lang>
-        <lang name="en-US">Use Custom File</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_SETIMG_FILEPATH">
-        <lang name="zh-CN">文件路径</lang>
-        <lang name="en-US">File Path</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_SETIMG_SET">
-        <lang name="zh-CN">设置</lang>
-        <lang name="en-US">Set</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_ASK_ICONEXISTS">
-        <lang name="zh-CN">发现图标文件已经存在，是否继续生成？生成的图标文件不会覆盖已有文件。</lang>
-        <lang name="en-US">Icon file already exists, do you want to continue generating? The generated icon file will not overwrite existing files.</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_BACK_TITLE">
-        <lang name="zh-CN">正在生成快捷方式</lang>
-        <lang name="en-US">Generating Shortcut</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_BACK_TEXT_ING">
-        <lang name="zh-CN">正在生成快捷方式...</lang>
-        <lang name="en-US">Generating Shortcut...</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_BACK_TITLE_SUCCEED">
-        <lang name="zh-CN">已生成快捷方式</lang>
-        <lang name="en-US">Shortcut Generated</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_BACK_TEXT_SUCCEED">
-        <lang name="zh-CN">已成功生成快捷方式。</lang>
-        <lang name="en-US">Shortcut generated successfully.</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_BACK_TITLE_FAILED">
-        <lang name="zh-CN">生成时出现问题</lang>
-        <lang name="en-US">Error Generating Shortcut</lang>
-    </resource>
-    <resource id="MANAGER_APP_SHORTCUTCREATE_OPENINSTALLLOCATION">
-        <lang name="zh-CN">打开安装位置</lang>
-        <lang name="en-US">Open Install Location</lang>
-    </resource>
-    <resource id="MANAGER_APP">
-        <lang name="zh-CN">应用信息</lang>
-        <lang name="en-US">App Information</lang>
-    </resource>
-    <resource id="MANAGER_LOAD">
-        <lang name="zh-CN">安装与注册</lang>
-        <lang name="en-US">Install &amp; Register</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_DESC">
-        <lang name="zh-CN">在这里，可以进行对应用的安装、注册等操作。</lang>
-        <lang name="en-US">Here, you can perform installations, registrations, and other operations on apps.</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_INSTALL">
-        <lang name="zh-CN">安装</lang>
-        <lang name="en-US">Install</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_INSTALL_BTN">
-        <lang name="zh-CN">安装</lang>
-        <lang name="en-US">Install</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_INSTALL_DESC">
-        <lang name="zh-CN">将应用部署到系统中。</lang>
-        <lang name="en-US">Deploy the app to the system.</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_DEPLOY_OPTIONS">
-        <lang name="zh-CN">部署选项</lang>
-        <lang name="en-US">Deploy Options</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_DEPLOY_OPTIONS_DEVELOPMENT_MODE">
-        <lang name="zh-CN">开发模式</lang>
-        <lang name="en-US">Development Mode</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_DEPLOY_OPTIONS_FORCE_APP_SHUTDOWN">
-        <lang name="zh-CN">强制关闭应用</lang>
-        <lang name="en-US">Force App Shutdown</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_DEPLOY_OPTIONS_INSTALL_ALL_RESOURCES">
-        <lang name="zh-CN">安装所有资源 (对于捆绑包)</lang>
-        <lang name="en-US">Install All Resources (for Bundle Packages)</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_REGISTER">
-        <lang name="zh-CN">注册</lang>
-        <lang name="en-US">Register</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_REGISTER_BTN">
-        <lang name="zh-CN">注册</lang>
-        <lang name="en-US">Register</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_REGISTER_DESC">
-        <lang name="zh-CN">将应用清单注册到系统中。</lang>
-        <lang name="en-US">Register the app manifest to the system.</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_STAGE">
-        <lang name="zh-CN">预部署</lang>
-        <lang name="en-US">Stage</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_STAGE_DESC">
-        <lang name="zh-CN">将应用预部署到系统中。</lang>
-        <lang name="en-US">Stage the app to the system.</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_STAGE_BTN">
-        <lang name="zh-CN">预部署</lang>
-        <lang name="en-US">Stage</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_INSTALL_ING">
-        <lang name="zh-CN">正在安装... {0}</lang>
-        <lang name="en-US">Installing... {0}</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_REGISTER_ING">
-        <lang name="zh-CN">正在注册... {0}</lang>
-        <lang name="en-US">Registering... {0}</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_STAGE_ING">
-        <lang name="zh-CN">正在预部署... {0}</lang>
-        <lang name="en-US">Staging... {0}</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_INSTALL_SUCCEED">
-        <lang name="zh-CN">安装完成</lang>
-        <lang name="en-US">Install Complete.</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_REGISTER_SUCCEED">
-        <lang name="zh-CN">注册完成</lang>
-        <lang name="en-US">Registration Complete.</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_STAGE_SUCCEED">
-        <lang name="zh-CN">预部署完成</lang>
-        <lang name="en-US">Staging Complete.</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_INS_OR_STA_FILTERDISPLAY">
-        <lang name="zh-CN">Windows 商店应用包 (*.appx, *.appxbundle, *.msix, *.msixbundle)</lang>
-        <lang name="en-US">Windows Store App Package (*.appx, *.appxbundle, *.msix, *.msixbundle)</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_REG_FILTERDISPLAY">
-        <lang name="zh-CN">Windows 商店应用清单文件 (*.appxmanifest, *AppxManifest.xml)</lang>
-        <lang name="en-US">Windows Store App Manifest File (*.appxmanifest, *AppxManifest.xml)</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_ALLFILES">
-        <lang name="zh-CN">所有文件 (*.*)</lang>
-        <lang name="en-US">All Files (*.*)</lang>
-    </resource>
-    <resource id="MANAGER_SETTINGS">
-        <lang name="zh-CN">设置</lang>
-        <lang name="en-US">Settings</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_UPDATE">
-        <lang name="zh-CN">更新</lang>
-        <lang name="en-US">Update</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_UPDATE_BTN">
-        <lang name="zh-CN">更新</lang>
-        <lang name="en-US">Update</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_UPDATE_DESC">
-        <lang name="zh-CN">更新已有的应用。</lang>
-        <lang name="en-US">Update existing apps.</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_UPDATE_ING">
-        <lang name="zh-CN">正在更新... {0}</lang>
-        <lang name="en-US">Updating... {0}</lang>
-    </resource>
-    <resource id="MANAGER_LOAD_UPDATE_SUCCEED">
-        <lang name="zh-CN">更新完成</lang>
-        <lang name="en-US">Update Complete.</lang>
-    </resource>
-    <resource id="READER_APPTITLE">
-        <lang name="zh-CN">Package Reader</lang>
-        <lang name="en-US">Package Reader</lang>
-    </resource>
+  <resource id="ms-resource://Microsoft.WinJS.1.0/ui/off">
+    <lang name="zh-CN">关</lang>
+    <lang name="en-US">Off</lang>
+    <lang name="af-ZA">Af</lang>
+    <lang name="am-ET">አጥፋ</lang>
+    <lang name="ar-SA">إيقاف التشغيل</lang>
+    <lang name="as-IN">অফ</lang>
+    <lang name="az-LATN-AZ">Qeyri-aktiv</lang>
+    <lang name="be-BY">Выкл.</lang>
+    <lang name="bg-BG">Изключено</lang>
+    <lang name="bn-BD">বন্ধ</lang>
+    <lang name="bn-IN">বন্ধ</lang>
+    <lang name="bs-LATN-BA">Isključeno</lang>
+    <lang name="ca-ES">Inactiva</lang>
+    <lang name="ca-ES-VALENCIA">Inactiva</lang>
+    <lang name="chr-CHER-US">ᎠᏍᏚᏗ</lang>
+    <lang name="cs-CZ">Vypnuto</lang>
+    <lang name="cy-GB">Diffodd</lang>
+    <lang name="da-DK">Fra</lang>
+    <lang name="de-DE">Aus</lang>
+    <lang name="el-GR">Ανενεργό</lang>
+    <lang name="en-GB">Off</lang>
+    <lang name="es-ES">Desactivado</lang>
+    <lang name="et-EE">Väljas</lang>
+    <lang name="eu-ES">Desaktibatuta</lang>
+    <lang name="fa-IR">خاموش</lang>
+    <lang name="fi-FI">Ei käytössä</lang>
+    <lang name="fil-PH">Naka-off</lang>
+    <lang name="fr-FR">Inactif</lang>
+    <lang name="ga-IE">As</lang>
+    <lang name="gd-GB">Dheth</lang>
+    <lang name="gl-ES">Desactivado</lang>
+    <lang name="gu-IN">બંધ</lang>
+    <lang name="ha-LATN-NG">Kashe</lang>
+    <lang name="he-IL">לא פעיל</lang>
+    <lang name="hi-IN">बंद</lang>
+    <lang name="hr-HR">Isključeno</lang>
+    <lang name="hu-HU">Kikapcsolva</lang>
+    <lang name="hy-AM">Անջատ</lang>
+    <lang name="id-ID">Nonaktif</lang>
+    <lang name="ig-NG">Gbanyọ</lang>
+    <lang name="is-IS">Óvirkt</lang>
+    <lang name="it-IT">Disattivato</lang>
+    <lang name="iu-LATN-CA">Qaminngajuq</lang>
+    <lang name="ja-JP">オフ</lang>
+    <lang name="ka-GE">გამორთვა</lang>
+    <lang name="kk-KZ">Өшірілген</lang>
+    <lang name="km-KH">បិទ</lang>
+    <lang name="kn-IN">ಆಫ್</lang>
+    <lang name="ko-KR">해제</lang>
+    <lang name="kok-IN">ऑफ करचें</lang>
+    <lang name="ku-ARAB-IQ">کوژاوە</lang>
+    <lang name="ky-KG">Өчүрулгөн</lang>
+    <lang name="lb-LU">Aus</lang>
+    <lang name="lt-LT">Išjungta</lang>
+    <lang name="lv-LV">Izslēgts</lang>
+    <lang name="mi-NZ">Weto ana</lang>
+    <lang name="mk-MK">Исклучено</lang>
+    <lang name="ml-IN">ഓഫ്</lang>
+    <lang name="mn-MN">Idəvxgüĭ</lang>
+    <lang name="mr-IN">बंद</lang>
+    <lang name="ms-MY">Mati</lang>
+    <lang name="mt-MT">Mitfi</lang>
+    <lang name="nb-NO">Av</lang>
+    <lang name="ne-NP">निभाउनुहोस्</lang>
+    <lang name="nl-NL">Uit</lang>
+    <lang name="nn-NO">Av</lang>
+    <lang name="nso-ZA">Timilwe</lang>
+    <lang name="or-IN">ଅଫ୍</lang>
+    <lang name="pa-ARAB-PK">بند</lang>
+    <lang name="pa-IN">ਬੰਦ ਕਰੋ</lang>
+    <lang name="pl-PL">Wyłączone</lang>
+    <lang name="prs-AF">خاموش</lang>
+    <lang name="pt-BR">Desligado</lang>
+    <lang name="pt-PT">Desativado</lang>
+    <lang name="qps-PLOC">[3Hcgw][Ǿƒƒ ]</lang>
+    <lang name="qps-PLOCM">‏‏أبع[Off]לף</lang>
+    <lang name="qut-GT">Q'atetalik</lang>
+    <lang name="quz-PE">Tukuchisqa</lang>
+    <lang name="ro-RO">Dezactivat</lang>
+    <lang name="ru-RU">Откл.</lang>
+    <lang name="rw-RW">Irafunze</lang>
+    <lang name="sd-ARAB-PK">بند کوليو</lang>
+    <lang name="si-LK">අක්‍රීය</lang>
+    <lang name="sk-SK">Vypnuté</lang>
+    <lang name="sl-SI">Izklopljeno</lang>
+    <lang name="sq-AL">Joaktiv</lang>
+    <lang name="sr-CYRL-BA">Искључено</lang>
+    <lang name="sr-CYRL-CS">Искључено</lang>
+    <lang name="sr-LATN-CS">Isključeno</lang>
+    <lang name="sv-SE">Av</lang>
+    <lang name="sw-KE">Zima</lang>
+    <lang name="ta-IN">அணை</lang>
+    <lang name="te-IN">ఆఫ్ చేయి</lang>
+    <lang name="tg-CYRL-TJ">Хомӯш</lang>
+    <lang name="th-TH">ปิด</lang>
+    <lang name="ti-ET">ኣጥፍእ</lang>
+    <lang name="tk-TM">Öçürilen</lang>
+    <lang name="tn-ZA">Timilwe</lang>
+    <lang name="tr-TR">Kapalı</lang>
+    <lang name="tt-RU">Сүндерелгән</lang>
+    <lang name="ug-CN">يېپىق</lang>
+    <lang name="uk-UA">Вимк.</lang>
+    <lang name="ur-PK">آف</lang>
+    <lang name="uz-LATN-UZ">O‘ch</lang>
+    <lang name="vi-VN">Tắt</lang>
+    <lang name="wo-SN">Fay</lang>
+    <lang name="xh-ZA">Cimile</lang>
+    <lang name="yo-NG">Pa</lang>
+    <lang name="zh-HK">關閉</lang>
+    <lang name="zh-TW">關閉</lang>
+    <lang name="zu-ZA">Cishile</lang>
+  </resource>
+  <resource id="ms-resource://Microsoft.WinJS.1.0/ui/on">
+    <lang name="zh-CN">开</lang>
+    <lang name="en-US">On</lang>
+    <lang name="af-ZA">Aan</lang>
+    <lang name="am-ET">አብራ</lang>
+    <lang name="ar-SA">تشغيل</lang>
+    <lang name="as-IN">অন</lang>
+    <lang name="az-LATN-AZ">Aktiv</lang>
+    <lang name="be-BY">Укл.</lang>
+    <lang name="bg-BG">Включено</lang>
+    <lang name="bn-BD">চালু</lang>
+    <lang name="bn-IN">চালু</lang>
+    <lang name="bs-LATN-BA">Uključeno</lang>
+    <lang name="ca-ES">Activa</lang>
+    <lang name="ca-ES-VALENCIA">Activa</lang>
+    <lang name="chr-CHER-US">ᎠᏍᏚᎢᏍᏗ</lang>
+    <lang name="cs-CZ">Zapnuto</lang>
+    <lang name="cy-GB">Ar waith</lang>
+    <lang name="da-DK">Til</lang>
+    <lang name="de-DE">Ein</lang>
+    <lang name="el-GR">Ενεργό</lang>
+    <lang name="en-GB">On</lang>
+    <lang name="es-ES">Activado</lang>
+    <lang name="et-EE">Sees</lang>
+    <lang name="eu-ES">Aktibatuta</lang>
+    <lang name="fa-IR">روشن</lang>
+    <lang name="fi-FI">Käytössä</lang>
+    <lang name="fil-PH">Naka-on</lang>
+    <lang name="fr-FR">Actif</lang>
+    <lang name="ga-IE">Air</lang>
+    <lang name="gd-GB">Air</lang>
+    <lang name="gl-ES">Activado</lang>
+    <lang name="gu-IN">ચાલુ</lang>
+    <lang name="ha-LATN-NG">Kunna</lang>
+    <lang name="he-IL">פעיל</lang>
+    <lang name="hi-IN">चालू</lang>
+    <lang name="hr-HR">Uključeno</lang>
+    <lang name="hu-HU">Bekapcsolva</lang>
+    <lang name="hy-AM">Միաց</lang>
+    <lang name="id-ID">Aktif</lang>
+    <lang name="ig-NG">Gbanye</lang>
+    <lang name="is-IS">Virkt</lang>
+    <lang name="it-IT">Attivato</lang>
+    <lang name="iu-LATN-CA">Ikumajuq</lang>
+    <lang name="ja-JP">オン</lang>
+    <lang name="ka-GE">ჩართვა</lang>
+    <lang name="kk-KZ">Қосылған</lang>
+    <lang name="km-KH">បើក</lang>
+    <lang name="kn-IN">ಆನ್</lang>
+    <lang name="ko-KR">설정</lang>
+    <lang name="kok-IN">ऑन करचें</lang>
+    <lang name="ku-ARAB-IQ">هەڵکراو</lang>
+    <lang name="ky-KG">Күйгүзүлгөн</lang>
+    <lang name="lb-LU">Un</lang>
+    <lang name="lt-LT">Įjungta</lang>
+    <lang name="lv-LV">Ieslēgts</lang>
+    <lang name="mi-NZ">Kā ana</lang>
+    <lang name="mk-MK">Вклученo</lang>
+    <lang name="ml-IN">ഓൺ</lang>
+    <lang name="mn-MN">Идэвхтэй</lang>
+    <lang name="mr-IN">चालू</lang>
+    <lang name="ms-MY">Hidup</lang>
+    <lang name="mt-MT">Mixgħul</lang>
+    <lang name="nb-NO">På</lang>
+    <lang name="ne-NP">खोल्नुहोस्</lang>
+    <lang name="nl-NL">Aan</lang>
+    <lang name="nn-NO">På</lang>
+    <lang name="nso-ZA">Goteditšwe</lang>
+    <lang name="or-IN">ଅନ୍</lang>
+    <lang name="pa-ARAB-PK">چالُو</lang>
+    <lang name="pa-IN">ਚਾਲੂ ਕਰੋ</lang>
+    <lang name="pl-PL">Włączone</lang>
+    <lang name="prs-AF">روشن</lang>
+    <lang name="pt-BR">Ligado</lang>
+    <lang name="pt-PT">Ativado</lang>
+    <lang name="qps-PLOC">[Aj8Pp][Őņ ]</lang>
+    <lang name="qps-PLOCM">‏‏أبع[On]לף</lang>
+    <lang name="qut-GT">Tzijtalik</lang>
+    <lang name="quz-PE">Kawsarichisqa</lang>
+    <lang name="ro-RO">Activat</lang>
+    <lang name="ru-RU">Вкл.</lang>
+    <lang name="rw-RW">Irafunguye</lang>
+    <lang name="sd-ARAB-PK">شروع ڪريو</lang>
+    <lang name="si-LK">සක්‍රීය</lang>
+    <lang name="sk-SK">Zapnuté</lang>
+    <lang name="sl-SI">Vklopljeno</lang>
+    <lang name="sq-AL">Aktiv</lang>
+    <lang name="sr-CYRL-BA">Укључено</lang>
+    <lang name="sr-CYRL-CS">Укључено</lang>
+    <lang name="sr-LATN-CS">Uključeno</lang>
+    <lang name="sv-SE">På</lang>
+    <lang name="sw-KE">Washa</lang>
+    <lang name="ta-IN">இயக்கு</lang>
+    <lang name="te-IN">ఆన్ చేయి</lang>
+    <lang name="tg-CYRL-TJ">Фаъол</lang>
+    <lang name="th-TH">เปิด</lang>
+    <lang name="ti-ET">ወልዕ</lang>
+    <lang name="tk-TM">Açyk</lang>
+    <lang name="tn-ZA">Tshubilwe</lang>
+    <lang name="tr-TR">Açık</lang>
+    <lang name="tt-RU">Кабызылган</lang>
+    <lang name="ug-CN">ئوچۇق</lang>
+    <lang name="uk-UA">Увімк.</lang>
+    <lang name="ur-PK">آن</lang>
+    <lang name="uz-LATN-UZ">Yoq</lang>
+    <lang name="vi-VN">Bật</lang>
+    <lang name="wo-SN">Taal</lang>
+    <lang name="xh-ZA">Layitile</lang>
+    <lang name="yo-NG">Tàn</lang>
+    <lang name="zh-HK">開啟</lang>
+    <lang name="zh-TW">開啟</lang>
+    <lang name="zu-ZA">Vuliwe</lang>
+  </resource>
+  <resource id="license">
+    <lang name="zh-CN">license_cn.html</lang>
+    <lang name="en-US">license_en.html</lang>
+  </resource>
+  <resource id="MANAGER_APPTITLE">
+    <lang name="zh-CN">Package Manager</lang>
+    <lang name="en-US">Package Manager</lang>
+  </resource>
+  <resource id="MANAGER_MANAGE">
+    <lang name="zh-CN">管理</lang>
+    <lang name="en-US">Manage</lang>
+  </resource>
+  <resource id="MANAGER_APP_TITLE">
+    <lang name="zh-CN">应用</lang>
+    <lang name="en-US">Application</lang>
+  </resource>
+  <resource id="MANAGER_APP_DESCRIPTION">
+    <lang name="zh-CN">在这里，可以对安装的 Windows 商店应用进行管理。</lang>
+    <lang name="en-US">Here you can manage the installed Windows Store apps.</lang>
+  </resource>
+  <resource id="MANAGER_APP_INSTALLEDAPPS">
+    <lang name="zh-CN">安装的应用</lang>
+    <lang name="en-US">Installed Apps</lang>
+  </resource>
+  <resource id="MANAGER_APP_INSTALLEDAPPS_LOADING">
+    <lang name="zh-CN">正在加载应用...</lang>
+    <lang name="en-US">Loading apps...</lang>
+  </resource>
+  <resource id="MANAGER_APP_INSTALLEDAPPS_SUCCEED">
+    <lang name="zh-CN">已经加载了应用。</lang>
+    <lang name="en-US">Loaded apps.</lang>
+  </resource>
+  <resource id="MANAGER_APP_INSTALLEDAPPS_FAILED">
+    <lang name="zh-CN">加载时发生错误: {0}</lang>
+    <lang name="en-US">Error loading apps: {0}</lang>
+  </resource>
+  <resource id="MANAGER_APP_REFRESH">
+    <lang name="zh-CN">刷新</lang>
+    <lang name="en-US">Refresh</lang>
+  </resource>
+  <resource id="MANAGER_APP_ADVANCEOPTIONS">
+    <lang name="zh-CN">高级选项</lang>
+    <lang name="en-US">Advanced Options</lang>
+  </resource>
+  <resource id="MANAGER_APP_UNINSTALL">
+    <lang name="zh-CN">卸载</lang>
+    <lang name="en-US">Uninstall</lang>
+  </resource>
+  <resource id="MANAGER_APP_LAUNCH">
+    <lang name="zh-CN">启动</lang>
+    <lang name="en-US">Launch</lang>
+  </resource>
+  <resource id="MANAGER_APP_CREATESHORTCUT">
+    <lang name="zh-CN">创建桌面快捷方式</lang>
+    <lang name="en-US">创建桌面快捷方式</lang>
+  </resource>
+  <resource id="MANAGER_MANAGE_FINDAPPS">
+    <lang name="zh-CN">找到 {0} 个应用</lang>
+    <lang name="en-US">Found {0} apps.</lang>
+  </resource>
+  <resource id="MANAGER_MANAGE_LISTEMPTY">
+    <lang name="zh-CN">还没有内容...</lang>
+    <lang name="en-US">No content...</lang>
+  </resource>
+  <resource id="MANAGER_MANAGE_SEARCHPLACEHOLDER">
+    <lang name="zh-CN">搜索此列表</lang>
+    <lang name="en-US">Search this list</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHOWSYSTEMAPP">
+    <lang name="zh-CN">显示系统应用</lang>
+    <lang name="en-US">Show system apps</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHOWFRAMEWORK">
+    <lang name="zh-CN">显示依赖项</lang>
+    <lang name="en-US">Show dependencies</lang>
+  </resource>
+  <resource id="MANAGER_APP_IDENTITY">
+    <lang name="zh-CN">标识</lang>
+    <lang name="en-US">Identity</lang>
+  </resource>
+  <resource id="MANAGER_APP_IDENTITY_NAME">
+    <lang name="zh-CN">名称</lang>
+    <lang name="en-US">Name</lang>
+  </resource>
+  <resource id="MANAGER_APP_IDENTITY_PUBLISHER">
+    <lang name="zh-CN">发布者</lang>
+    <lang name="en-US">Publisher</lang>
+  </resource>
+  <resource id="MANAGER_APP_IDENTITY_PUBLISHERID">
+    <lang name="zh-CN">发布者 ID</lang>
+    <lang name="en-US">Publisher ID</lang>
+  </resource>
+  <resource id="MANAGER_APP_IDENTITY_FAMILYNAME">
+    <lang name="zh-CN">系列名</lang>
+    <lang name="en-US">Family Name</lang>
+  </resource>
+  <resource id="MANAGER_APP_IDENTITY_FULLNAME">
+    <lang name="zh-CN">全名</lang>
+    <lang name="en-US">Full Name</lang>
+  </resource>
+  <resource id="MANAGER_APP_IDENTITY_ARCHITECTURE">
+    <lang name="zh-CN">支持的处理器架构</lang>
+    <lang name="en-US">Supported processor architectures</lang>
+  </resource>
+  <resource id="MANAGER_APP_HASAPPS">
+    <lang name="zh-CN">具有的应用</lang>
+    <lang name="en-US">Has Apps</lang>
+  </resource>
+  <resource id="MANAGER_APP_HASAPPS_DESC">
+    <lang name="zh-CN">下面是包具有的应用。现在可以直接在这里启动程序，或者创建桌面快捷方式。</lang>
+    <lang name="en-US">Below are the apps that are included in this package. You can launch the apps directly from here, or create desktop shortcuts.</lang>
+  </resource>
+  <resource id="MANAGER_APP_UNINSTALL_DESC">
+    <lang name="zh-CN">将从这台电脑中卸载此应用及其相关信息。</lang>
+    <lang name="en-US">This app and its related information will be uninstalled from this computer.</lang>
+  </resource>
+  <resource id="MANAGER_APP_UNINSTALL_ING">
+    <lang name="zh-CN">正在卸载...</lang>
+    <lang name="en-US">Uninstalling...</lang>
+  </resource>
+  <resource id="MANAGER_APP_UNINSTALL_PROGRESSING">
+    <lang name="zh-CN">正在卸载... {0}%</lang>
+    <lang name="en-US">Uninstalling... {0}%</lang>
+  </resource>
+  <resource id="MANAGER_APP_UNINSTALL_SUCCEED">
+    <lang name="zh-CN">已成功卸载。</lang>
+    <lang name="en-US">Uninstall succeeded.</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_TITLE">
+    <lang name="zh-CN">创建桌面快捷方式</lang>
+    <lang name="en-US">Create Desktop Shortcut</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_DESC">
+    <lang name="zh-CN">桌面上将创建一个快捷方式，作为启动 Windows 商店应用的入口点。由于 Windows 8.x 的限制，此操作将通过启动程序（使用参数）来实现；请勿将其固定到“开始”菜单。</lang>
+    <lang name="en-US">A shortcut to the Windows Store app will be created on the desktop as the entry point for launching the app. Due to limitations in Windows 8.x, this will be achieved through launching the program (using parameters); please do not pin it to the Start Menu.</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_ICONTYPE">
+    <lang name="zh-CN">请选择设置图标设置模式。</lang>
+    <lang name="en-US">Please select the icon settings mode.</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_ICONTYPE_GEN">
+    <lang name="zh-CN">生成新的图标</lang>
+    <lang name="en-US">Generate new icon</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_ICONTYPE_SEL">
+    <lang name="zh-CN">选择现有图标</lang>
+    <lang name="en-US">Select existing icon</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_ICONTYPE_SEL_ICONPATH">
+    <lang name="zh-CN">请选择图标路径: </lang>
+    <lang name="en-US">Please select icon path: </lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_BROWSE">
+    <lang name="zh-CN">浏览...</lang>
+    <lang name="en-US">Browse...</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_PREVIEW">
+    <lang name="zh-CN">预览:</lang>
+    <lang name="en-US">Preview:</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_SELECT">
+    <lang name="zh-CN">选择</lang>
+    <lang name="en-US">Select</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_GENERATE">
+    <lang name="zh-CN">创建</lang>
+    <lang name="en-US">Create</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_CANCEL">
+    <lang name="zh-CN">取消</lang>
+    <lang name="en-US">Cancel</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_BACKGROUNDCOLOR">
+    <lang name="zh-CN">背景颜色</lang>
+    <lang name="en-US">Background Color</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_RATIO">
+    <lang name="zh-CN">背景与前景的边长比</lang>
+    <lang name="en-US">Background-to-foreground edge ratio</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_RATIO_CUSTOM">
+    <lang name="zh-CN">自定义</lang>
+    <lang name="en-US">Custom</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_RATIO_CUSTOMRATIO">
+    <lang name="zh-CN">自定义比例</lang>
+    <lang name="en-US">Custom Ratio</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_DISPLAYNAME">
+    <lang name="zh-CN">快捷方式显示名</lang>
+    <lang name="en-US">Shortcut Display Name</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_IMAGELIST">
+    <lang name="zh-CN">图片列表</lang>
+    <lang name="en-US">Image List</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_SIZE">
+    <lang name="zh-CN">尺寸</lang>
+    <lang name="en-US">Size</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_IMAGE">
+    <lang name="zh-CN">图像</lang>
+    <lang name="en-US">Image</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_LOADING">
+    <lang name="zh-CN">请稍候...</lang>
+    <lang name="en-US">Please wait...</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_SETIMG_TITLE">
+    <lang name="zh-CN">设置当前图片</lang>
+    <lang name="en-US">Set Current Image</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_SETIMG_CURRSIZE">
+    <lang name="zh-CN">当前尺寸</lang>
+    <lang name="en-US">Current Size</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_SETIMG_USEDEF">
+    <lang name="zh-CN">使用预设资源</lang>
+    <lang name="en-US">Use Default Resources</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_SETIMG_USEFILE">
+    <lang name="zh-CN">使用自定义文件</lang>
+    <lang name="en-US">Use Custom File</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_SETIMG_FILEPATH">
+    <lang name="zh-CN">文件路径</lang>
+    <lang name="en-US">File Path</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_SETIMG_SET">
+    <lang name="zh-CN">设置</lang>
+    <lang name="en-US">Set</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_ASK_ICONEXISTS">
+    <lang name="zh-CN">发现图标文件已经存在，是否继续生成？生成的图标文件不会覆盖已有文件。</lang>
+    <lang name="en-US">Icon file already exists, do you want to continue generating? The generated icon file will not overwrite existing files.</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_BACK_TITLE">
+    <lang name="zh-CN">正在生成快捷方式</lang>
+    <lang name="en-US">Generating Shortcut</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_BACK_TEXT_ING">
+    <lang name="zh-CN">正在生成快捷方式...</lang>
+    <lang name="en-US">Generating Shortcut...</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_BACK_TITLE_SUCCEED">
+    <lang name="zh-CN">已生成快捷方式</lang>
+    <lang name="en-US">Shortcut Generated</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_BACK_TEXT_SUCCEED">
+    <lang name="zh-CN">已成功生成快捷方式。</lang>
+    <lang name="en-US">Shortcut generated successfully.</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_BACK_TITLE_FAILED">
+    <lang name="zh-CN">生成时出现问题</lang>
+    <lang name="en-US">Error Generating Shortcut</lang>
+  </resource>
+  <resource id="MANAGER_APP_SHORTCUTCREATE_OPENINSTALLLOCATION">
+    <lang name="zh-CN">打开安装位置</lang>
+    <lang name="en-US">Open Install Location</lang>
+  </resource>
+  <resource id="MANAGER_APP">
+    <lang name="zh-CN">应用信息</lang>
+    <lang name="en-US">App Information</lang>
+  </resource>
+  <resource id="MANAGER_LOAD">
+    <lang name="zh-CN">安装与注册</lang>
+    <lang name="en-US">Install &amp; Register</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_DESC">
+    <lang name="zh-CN">在这里，可以进行对应用的安装、注册等操作。</lang>
+    <lang name="en-US">Here, you can perform installations, registrations, and other operations on apps.</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_INSTALL">
+    <lang name="zh-CN">安装</lang>
+    <lang name="en-US">Install</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_INSTALL_BTN">
+    <lang name="zh-CN">安装</lang>
+    <lang name="en-US">Install</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_INSTALL_DESC">
+    <lang name="zh-CN">将应用部署到系统中。</lang>
+    <lang name="en-US">Deploy the app to the system.</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_DEPLOY_OPTIONS">
+    <lang name="zh-CN">部署选项</lang>
+    <lang name="en-US">Deploy Options</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_DEPLOY_OPTIONS_DEVELOPMENT_MODE">
+    <lang name="zh-CN">开发模式</lang>
+    <lang name="en-US">Development Mode</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_DEPLOY_OPTIONS_FORCE_APP_SHUTDOWN">
+    <lang name="zh-CN">强制关闭应用</lang>
+    <lang name="en-US">Force App Shutdown</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_DEPLOY_OPTIONS_INSTALL_ALL_RESOURCES">
+    <lang name="zh-CN">安装所有资源 (对于捆绑包)</lang>
+    <lang name="en-US">Install All Resources (for Bundle Packages)</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_REGISTER">
+    <lang name="zh-CN">注册</lang>
+    <lang name="en-US">Register</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_REGISTER_BTN">
+    <lang name="zh-CN">注册</lang>
+    <lang name="en-US">Register</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_REGISTER_DESC">
+    <lang name="zh-CN">将应用清单注册到系统中。</lang>
+    <lang name="en-US">Register the app manifest to the system.</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_STAGE">
+    <lang name="zh-CN">预部署</lang>
+    <lang name="en-US">Stage</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_STAGE_DESC">
+    <lang name="zh-CN">将应用预部署到系统中。</lang>
+    <lang name="en-US">Stage the app to the system.</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_STAGE_BTN">
+    <lang name="zh-CN">预部署</lang>
+    <lang name="en-US">Stage</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_INSTALL_ING">
+    <lang name="zh-CN">正在安装... {0}</lang>
+    <lang name="en-US">Installing... {0}</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_REGISTER_ING">
+    <lang name="zh-CN">正在注册... {0}</lang>
+    <lang name="en-US">Registering... {0}</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_STAGE_ING">
+    <lang name="zh-CN">正在预部署... {0}</lang>
+    <lang name="en-US">Staging... {0}</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_INSTALL_SUCCEED">
+    <lang name="zh-CN">安装完成</lang>
+    <lang name="en-US">Install Complete.</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_REGISTER_SUCCEED">
+    <lang name="zh-CN">注册完成</lang>
+    <lang name="en-US">Registration Complete.</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_STAGE_SUCCEED">
+    <lang name="zh-CN">预部署完成</lang>
+    <lang name="en-US">Staging Complete.</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_INS_OR_STA_FILTERDISPLAY">
+    <lang name="zh-CN">Windows 商店应用包 (*.appx, *.appxbundle, *.msix, *.msixbundle)</lang>
+    <lang name="en-US">Windows Store App Package (*.appx, *.appxbundle, *.msix, *.msixbundle)</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_REG_FILTERDISPLAY">
+    <lang name="zh-CN">Windows 商店应用清单文件 (*.appxmanifest, *AppxManifest.xml)</lang>
+    <lang name="en-US">Windows Store App Manifest File (*.appxmanifest, *AppxManifest.xml)</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_ALLFILES">
+    <lang name="zh-CN">所有文件 (*.*)</lang>
+    <lang name="en-US">All Files (*.*)</lang>
+  </resource>
+  <resource id="MANAGER_SETTINGS">
+    <lang name="zh-CN">设置</lang>
+    <lang name="en-US">Settings</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_UPDATE">
+    <lang name="zh-CN">更新</lang>
+    <lang name="en-US">Update</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_UPDATE_BTN">
+    <lang name="zh-CN">更新</lang>
+    <lang name="en-US">Update</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_UPDATE_DESC">
+    <lang name="zh-CN">更新已有的应用。</lang>
+    <lang name="en-US">Update existing apps.</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_UPDATE_ING">
+    <lang name="zh-CN">正在更新... {0}</lang>
+    <lang name="en-US">Updating... {0}</lang>
+  </resource>
+  <resource id="MANAGER_LOAD_UPDATE_SUCCEED">
+    <lang name="zh-CN">更新完成</lang>
+    <lang name="en-US">Update Complete.</lang>
+  </resource>
+  <resource id="READER_APPTITLE">
+    <lang name="zh-CN">Package Reader</lang>
+    <lang name="en-US">Package Reader</lang>
+  </resource>
+  <resource id="READER_READER_TITLE">
+    <lang name="zh-CN">读取</lang>
+    <lang name="en-US">Read</lang>
+  </resource>
+  <resource id="READER_READER_DESC">
+    <lang name="zh-CN">读取一个包，然后获取其信息。</lang>
+    <lang name="en-US">Read a package and then retrieve its information.</lang>
+  </resource>
+  <resource id="READER_READER_FILEPATH">
+    <lang name="zh-CN">文件路径</lang>
+    <lang name="en-US">File Path</lang>
+  </resource>
+  <resource id="READER_READER_BROWSER">
+    <lang name="zh-CN">浏览...</lang>
+    <lang name="en-US">Browse...</lang>
+  </resource>
+  <resource id="READER_READER_USEPRI">
+    <lang name="zh-CN">解析 PRI 文件</lang>
+    <lang name="en-US">Parsing PRI file</lang>
+  </resource>
+  <resource id="READER_READER_READ">
+    <lang name="zh-CN">读取</lang>
+    <lang name="en-US">Read</lang>
+  </resource>
+  <resource id="READER_READER_SAVEFILE">
+    <lang name="zh-CN">将 HTML 报告保存为文件</lang>
+    <lang name="en-US">Save the HTML report as a file</lang>
+  </resource>
+  <resource id="READER_READER_SAVEJSON">
+    <lang name="zh-CN">生成 JSON 文件报告</lang>
+    <lang name="en-US">Generate JSON file report</lang>
+  </resource>
+  <resource id="READER_READER_SAVEXML">
+    <lang name="zh-CN">生成 XML 文件报告</lang>
+    <lang name="en-US">Generate XML file report</lang>
+  </resource>
+  <resource id="READER_READER_RESULT">
+    <lang name="zh-CN">读取结果：</lang>
+    <lang name="en-US">Read result:</lang>
+  </resource>
+  <resource id="READER_READER_PLEASESELECT">
+    <lang name="zh-CN">请选择一个有效文件</lang>
+    <lang name="en-US">Please select a valid file.</lang>
+  </resource>
+  <resource id="READER_READER_SAVINGHTML">
+    <lang name="zh-CN">正在保存文件...</lang>
+    <lang name="en-US">Saving file...</lang>
+  </resource>
+  <resource id="READER_READER_HTMLFILE">
+    <lang name="zh-CN">HTML 报告文件</lang>
+    <lang name="en-US">HTML Report File</lang>
+  </resource>
+  <resource id="READER_READER_SAVEERR">
+    <lang name="zh-CN">保存时发生问题</lang>
+    <lang name="en-US">Problem occurred during saving</lang>
+  </resource>
+  <resource id="READER_READER_SAVEINGJSON">
+    <lang name="zh-CN">正在生成 JSON 文件，请稍候... \n这可能需要比较长的时间。</lang>
+    <lang name="en-US">Generating JSON file, please wait... \nThis may take a long time.</lang>
+  </resource>
+  <resource id="READER_READER_JSONFILE">
+    <lang name="zh-CN">包含 JSON 报告的 ZIP 文件</lang>
+    <lang name="en-US">ZIP file containing JSON report</lang>
+  </resource>
+  <resource id="READER_READER_XMLFILE">
+    <lang name="zh-CN">包含 XML 报告的 ZIP 文件</lang>
+    <lang name="en-US">ZIP file containing XML report</lang>
+  </resource>
+  <resource id="READER_READER_SAVEINGXML">
+    <lang name="zh-CN">正在生成 XML 文件，请稍候... \n这可能需要比较长的时间。</lang>
+    <lang name="en-US">Generating XML file, please wait... \nThis may take a long time.</lang>
+  </resource>
+  <resource id="READER_ACQUIRE_TITLE">
+    <lang name="zh-CN">获取</lang>
+    <lang name="en-US">Acquire</lang>
+  </resource>
+  <resource id="READER_ACQUIRE_PROHIBIT">
+    <lang name="zh-CN">由于来自 store.rg-adguard.net 的限制，现在暂时无法实现对包的获取。请自行打开下面 URL 进行访问。</lang>
+    <lang name="en-US">Due to limitations from store.rg-adguard.net, package retrieval is temporarily unavailable. Please access the following URL yourself.</lang>
+  </resource>
+  <resource id="READER_ACQUIRE_DESC">
+    <lang name="zh-CN">请在下面的输入框中输入要查询的内容，设置好参数后将进行查询。</lang>
+    <lang name="en-US">Please enter the content you want to query in the input box below. After setting the parameters, the query will be performed.</lang>
+  </resource>
+  <resource id="READER_ACQUIRE_SHAREDURL">
+    <lang name="zh-CN">分享链接</lang>
+    <lang name="en-US">Shared link</lang>
+  </resource>
+  <resource id="READER_ACQUIRE_PRODUCTID">
+    <lang name="zh-CN">产品 ID</lang>
+    <lang name="en-US">Product ID</lang>
+  </resource>
+  <resource id="READER_ACQUIRE_PFN">
+    <lang name="zh-CN">包系列名</lang>
+    <lang name="en-US">Package Family Name</lang>
+  </resource>
+  <resource id="READER_ACQUIRE_CATEGORYID">
+    <lang name="zh-CN">类别 ID</lang>
+    <lang name="en-US">Category ID</lang>
+  </resource>
+  <resource id="READER_ACQUIRE_WIF">
+    <lang name="zh-CN">快速</lang>
+    <lang name="en-US">Fast</lang>
+  </resource>
+  <resource id="READER_ACQUIRE_WIS">
+    <lang name="zh-CN">慢速</lang>
+    <lang name="en-US">Slow</lang>
+  </resource>
+  <resource id="READER_ACQUIRE_RP">
+    <lang name="zh-CN">发布预览</lang>
+    <lang name="en-US">Release Preview</lang>
+  </resource>
+  <resource id="READER_ACQUIRE_RETAIL">
+    <lang name="zh-CN">正式</lang>
+    <lang name="en-US">Retail</lang>
+  </resource>
+  <resource id="READER_ACQUIRE_SMARTQUERY">
+    <lang name="zh-CN">自动查询</lang>
+    <lang name="en-US">Automatic query</lang>
+  </resource>
+  <resource id="READER_ACQUIRE_QUERY">
+    <lang name="zh-CN">查询</lang>
+    <lang name="en-US">Query</lang>
+  </resource>
+  <resource id="READER_ACQUIRE_CLICKDOWNLOAD">
+    <lang name="zh-CN">点击下载</lang>
+    <lang name="en-US">Click to download</lang>
+  </resource>
+  <resource id="READER_ACQUIRE_RESULTAPPS">
+    <lang name="zh-CN">以下可能为检索到的应用</lang>
+    <lang name="en-US">The following may be the applications retrieved:</lang>
+  </resource>
+  <resource id="READER_ACQUIRE_RESULTDEPS">
+    <lang name="zh-CN">以下可能为检索到的依赖项</lang>
+    <lang name="en-US">The following may be the retrieved dependencies: </lang>
+  </resource>
+  <resource id="READER_ACQUIRE_NOCONTENT">
+    <lang name="zh-CN">还没有内容...</lang>
+    <lang name="en-US">There is no content yet...</lang>
+  </resource>
+  <resource id="READER_ACQUIRE_QUERYING">
+    <lang name="zh-CN">正在查询...</lang>
+    <lang name="en-US">Querying...</lang>
+  </resource>
+  <resource id="READER_ACQUIRE_RESULTCNT">
+    <lang name="zh-CN">已获取到 {0} 个信息</lang>
+    <lang name="en-US">{0} piece(-s) of information have been retrieved.</lang>
+  </resource>
+  <resource id="READER_SEARCH_TITLE">
+    <lang name="zh-CN">搜索</lang>
+    <lang name="en-US">Search</lang>
+  </resource>
+  <resource id="READER_SEARCH_PROHIBIT">
+    <lang name="zh-CN">由于来自 dbox.tools 的限制，现在暂时无法实现信息检索。请自行打开下面 URL 进行访问。</lang>
+    <lang name="en-US">Information retrieval is temporarily unavailable due to limitations imposed by dbox.tools. Please access the information via the URL below.</lang>
+  </resource>
+  <resource id="READER_SETTINGS_TITLE">
+    <lang name="zh-CN">设置</lang>
+    <lang name="en-US">Settings</lang>
+  </resource>
+  <resource id="READER_SETTINGS_ENABLEACQUIRE">
+    <lang name="zh-CN">启用获取</lang>
+    <lang name="en-US">Enable Acquire</lang>
+  </resource>
+  <resource id="READER_SETTINGS_USEPRI">
+    <lang name="zh-CN">默认读取时解析 PRI 文件</lang>
+    <lang name="en-US">PRI files are parsed by default when reading</lang>
+  </resource>
+  <resource id="READER_SETTINGS_APPITEMS">
+    <lang name="zh-CN">应用部分元数据</lang>
+    <lang name="en-US">App Metadata</lang>
+  </resource>
+  <resource id="READER_SETTINGS_APPITEMS_DESC">
+    <lang name="zh-CN">应用元数据对应应用清单中 Application 节点的一些元素和属性。注意：一些应用元数据会因为各个系统中包读取 API 的差异支持程度也不同。若是要读取某些项的话请勾选下列项目。该设置作用于 Package Reader 全局，且在重新启动应用后生效。</lang>
+    <lang name="en-US">Application metadata corresponds to certain elements and attributes of the Application node in the application manifest. Note: The level of support for some application metadata may vary depending on the package reading API used by different systems. To read specific items, please select the following options. This setting applies globally to the Package Reader and takes effect after restarting the application.</lang>
+  </resource>
+  <resource id="READER_SETTINGS_APPITEMS_ITEM">
+    <lang name="zh-CN">项</lang>
+    <lang name="en-US">Item</lang>
+  </resource>
+  <resource id="READER_SETTINGS_APPITEMS_DESCRIPTION">
+    <lang name="zh-CN">描述</lang>
+    <lang name="en-US">Description</lang>
+  </resource>
+  <resource id="APPMETADATA_AppListEntry">
+    <lang name="zh-CN">显示应用列表入口</lang>
+    <lang name="en-US">Show App List Entry</lang>
+  </resource>
+  <resource id="APPMETADATA_BackgroundColor">
+    <lang name="zh-CN">磁贴背景颜色</lang>
+    <lang name="en-US">Tile Background Color</lang>
+  </resource>
+  <resource id="APPMETADATA_DefaultSize">
+    <lang name="zh-CN">磁贴默认尺寸</lang>
+    <lang name="en-US">Tile Default Size</lang>
+  </resource>
+  <resource id="APPMETADATA_Description">
+    <lang name="zh-CN">应用描述</lang>
+    <lang name="en-US">App Description</lang>
+  </resource>
+  <resource id="APPMETADATA_DisplayName">
+    <lang name="zh-CN">应用显示名称</lang>
+    <lang name="en-US">App Display Name</lang>
+  </resource>
+  <resource id="APPMETADATA_EntryPoint">
+    <lang name="zh-CN">应用进入点</lang>
+    <lang name="en-US">App Entry Point</lang>
+  </resource>
+  <resource id="APPMETADATA_Executable">
+    <lang name="zh-CN">可执行文件</lang>
+    <lang name="en-US">Executable File</lang>
+  </resource>
+  <resource id="APPMETADATA_ForegroundText">
+    <lang name="zh-CN">磁贴前景颜色</lang>
+    <lang name="en-US">Tile Foreground Text</lang>
+  </resource>
+  <resource id="APPMETADATA_ID">
+    <lang name="zh-CN">应用 ID</lang>
+    <lang name="en-US">ID</lang>
+  </resource>
+  <resource id="APPMETADATA_LockScreenLogo">
+    <lang name="zh-CN">锁屏图标</lang>
+    <lang name="en-US">Lock Screen Logo</lang>
+  </resource>
+  <resource id="APPMETADATA_LockScreenNotification">
+    <lang name="zh-CN">锁屏通知类型</lang>
+    <lang name="en-US">Lock Screen Notification Types</lang>
+  </resource>
+  <resource id="APPMETADATA_Logo">
+    <lang name="zh-CN">中磁贴图标 (Windows 8)</lang>
+    <lang name="en-US">Medium Tile Logo (Windows 8)</lang>
+  </resource>
+  <resource id="APPMETADATA_MinWidth">
+    <lang name="zh-CN">窗口最小宽度</lang>
+    <lang name="en-US">Window Minimum Width</lang>
+  </resource>
+  <resource id="APPMETADATA_ShortName">
+    <lang name="zh-CN">短名称</lang>
+    <lang name="en-US">Short Name</lang>
+  </resource>
+  <resource id="APPMETADATA_SmallLogo">
+    <lang name="zh-CN">应用列表图标 (Windows 8)</lang>
+    <lang name="en-US">App List Logo (Windows 8)</lang>
+  </resource>
+  <resource id="APPMETADATA_Square150x150Logo">
+    <lang name="zh-CN">中磁贴图标</lang>
+    <lang name="en-US">Medium Tile Logo</lang>
+  </resource>
+  <resource id="APPMETADATA_Square30x30Logo">
+    <lang name="zh-CN">应用列表图标 (Windows 8.1)</lang>
+    <lang name="en-US">App List Logo (Windows 8.1)</lang>
+  </resource>
+  <resource id="APPMETADATA_Square310x310Logo">
+    <lang name="zh-CN">大磁贴图标</lang>
+    <lang name="en-US">Large Tile Logo</lang>
+  </resource>
+  <resource id="APPMETADATA_Square44x44Logo">
+    <lang name="zh-CN">应用列表图标 (Windows Phone 或 UWP)</lang>
+    <lang name="en-US">App List Logo (Windows Phone 或 UWP)</lang>
+  </resource>
+  <resource id="APPMETADATA_Square70x70Logo">
+    <lang name="zh-CN">小磁贴图标 (Windows 8.1)</lang>
+    <lang name="en-US">Small Tile Logo (Windows 8.1)</lang>
+  </resource>
+  <resource id="APPMETADATA_Square71x71Logo">
+    <lang name="zh-CN">小磁贴图标 (Windows Phone 或 UWP)</lang>
+    <lang name="en-US">Small Tile Logo (Windows Phone or UWP)</lang>
+  </resource>
+  <resource id="APPMETADATA_StartPage">
+    <lang name="zh-CN">起始页</lang>
+    <lang name="en-US">Start Page</lang>
+  </resource>
+  <resource id="APPMETADATA_Tall150x310Logo">
+    <lang name="zh-CN">高磁贴图标 (已废弃)</lang>
+    <lang name="en-US">Tall Tile Logo (Deprecated)</lang>
+  </resource>
+  <resource id="APPMETADATA_VisualGroup">
+    <lang name="zh-CN">开始菜单应用组</lang>
+    <lang name="en-US">Visual Group in Start Menu</lang>
+  </resource>
+  <resource id="APPMETADATA_WideLogo">
+    <lang name="zh-CN">宽磁贴图标 (Windows 8)</lang>
+    <lang name="en-US">Wide Tile Logo (Windows 8)</lang>
+  </resource>
+  <resource id="APPMETADATA_Wide310x150Logo">
+    <lang name="zh-CN">宽磁贴图标</lang>
+    <lang name="en-US">Wide Tile Logo</lang>
+  </resource>
+  <resource id="READER_READER_APPXFILE">
+    <lang name="zh-CN">Windows 商店应用包</lang>
+    <lang name="en-US">Windows Store App Package</lang>
+  </resource>
+  <resource id="READER_READER_ALLFILES">
+    <lang name="zh-CN">所有文件</lang>
+    <lang name="en-US">All Files</lang>
+  </resource>
 </resources>

@@ -936,6 +936,7 @@ namespace Bridge
 		public _I_Notice Notice => new _I_Notice ();
 		public _I_Process Process => proc;
 		public _I_Web Web => new _I_Web ();
+		public _I_Utilities Utilities => new _I_Utilities ();
 		public string CmdArgs
 		{
 			get

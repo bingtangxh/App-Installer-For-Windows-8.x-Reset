@@ -31,10 +31,24 @@ namespace AppxPackage
 				"Square71x71Logo",
 				"StartPage",
 				"Tall150x310Logo",
-				"VisualGroup",
 				"WideLogo",
 				"Wide310x150Logo",
 				"Executable"
+		};
+		public static readonly string [] ImageFilePathItems = new string []
+		{
+				"LockScreenLogo",
+				"Logo",
+				"SmallLogo",
+				"Square150x150Logo",
+				"Square30x30Logo",
+				"Square310x310Logo",
+				"Square44x44Logo",
+				"Square70x70Logo",
+				"Square71x71Logo",
+				"Tall150x310Logo",
+				"WideLogo",
+				"Wide310x150Logo"
 		};
 		public static bool IsFilePathKey (string key)
 		{
@@ -293,7 +307,7 @@ namespace AppxPackage
 				return obj.Trim ().ToLowerInvariant ().GetHashCode ();
 			}
 		}
-		private HashSet <string> set = new HashSet<string> (new TrimIgnoreCaseComparer ());
+		private HashSet<string> set = new HashSet<string> (new TrimIgnoreCaseComparer ());
 		public Dictionary<PriResourceKey, string> FileResourceAllValues (string resid, ZipOutputStream zos)
 		{
 			var comparer = new TrimIgnoreCaseComparer ();
@@ -716,6 +730,13 @@ namespace AppxPackage
 					return true;
 			return false;
 		}
+		protected bool IsImageFilePathKey (string key)
+		{
+			foreach (var i in ConstData.ImageFilePathItems)
+				if ((i?.Trim ()?.ToLower () ?? "") == (key?.Trim ()?.ToLower () ?? ""))
+					return true;
+			return false;
+		}
 		public new string this [string key]
 		{
 			get
@@ -767,7 +788,7 @@ namespace AppxPackage
 				string pri = PriGetRes (value);
 				return string.IsNullOrEmpty (pri) ? value : pri;
 			}
-			if (IsFilePathKey (key) && !string.IsNullOrEmpty (value))
+			if (IsImageFilePathKey (key) && !string.IsNullOrEmpty (value))
 			{
 				string pri = PriGetRes (value);
 				return string.IsNullOrEmpty (pri) ? value : pri;
@@ -777,7 +798,7 @@ namespace AppxPackage
 		public string NewAtBase64 (string key)
 		{
 			string value = NewAt (key, true);
-			if (!IsFilePathKey (key) || string.IsNullOrEmpty (value)) return "";
+			if (!IsImageFilePathKey (key) || string.IsNullOrEmpty (value)) return "";
 			switch (PackageReadHelper.GetPackageType (m_hReader))
 			{
 				case 1: // PKGTYPE_APPX
@@ -2458,7 +2479,7 @@ namespace AppxPackage
 							#endregion
 							#region dependencies
 							XmlElement nodeDependencies = xml.CreateElement ("Dependencies");
-							var deps = Dependencies; 
+							var deps = Dependencies;
 							if (deps != null)
 							{
 								foreach (var dep in deps)

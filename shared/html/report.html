@@ -195,6 +195,42 @@
     </table>
     <script>
         (function(global) {
+            var imageItem = [
+                "LockScreenLogo",
+                "Logo",
+                "SmallLogo",
+                "Square150x150Logo",
+                "Square30x30Logo",
+                "Square310x310Logo",
+                "Square44x44Logo",
+                "Square70x70Logo",
+                "Square71x71Logo",
+                "Tall150x310Logo",
+                "WideLogo",
+                "Wide310x150Logo"
+            ];
+
+            function toLowerCase(str) {
+                if (typeof str !== "string") return "";
+                return str.replace(/[A-Z]/g, function(ch) {
+                    return String.fromCharCode(ch.charCodeAt(0) + 32);
+                });
+            }
+
+            function trim(str) {
+                return str.replace(/^\s+|\s+$/g, "");
+            }
+
+            function isImageItem(item) {
+                var tl = trim(toLowerCase(item));
+                for (var i = 0; i < imageItem.length; i++) {
+                    var lower = trim(toLowerCase(imageItem[i]));
+                    if (lower == tl) {
+                        return true;
+                    }
+                }
+                return false;
+            }
             if (typeof Array.prototype.forEach !== "function") {
                 Array.prototype.forEach = function(callback, thisArg) {
                     var T, k;
@@ -317,7 +353,7 @@
                         var tdv = document.createElement("td");
                         tdk.textContent = key;
                         tdv.textContent = t[key];
-                        if (typeof t[key + "_Base64"] !== "undefined") {
+                        if (typeof t[key + "_Base64"] !== "undefined" && isImageItem(key)) {
                             tdv.innerHTML = "";
                             var img = document.createElement("img");
                             img.src = t[key + "_Base64"];

@@ -72,5 +72,44 @@ Original Project:
   License File: LICENSE.WinJS
 
 ----------------------------------------------------------------------
+CodeMirror
+----------------------------------------------------------------------
+
+This product includes CodeMirror, which is licensed under the MIT License.
+
+Original Project:
+  Name: CodeMirror
+  Author: Marijn Haverbeke and contributors
+  Project Homepage: https://codemirror.net/
+  License: MIT License
+  License File: LICENSE.CodeMirror
+
+----------------------------------------------------------------------
+Json.NET (Newtonsoft.Json)
+----------------------------------------------------------------------
+
+This product includes Json.NET (also known as Newtonsoft.Json), which is licensed under the MIT License.
+
+Original Project:
+  Name: Json.NET
+  Author: James Newton-King
+  Project Homepage: https://www.newtonsoft.com/json
+  License: MIT License
+  License File: LICENSE.Newtonsoft.Json
+
+----------------------------------------------------------------------
+SharpZipLib
+----------------------------------------------------------------------
+
+This product includes SharpZipLib, which is licensed under the MIT License.
+
+Original Project:
+  Name: SharpZipLib
+  Author: SharpZipLib Contributors
+  Project Homepage: https://icsharpcode.github.io/SharpZipLib/
+  License: MIT License
+  License File: LICENSE.SharpZipLib
+
+----------------------------------------------------------------------
 
 End of notices.

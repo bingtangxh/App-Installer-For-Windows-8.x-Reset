@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>App Installer Settings</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="../../js/module.js"></script>
+    <script type="text/javascript" src="../../js/polyfill-ie.js"></script>
+    <link rel="stylesheet" href="../../libs/winjs/2.0/css/ui-light.css" id="winjs-style">
+    <script type="text/javascript" src="../../libs/winjs/1.0/js/base.js"></script>
+    <script type="text/javascript" src="../../libs/winjs/1.0/js/ui.js"></script>
+    <script type="text/javascript" src="../../js/color.js"></script>
+    <script type="text/javascript" src="../../js/promise.js"></script>
+    <script type="text/javascript" src="../../js/bridge.js"></script>
+    <script type="text/javascript" src="../../js/dpimodes.js"></script>
+    <script type="text/javascript" src="../../js/resources.js"></script>
+    <script type="text/javascript" src="../../js/animation.js"></script>
+    <link rel="stylesheet" href="../../fonts/fonts.css">
+    <script type="text/javascript" src="../../js/event.js"></script>
+    <script type="text/javascript" src="../../js/tileback.js"></script>
+    <script type="text/javascript" src="../../js/load.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../libs/msgbox/contentdlg.css">
+    <script type="text/javascript" src="../../libs/msgbox/contentdlg.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../libs/msgbox/msgbox.css">
+    <script type="text/javascript" src="../../libs/msgbox/msgbox.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../libs/toggle/toggle.css">
+    <script type="text/javascript" src="../../libs/toggle/toggle.js"></script>
+    <script type="text/javascript" src="../../js/init.js"></script>
+    <link rel="stylesheet" type="text/css" href="../page.css">
+    <link rel="stylesheet" type="text/css" href="../subpage.css">
+    <script type="text/javascript" src="preinit.js"></script>
+    <script type="text/javascript" src="initsame.js"></script>
+    <script>
+        try {
+            window.parent.setItemHighlight("appitems");
+        } catch (e) {}
+    </script>
+</head>
+
+<body>
+    <div class="pagecontainer full pagesection">
+        <div class="section padding">
+            <div class="bottom-compensate">
+                <h2 id="page-title" data-res-resxml="READER_SETTINGS_APPITEMS"></h2>
+                <div class="win-settings-section">
+                    <p data-res-resxml="READER_SETTINGS_APPITEMS_DESC"></p>
+                    <style>
+                        table {
+                            border-collapse: collapse;
+                        }
+                        
+                        table th,
+                        table td {
+                            border: 1px solid #ccc;
+                            padding: 5px;
+                        }
+                    </style>
+                    <table style="max-width: 100%;">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th data-res-resxml="READER_SETTINGS_APPITEMS_ITEM"></th>
+                                <th data-res-resxml="READER_SETTINGS_APPITEMS_DESCRIPTION"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="appitem-list"></tbody>
+                    </table>
+                    <script>
+                        (function() {
+                            "use strict";
+                            var appItemList = document.getElementById("appitem-list");
+                            var ini = Bridge.External.Config.GetConfig();
+                            var appitemset = ini.getSection("PackageReader:AppMetadatas");
+                            var appitems = [
+                                "Id",
+                                "StartPage",
+                                "EntryPoint",
+                                "Executable",
+                                "BackgroundColor",
+                                "DisplayName",
+                                "Description",
+                                "ShortName",
+                                "ForegroundText",
+                                "SmallLogo",
+                                "Square30x30Logo",
+                                "Square44x44Logo",
+                                "Square70x70Logo",
+                                "Square71x71Logo",
+                                "Logo",
+                                "Square150x150Logo",
+                                "WideLogo",
+                                "Wide310x150Logo",
+                                "Square310x310Logo",
+                                "Tall150x310Logo",
+                                "LockScreenLogo",
+                                "LockScreenNotification",
+                                "DefaultSize",
+                                "AppListEntry",
+                                "VisualGroup",
+                                "MinWidth",
+                            ];
+                            var defaultItems = [
+                                "Id",
+                                "DisplayName",
+                                "BackgroundColor",
+                                "ForegroundText",
+                                "ShortName",
+                                "Square44x44Logo",
+                                "SmallLogo"
+                            ];
+                            for (var i = 0; i < appitems.length; i++) {
+                                var item = appitems[i];
+                                var isenable = appitemset.getKey(item).value;
+                                if (isenable === null || isenable === void 0 || isenable === "") {
+                                    isenable = defaultItems.indexOf(item) >= 0;
+                                }
+                                var dispItem = stringRes("APPMETADATA_" + item);
+                                var tr = document.createElement("tr");
+                                var tdCheck = document.createElement("td");
+                                var tdItem = document.createElement("td");
+                                var tdDesc = document.createElement("td");
+                                tr.appendChild(tdCheck);
+                                tr.appendChild(tdItem);
+                                tr.appendChild(tdDesc);
+                                var checkbox = document.createElement("input");
+                                tdCheck.appendChild(checkbox);
+                                checkbox.type = "checkbox";
+                                checkbox.checked = isenable;
+                                checkbox.id = "appitem_" + item;
+                                checkbox.setAttribute("data-metadata", item);
+                                var label = document.createElement("label");
+                                tdItem.appendChild(label);
+                                label.setAttribute("for", checkbox.id);
+                                label.style.fontWeight = "normal";
+                                label.textContent = item;
+                                label.title = item;
+                                var labelDesc = document.createElement("label");
+                                tdDesc.appendChild(labelDesc);
+                                labelDesc.textContent = dispItem;
+                                labelDesc.title = dispItem;
+                                labelDesc.setAttribute("for", checkbox.id);
+                                labelDesc.style.fontWeight = "normal";
+                                appItemList.appendChild(tr);
+                                checkbox.onchange = function() {
+                                    appitemset.getKey(this.getAttribute("data-metadata")).value = this.checked;
+                                }
+                            }
+                        })();
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

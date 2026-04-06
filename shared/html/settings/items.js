@@ -23,6 +23,7 @@
     var settingItems = {
         appinstaller: getSettingsItem("appinstaller.html", getLibRes("appinstaller.exe", 300)),
         manager: getSettingsItem("manager.html", getStringRes("MANAGER_APPTITLE")),
+        reader: getSettingsItem("reader.html", getStringRes("READER_APPTITLE")),
         settings: getSettingsItem("settings.html", getLibRes("settings.exe", 200)),
     };
     Object.defineProperty(global, "settingPages", {

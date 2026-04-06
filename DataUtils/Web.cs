@@ -297,11 +297,18 @@ namespace DataUtils
 				return new HttpResponse (res);
 			}
 		}
-		public void SendAsync (string sBody, string encoding, object pfResolve)
+		public void SendAsync (string sBody, string encoding, object pfResolve, object pfReject)
 		{
 			System.Threading.ThreadPool.QueueUserWorkItem (delegate
 			{
-				JsUtils.Call (pfResolve, Send (sBody, encoding));
+				try
+				{
+					JsUtils.Call (pfResolve, Send (sBody, encoding));
+				}
+				catch (Exception ex)
+				{
+					JsUtils.Call (pfReject, new _I_Exception (ex));
+				}
 			});
 		}
 		public void Dispose () { }

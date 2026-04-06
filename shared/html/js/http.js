@@ -35,6 +35,8 @@
                     try {
                         inst.sendAsync(body, encoding, function(resp) {
                             if (c) c(resp);
+                        }, function(err) {
+                            if (e) e(err);
                         });
                     } catch (ex) { if (e) e(ex); }
                 });

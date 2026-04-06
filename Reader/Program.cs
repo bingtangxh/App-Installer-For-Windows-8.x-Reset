@@ -18,10 +18,6 @@ namespace Reader
 		static void Main ()
 		{
 			Directory.SetCurrentDirectory (AppDomain.CurrentDomain.BaseDirectory);
-			AppxPackage.PackageReader.AddApplicationItem ("SmallLogo");
-			AppxPackage.PackageReader.AddApplicationItem ("Square30x30Logo");
-			AppxPackage.PackageReader.AddApplicationItem ("Logo");
-			AppxPackage.PackageReader.AddApplicationItem ("Square44x44Logo");
 			DataUtils.BrowserEmulation.SetWebBrowserEmulation ();
 			Application.EnableVisualStyles ();
 			Application.SetCompatibleTextRenderingDefault (false);

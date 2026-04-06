@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Calendar.cs" />
+    <Compile Include="DateTimeFormat.cs" />
     <Compile Include="Download.cs" />
     <Compile Include="Enumerable.cs" />
     <Compile Include="HResult.cs" />

@@ -32,7 +32,7 @@
       ForegroundText='light'
       BackgroundColor='#004fe2'>
       <DefaultTile ShowName='allLogos' />
-      <SplashScreen Image="VisualElements\splash\manager\splash.png"
+      <SplashScreen Image="VisualElements\splash\reader\splash.png"
         BackgroundColor="#004fe2" DarkModeBackgroundColor='#002770' />
     </VisualElements>
   </Application>
