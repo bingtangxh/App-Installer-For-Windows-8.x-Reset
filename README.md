@@ -15,7 +15,7 @@
 <h2>Attention</h2>
 <ul>
   <li><del>This program is an x86 program, not an ARM application, not cross-platform, and cannot be used on Windows RT.</del></li>
-  <li>This program uses some third-party libraries and other Github projects, and is completed using AI (ChatGTP). This project can be used for learning and communication purposes.</li>
+  <li>The program uses some third-party libraries and other GitHub projects, and is completed with the assistance of AI (ChatGTP). This project can be used for learning and communication purposes.</li>
   <li>(Important) Internet Explorer must support TLS 1.2 (requiring the use of IE's XMLHttpRequest to retrieve update information), especially IE10. You can do this by opening the "Advanced" tab in Control Panel/Internet Explorer's "Internet Options," finding "Use TLS 1.2" and checking the box, then clicking "OK" and saving. The settings will take effect the next time you open the browser.<br><img width="300" height="395" alt="屏幕截图 2025-12-08 103450" src="https://github.com/user-attachments/assets/69ee21ca-7f47-4d56-8dde-37e5704776c1" /></li>
 </ul>
 <hr>
