@@ -30,33 +30,43 @@
 }
 
 .win-contentdialog .win-contentdialog-title {
-    width: 100%;
     font-size: 20pt;
     font-weight: normal;
-    padding: 0 172px;
     box-sizing: border-box;
     display: block;
 }
 
 .win-contentdialog .win-contentdialog-content {
-    width: 100%;
-    padding: 0 172px;
     overflow-y: auto;
     box-sizing: border-box;
     max-height: calc(100vh - 200px);
-    margin: 10px 0 20px 0;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding-right: 24px;
     font-weight: normal;
 }
 
 .win-contentdialog .win-contentdialog-commands {
-    width: 100%;
-    padding: 0 172px;
     box-sizing: border-box;
+    display: -ms-flexbox;
     display: flex;
+    -ms-flex-direction: row;
     flex-direction: row;
+    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
+    -ms-flex-line-pack: start;
     align-content: flex-start;
+    -ms-flex-pack: end;
     justify-content: flex-end;
+}
+
+.win-contentdialog .win-contentdialog-title,
+.win-contentdialog .win-contentdialog-content,
+.win-contentdialog .win-contentdialog-commands {
+    width: 680px;
+    max-width: calc(100vw - 172px * 2);
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .win-contentdialog .win-contentdialog-commands>button {
