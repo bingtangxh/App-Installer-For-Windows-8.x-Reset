@@ -288,6 +288,7 @@ Commands:
 		}
 		static void Main (string [] args)
 		{
+			var currencoding = Console.OutputEncoding;
 			try
 			{
 				Console.OutputEncoding = Encoding.UTF8;
@@ -985,6 +986,7 @@ Examples:
 			finally
 			{
 				Console.ResetColor ();
+				Console.OutputEncoding = currencoding;
 			}
 		}
 	}
