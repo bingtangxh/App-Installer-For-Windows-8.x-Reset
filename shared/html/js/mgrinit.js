@@ -442,6 +442,8 @@
             createShortcutButton.setAttribute("data-app-user-model-id", item.AppUserModelID);
             createShortcutButton.textContent = strres.get("MANAGER_APP_SHORTCUTCREATE_TITLE");
             createShortcutButton.style.marginRight = "10px";
+            appItem.setAttribute("title", item.Id);
+            appItem.setAttribute("aria-label", item.DisplayName || item.ShortName);
             Windows.UI.Event.Util.addEvent(launchButton, "click", function(e) {
                 e.stopPropagation();
                 Package.manager.active(this.getAttribute("data-app-user-model-id"));

@@ -381,6 +381,7 @@ void DestroyPriFileInstance (PCSPRIFILE pFilePri)
 	if (!pFilePri) return;
 	try
 	{
+#ifdef ELDER_FUNC
 		CreateScopedLock (g_threadlock);
 		auto it = g_tasklist.find (pFilePri);
 		if (it != g_tasklist.end ())
@@ -388,6 +389,7 @@ void DestroyPriFileInstance (PCSPRIFILE pFilePri)
 			it->second.bIsRunning = false;
 			g_tasklist.erase (it);
 		}
+#endif
 		IntPtr handlePtr = IntPtr (pFilePri);
 		System::Runtime::InteropServices::GCHandle handle = System::Runtime::InteropServices::GCHandle::FromIntPtr (handlePtr);
 		PriFileInst ^inst = safe_cast <PriFileInst ^> (handle.Target);

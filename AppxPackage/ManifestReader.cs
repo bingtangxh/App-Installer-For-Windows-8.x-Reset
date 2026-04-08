@@ -348,8 +348,18 @@ namespace AppxPackage
 		{
 			get
 			{
-				string value;
-				if (!TryGetValue (key, out value))
+				string value = null;
+				var isfind = false;
+				foreach (var kv in this)
+				{
+					if (kv.Key?.Trim ()?.ToLowerInvariant () == key?.Trim ()?.ToLowerInvariant ())
+					{
+						value = kv.Value;
+						isfind = true;
+						break;
+					}
+				}
+				if (!isfind)
 				{
 					value = string.Empty;
 					base [key] = value;
@@ -370,8 +380,18 @@ namespace AppxPackage
 		}
 		public string At (string key)
 		{
-			string value;
-			if (!TryGetValue (key, out value)) throw new KeyNotFoundException ($"PRBaseApplication.At: key \"{key}\" not found");
+			string value = null;
+			var isfind = false;
+			foreach (var kv in this)
+			{
+				if (kv.Key?.Trim ()?.ToLowerInvariant () == key?.Trim ()?.ToLowerInvariant ())
+				{
+					value = kv.Value;
+					isfind = true;
+					break;
+				}
+			}
+			if (!isfind) throw new KeyNotFoundException ($"MRApplication: cannot find key \"{key}\"");
 			if (!EnablePri ()) return value;
 			if (PriFileHelper.IsMsResourcePrefix (value))
 			{
@@ -383,8 +403,18 @@ namespace AppxPackage
 		}
 		public string NewAt (string key, bool toPriString)
 		{
-			string value;
-			if (!TryGetValue (key, out value))
+			string value = null;
+			var isfind = false;
+			foreach (var kv in this)
+			{
+				if (kv.Key?.Trim ()?.ToLowerInvariant () == key?.Trim ()?.ToLowerInvariant ())
+				{
+					value = kv.Value;
+					isfind = true;
+					break;
+				}
+			}
+			if (!isfind)
 			{
 				value = string.Empty;
 				base [key] = value;
