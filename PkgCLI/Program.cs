@@ -497,21 +497,25 @@ Examples:
 						PrintVersion ();
 						Console.WriteLine (@"
 Usage:
-    pkgcli /remove <package_full_name> [<package_full_name>...]
+    pkgcli /remove <package_full_name> [<package_full_name>...] [/yes]
 
 Operation:
-    Remove (uninstall) one or more packages.
+    Remove one or more packages.
 
 Arguments:
     <package_full_name>  The full name of the installed package.
                          Format: <identity_name>_<version>_<architecture>_<resource_id>_<publisher_id>
                          Example: Microsoft.WinJS.1.0_1.0.9200.20789_neutral__8wekyb3d8bbwe
 
+Options:
+    /yes                Automatically confirm the uninstallation without prompting.
+                        Aliases: /y, /agree
+
 You can specify multiple full names separated by spaces.
 
 Examples:
     pkgcli /remove MyPackage_1.0.0.0_x64__abcd1234
-    pkgcli /remove PackageA_1.0.0.0_neutral__abcd1234 PackageB_2.0.0.0_x86__efgh5678
+    pkgcli /remove PackageA_1.0.0.0_neutral__abcd1234 PackageB_2.0.0.0_x86__efgh5678 /yes
 ");
 						return;
 					}
