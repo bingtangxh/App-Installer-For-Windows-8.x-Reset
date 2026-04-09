@@ -568,12 +568,12 @@ We will use default encoding.]]></lang>
     <lang name="zh-CN"><![CDATA[异常 {0}:
 信息：
     {1}
-堆栈轨迹：
+堆栈回溯：
     {2}]]></lang>
     <lang name="en-US"><![CDATA[Exception {0}:
 Message: 
     {1}
-Stack: 
+Stack Trace: 
     {2}]]></lang>
   </resource>
 </resources>
