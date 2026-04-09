@@ -490,7 +490,7 @@ Examples:
 					return;
 				}
 				else if (cmds.ParamsContainsOr ("remove"))
-				{
+				{ 
 					#region help text: remove
 					if (CliPasingUtils.ParamContains (cmds, "help"))
 					{
