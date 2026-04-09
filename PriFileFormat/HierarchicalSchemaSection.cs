@@ -174,6 +174,7 @@ namespace PriFileFormat
 		}
 		~HierarchicalSchemaSection ()
 		{
+			return;
 			Version = null;
 			foreach (var item in Items) { item.Parent = null; }
 			foreach (var scope in Scopes) { scope.Parent = null; }
