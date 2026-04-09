@@ -23,37 +23,18 @@ namespace PkgCLI
 			"/h",
 			"-h"
 		};
+		public static StringResXmlDoc res = new StringResXmlDoc (Path.Combine (AppDomain.CurrentDomain.BaseDirectory, "locale\\pkgcli.xml"));
 		static bool IsHelpParam (string arg) => helpArgs.Contains (arg.Normalize ());
 		static void PrintVersion ()
 		{
 			var verFilePath = Path.Combine (AppDomain.CurrentDomain.BaseDirectory, "version");
 			var verFileInst = new _I_File (verFilePath);
 			var verstr = verFileInst.Content?.Trim () ?? "0.0.0.1";
-			Console.WriteLine (
-				$"Package Manager CLI [Version {verstr}]\n(C) Windows Modern. All rights reserved."
-			);
+			Console.WriteLine (String.Format (res.Get ("PKGCLI_VERSION"), verstr));
 		}
 		static void PrintTotalHelp ()
 		{
-			Console.WriteLine (@"
-Usage:
-    pkgcli <command> [arguments]
-
-Commands:
-    /install        Install a package.
-    /update         Update a package (previous version must be installed).
-    /register       Register an app manifest file.
-    /stage          Stage a package.
-    /remove         Remove the package.
-    /read           Read package information.
-    /get            List all installed apps.
-    /find           Find installed apps.
-    /active         Launch an app.
-    /config         Configure settings (omit to show current config).
-    /version        Display version information.
-    /encoding       Set console output encoding. With other commands.
-    /?              Show this help.
-");
+			Console.WriteLine (res.Get ("PKGCLI_TOTALHELP"));
 		}
 		public static bool IsFilePathInList (List<string> filelist, string file)
 		{
@@ -339,28 +320,7 @@ Commands:
 					if (CliPasingUtils.ParamContains (cmds, "help"))
 					{
 						PrintVersion ();
-						Console.WriteLine (@"
-Usage:
-    pkgcli /encoding:<code_page|name>
-    pkgcli /en:<code_page|name>
-
-Operation:
-    Set the console output encoding for the current session.
-    Useful when the output contains non-ASCII characters.
-
-Arguments:
-    <code_page>     Numeric code page identifier (e.g., 65001 for UTF-8, 936 for GB2312).
-    <name>          Encoding name (e.g., utf-8, gb2312, windows-1252).
-
-Examples:
-    pkgcli /encoding:65001      (Set to UTF-8)
-    pkgcli /encoding:utf-8
-    pkgcli /en:936              (Set to GB2312/GBK)
-    pkgcli /en:gb2312
-
-Note:
-    This setting only affects the current pkgcli process and does not persist.
-");
+						Console.WriteLine (res.Get ("PKGCLI_HELP_ENCODING"));
 						return;
 					}
 					#endregion
@@ -378,7 +338,7 @@ Note:
 					catch (Exception ex)
 					{
 						Console.ForegroundColor = ConsoleColor.Yellow;
-						Console.WriteLine ($"Warning: Set encoding for output failed. Exception {ex.GetType ()}\nMessage: \n    {ex.Message}\nWe will use default encoding.");
+						Console.WriteLine (String.Format (res.Get ("PKGCLI_WARNING_ENCODING"), ex.GetType (), ex.Message));
 						Console.ResetColor ();
 					}
 				}
@@ -388,33 +348,7 @@ Note:
 					PrintVersion ();
 					if (CliPasingUtils.ParamContains (cmds, "help"))
 					{
-						Console.WriteLine (@"
-Usage:
-    pkgcli <command> <file_path...> [/developmode] [/force] [/allres]
-
-Commands:
-    /install        Install a package. Supports .appx, .appxbundle, .msix, .msixbundle.
-    /register       Register a package. Supports AppxManifest.xml or *.appxmanifest.
-    /update         Update an installed app. Supports same formats as /install.
-    /stage          Stage a package (pre-deploy). Supports same formats as /install.
-
-Options (DeploymentOptions flags):
-    /developmode    Install/register in development mode. Do not use with bundle packages.
-    /force          Force application shutdown to allow registration when the package or its dependencies are in use.
-    /allres         Skip resource applicability checks; stage/register all resource packages in a bundle.
-
-Arguments:
-    <file_path...>  One or more package or manifest file paths. Can be:
-                    - Direct path to .appx, .msix, .appxbundle, .msixbundle, or .xml manifest.
-                    - A .txt file containing a list of such paths (one per line).
-                    - If no command is repeated, the command applies to all listed files.
-
-Examples:
-    pkgcli /install MyApp.appx
-    pkgcli /register /manifest:AppxManifest.xml /developmode
-    pkgcli /update MyApp.msixbundle /force
-    pkgcli /stage MyApp.appx /allres
-");
+						Console.WriteLine (res.Get ("PKGCLI_HELP_IRUS"));
 						return;
 					}
 					#endregion
@@ -468,7 +402,7 @@ Examples:
 					{
 						Console.WriteLine ();
 						var file = totallist [i];
-						Console.Write ($"\r({i + 1}/{totallist.Count}) Operation in progress...");
+						Console.Write ("\r" + String.Format (res.Get ("PKGCLI_PROGRESS_OPERATION"), i + 1, totallist.Count));
 						var hr = new _I_HResult (0);
 						var tempope = ope;
 						if (file.Item1 == 1)
@@ -476,17 +410,17 @@ Examples:
 							if (cmds.ParamContains ("register")) tempope = RegisterPackageByFullName;
 						}
 						hr = tempope (file.Item2, null, options, prog => {
-							var str = $"\r({i + 1}/{filelist.Count}) Operation in progress... {prog}% of {(int)((i + prog * 0.01) / filelist.Count * 100)}%";
+							var str = "\r" + String.Format (res.Get ("PKGCLI_PROGRESS_OPERATION_WITHPROGRESS"), i + 1, totallist.Count, prog, (int)((i + prog * 0.01) / totallist.Count * 100));
 							Console.Write (str);
 						});
 						if (hr.Failed)
 						{
 							Console.ForegroundColor = ConsoleColor.Red;
-							Console.Write ($"\nPackage {i + 1} \"{file.Item2}\" Operation Error ({"0x" + hr.HResult.ToString ("X8")}): \n{hr.Message}");
+							Console.Write ("\n" + String.Format (res.Get ("PKGCLI_ERROR_IRUS_EXCEPTION"), i + 1, file.Item2, "0x" + hr.HResult.ToString ("X8"), hr.Message));
 							Console.ResetColor ();
 						}
 					}
-					Console.WriteLine ("\nAll Done.");
+					Console.WriteLine ("\n" + res.Get ("PKGCLI_COMPLETE_OPERATION"));
 					return;
 				}
 				else if (cmds.ParamsContainsOr ("remove"))
@@ -495,28 +429,7 @@ Examples:
 					if (CliPasingUtils.ParamContains (cmds, "help"))
 					{
 						PrintVersion ();
-						Console.WriteLine (@"
-Usage:
-    pkgcli /remove <package_full_name> [<package_full_name>...] [/yes]
-
-Operation:
-    Remove one or more packages.
-
-Arguments:
-    <package_full_name>  The full name of the installed package.
-                         Format: <identity_name>_<version>_<architecture>_<resource_id>_<publisher_id>
-                         Example: Microsoft.WinJS.1.0_1.0.9200.20789_neutral__8wekyb3d8bbwe
-
-Options:
-    /yes                Automatically confirm the uninstallation without prompting.
-                        Aliases: /y, /agree
-
-You can specify multiple full names separated by spaces.
-
-Examples:
-    pkgcli /remove MyPackage_1.0.0.0_x64__abcd1234
-    pkgcli /remove PackageA_1.0.0.0_neutral__abcd1234 PackageB_2.0.0.0_x86__efgh5678 /yes
-");
+						Console.WriteLine (res.Get ("PKGCLI_HELP_REMOVE"));
 						return;
 					}
 					#endregion
@@ -536,30 +449,30 @@ Examples:
 						if (list.Count <= 0) agree = true;
 						else
 						{
-							Console.Write ($"We will uninstall {list.Count} app(-s). Do you want to continue?(Y/N) ");
+							Console.Write (String.Format (res.Get ("PKGCLI_ASK_REMOVE"), list.Count));
 							var userinput = Console.ReadLine ();
 							if (userinput.NEquals ("y") || userinput.NEquals ("yes")) agree = true;
 							else agree = false;
 						}
 					}
-					if (agree == false) throw new OperationCanceledException ("User canceled.");
+					if (agree == false) throw new OperationCanceledException (res.Get ("PKGCLI_ERROR_USERABORT"));
 					for (int i = 0; i < list.Count; i++)
 					{
 						Console.WriteLine ();
 						var file = list [i];
-						Console.Write ($"\r({i + 1}/{list.Count}) Operation in progress...");
+						Console.Write ("\r" + String.Format (res.Get ("PKGCLI_PROGRESS_OPERATION"), i + 1, list.Count));
 						var hr = RemovePackage (file, prog => {
-							var str = $"\r({i + 1}/{list.Count}) Operation in progress... {prog}% of {(int)((i + prog * 0.01) / list.Count * 100)}%";
+							var str = "\r" + String.Format (res.Get ("PKGCLI_PROGRESS_OPERATION_WITHPROGRESS"), i + 1, list.Count, prog, (int)((i + prog * 0.01) / list.Count * 100));
 							Console.Write (str);
 						});
 						if (hr.Failed)
 						{
 							Console.ForegroundColor = ConsoleColor.Red;
-							Console.Write ($"\nPackage {i + 1} \"{file}\" Operation Error ({"0x" + hr.HResult.ToString ("X8")}): \n{hr.Message}");
+							Console.Write ("\n" + String.Format (res.Get ("PKGCLI_ERROR_IRUS_EXCEPTION"), i + 1, file, "0x" + hr.HResult.ToString ("X8"), hr.Message));
 							Console.ResetColor ();
 						}
 					}
-					Console.WriteLine ("\nAll Done.");
+					Console.WriteLine ("\n" + res.Get ("PKGCLI_COMPLETE_OPERATION"));
 					return;
 				}
 				else if (cmds.ParamsContainsOr ("get"))
@@ -568,30 +481,7 @@ Examples:
 					if (CliPasingUtils.ParamContains (cmds, "help"))
 					{
 						PrintVersion ();
-						Console.WriteLine (@"
-Usage:
-    pkgcli /get [/filter:<filter1,filter2,...>]
-
-Operation:
-    List all installed packages with their properties.
-
-Options:
-    /filter:<filters>   Show only the specified properties.
-                        Filters are case-insensitive and support '*' wildcard.
-                        Multiple filters separated by comma ',' or semicolon ';'.
-                        Examples:
-                            /filter:Identity:Name,Identity:Version
-                            /filter:Identity:*                 (all Identity properties)
-                            /filter:Properties:DisplayName
-
-Output:
-    Each package is printed as a section [FullName] followed by key = value lines.
-    Redirect output to a file to save as INI-like format.
-
-Examples:
-    pkgcli /get
-    pkgcli /get /filter:Identity:FullName,Properties:DisplayName
-");
+						Console.WriteLine (res.Get ("PKGCLI_HELP_GET"));
 						return;
 					}
 					#endregion
@@ -611,7 +501,7 @@ Examples:
 					if (hr.Item1.Failed)
 					{
 						Console.ForegroundColor = ConsoleColor.Red;
-						Console.WriteLine ($"Operation Error ({"0x" + hr.Item1.HResult.ToString ("X8")}): \n{hr.Item1.Message}");
+						Console.WriteLine (String.Format (res.Get ("PKGCLI_ERROR_EXCEPTION"), "0x" + hr.Item1.HResult.ToString ("X8"), hr.Item1.Message));
 						Console.ResetColor ();
 						return;
 					}
@@ -630,28 +520,7 @@ Examples:
 					if (CliPasingUtils.ParamContains (cmds, "help"))
 					{
 						PrintVersion ();
-Console.WriteLine(@"
-Usage:
-    pkgcli /find <package_full_name|package_family_name> [/filter:<filters>]
-    pkgcli /find <identity_name> <identity_publisher> [/filter:<filters>]
-
-Operation:
-    Find installed packages matching the given identifier.
-
-Arguments:
-    <package_full_name>       Full name of a package.
-    <package_family_name>     Family name of a package.
-    <identity_name>           Name part of the package identity (e.g., ""Microsoft.WindowsStore"").
-    <identity_publisher>      Publisher part (e.g., ""CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"").
-
-Options:
-    /filter:<filters>         Same as in /get command.
-
-Examples:
-    pkgcli /find Microsoft.WindowsStore_8wekyb3d8bbwe!App
-    pkgcli /find Microsoft.WindowsStore
-    pkgcli /find Microsoft.WindowsStore ""CN=Microsoft Corporation, ...""
-");
+						Console.WriteLine (res.Get ("PKGCLI_HELP_FIND"));
 						return;
 					}
 					#endregion
@@ -715,24 +584,7 @@ Examples:
 					if (CliPasingUtils.ParamContains (cmds, "help"))
 					{
 						PrintVersion ();
-						Console.WriteLine (@"
-Usage:
-    pkgcli /active <app_user_model_id> [arguments]
-
-Operation:
-    Launch (activate) a Universal Windows Platform (UWP) app.
-
-Arguments:
-    <app_user_model_id>       The Application User Model ID (AUMID).
-                              Format: <package_family_name>!<app_id>
-                              Example: Microsoft.WindowsStore_8wekyb3d8bbwe!App
-
-    [arguments]               Optional command-line arguments passed to the app.
-
-Examples:
-    pkgcli /active Microsoft.WindowsStore_8wekyb3d8bbwe!App
-    pkgcli /active MyAppFamily!App --fullscreen --debug
-");
+						Console.WriteLine (res.Get ("PKGCLI_HELP_ACTIVATE"));
 						return;
 					}
 					#endregion
@@ -747,11 +599,11 @@ Examples:
 								if (args [i].NNormalize ().IndexOf (c.Value.NNormalize ()) >= 0) break;
 							}
 							var hr = ActiveApp (c.Value, BuildCommandLine (args, i + 1));
-							if (hr.Succeeded) Console.WriteLine ("Done.");
+							if (hr.Succeeded) Console.WriteLine (res.Get ("PKGCLI_COMPLETE_DONE"));
 							else
 							{
 								Console.ForegroundColor = ConsoleColor.Red;
-								Console.Write ($"Operation Error ({"0x" + hr.HResult.ToString ("X8")}): \n{hr.Message}");
+								Console.Write (String.Format (res.Get ("PKGCLI_ERROR_EXCEPTION"), "0x" + hr.HResult.ToString ("X8"), hr.Message));
 								Console.ResetColor ();
 							}
 							return;
@@ -765,54 +617,7 @@ Examples:
 					if (CliPasingUtils.ParamContains (cmds, "help"))
 					{
 						PrintVersion ();
-						Console.WriteLine (@"
-Usage:
-    pkgcli /read [options] [<file>]
-
-Description:
-    Read an Appx/MSIX package (.appx, .appxbundle, .msix, .msixbundle) or its manifest file (.xml, .appxpackage, .msixpackage).
-    Extracts package/manifest information and outputs as JSON to the console, or saves as a ZIP archive containing either info.json or info.xml.
-
-Options:
-    /manifest:<file>        Specify a manifest file to read.
-    /package:<file>         Specify a package file to read.
-    <file>                  If no /manifest or /package is provided, the first unnamed parameter is used as the input file.
-                            File type is auto-detected by extension:
-                              .xml, .appxpackage, .msixpackage  → ManifestReader
-                              .appx, .appxbundle, .msix, .msixbundle → PackageReader
-
-    /item:<path>            Instead of outputting the whole JSON object, output only the value at the given path.
-                            Path syntax: use '.' or ':' as separators, case-insensitive.
-                            Supports indexers (e.g., [0]), .length for collections, and automatic Base64 access (e.g., LogoBase64).
-                            Examples:
-                                /item:Identity.Name
-                                /item:Properties.Publisher
-                                /item:applications[0]
-                                /item:applications.length
-                                /item:applications[0].LogoBase64
-
-    /usepri                 Enable PRI resource resolution (localization and scaled images). Required for proper resource string and image resolution.
-
-    /savexml:<output>       Save extracted data as an XML file wrapped in a ZIP archive.
-                            The archive will contain an info.xml file with the structured data.
-
-    /savejson:<output>      Save extracted data as a JSON file wrapped in a ZIP archive.
-                            The archive will contain an info.json file with the structured data.
-
-    /help                   Display this help text.
-
-Output Behavior:
-    - If neither /savexml nor /savejson is given, the information is printed directly to the console as JSON.
-    - If /item is used, only the value at the specified path is printed (as a string, version, or formatted JSON).
-    - If /savexml or /savejson is used, the data is saved to the specified file (ZIP archive) and a success/failure message is shown.
-
-Examples:
-    pkgcli /read MyApp.appx
-    pkgcli /read /manifest:AppxManifest.xml /usepri
-    pkgcli /read /package:MyApp.msixbundle /item:Identity.Name
-    pkgcli /read /package:MyApp.appx /savejson:output.zip
-    pkgcli /read MyApp.appx /item:applications[0].DisplayName
-");
+						Console.WriteLine (res.Get ("PKGCLI_HELP_READ"));
 						return;
 					}
 					#endregion
@@ -954,26 +759,7 @@ Examples:
 					if (CliPasingUtils.ParamContains (cmds, "help"))
 					{
 						PrintVersion ();
-						Console.WriteLine (@"
-Usage:
-    pkgcli /config                      Show current configuration (all keys).
-    pkgcli /config /show:<key>          Show value of a specific configuration key.
-    pkgcli /config /set:<key> <value>   Set configuration key to the given value.
-    pkgcli /config /refresh             Reload configuration from config.ini.
-
-Configuration keys:
-    AppMetadataItems    Comma-separated list of application metadata fields to read from manifests.
-                        Default: ""Id,BackgroundColor,DisplayName,ForegroundText,ShortName,SmallLogo,Square44x44Logo""
-
-Configuration file:
-    config.ini in the same directory as pkgcli.exe.
-
-Examples:
-    pkgcli /config
-    pkgcli /config /show:AppMetadataItems
-    pkgcli /config /set:AppMetadataItems ""Id,DisplayName,Logo""
-    pkgcli /config /refresh
-");
+						Console.WriteLine (res.Get ("PKGCLI_HELP_CONFIG"));
 						return;
 					}
 					#endregion
@@ -984,7 +770,7 @@ Examples:
 					{
 						var cmd = cmds.GetFromId ("set");
 						var key = cmd.Value;
-						if (string.IsNullOrWhiteSpace (key)) throw new InvalidOperationException ($"key is empty");
+						if (string.IsNullOrWhiteSpace (key)) throw new InvalidOperationException (Program.res.Get ("PKGCLI_ERROR_KEYSTRINGEMPTY"));
 						var isfind = false;
 						foreach (var i in configItems)
 						{
@@ -994,7 +780,7 @@ Examples:
 								break;
 							}
 						}
-						if (!isfind) throw new KeyNotFoundException ($"Error: cannot find the key \"{key}\"");
+						if (!isfind) throw new KeyNotFoundException (String.Format (Program.res.Get("PKGCLI_ERROR_CANNOTFINDKEY"), key));
 						var valuelist = new List<string> ();
 						foreach (var c in cmds)
 						{
@@ -1032,7 +818,7 @@ Examples:
 								break;
 							}
 						}
-						if (!isfind) throw new KeyNotFoundException ($"Error: cannot find the key \"{key}\"");
+						if (!isfind) throw new KeyNotFoundException (String.Format (Program.res.Get ("PKGCLI_ERROR_CANNOTFINDKEY"), key));
 						var value = sSettings.GetKey ($"PkgCLI:{key.Trim ()}").ReadString ("(use default)");
 						Console.WriteLine (value);
 					}
@@ -1044,18 +830,7 @@ Examples:
 					if (CliPasingUtils.ParamContains (cmds, "help"))
 					{
 						PrintVersion ();
-						Console.WriteLine (@"
-Usage:
-    pkgcli /version
-    pkgcli /ver
-
-Operation:
-    Display the current version of Package Manager CLI.
-
-Examples:
-    pkgcli /version
-    pkgcli /ver
-");
+						Console.WriteLine (res.Get ("PKGCLI_HELP_VERSION"));
 						return;
 					}
 					#endregion
@@ -1072,7 +847,7 @@ Examples:
 			catch (Exception ex)
 			{
 				Console.ForegroundColor = ConsoleColor.Red;
-				Console.WriteLine ($"Exception {ex.GetType ()}, \nMessage: \n    {ex.Message}\nStack: \n    {ex.StackTrace}");
+				Console.WriteLine (String.Format (res.Get ("PKGCLI_ERROR_FINALEXCEPTION"), ex.GetType (), ex.Message, ex.StackTrace));
 			}
 			finally
 			{

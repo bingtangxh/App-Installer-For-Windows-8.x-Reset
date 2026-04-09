@@ -78,6 +78,14 @@ namespace PkgCLI
 			}
 			return sb.ToString ().TrimEnd (Environment.NewLine.ToCharArray ());
 		}
+		public static string Format (this string format, params object [] args)
+		{
+			return String.Format (format, args);
+		}
+		public static string Format (this string format, object args)
+		{
+			return String.Format (format, args);
+		}
 	}
 	public static class PackageReaderExt
 	{
