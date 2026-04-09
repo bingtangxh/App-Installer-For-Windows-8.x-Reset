@@ -50,6 +50,8 @@ Commands:
     /find           Find installed apps.
     /active         Launch an app.
     /config         Configure settings (omit to show current config).
+    /version        Display version information.
+    /encoding       Set console output encoding. With other commands.
     /?              Show this help.
 ");
 		}
@@ -291,7 +293,7 @@ Commands:
 			var currencoding = Console.OutputEncoding;
 			try
 			{
-				Console.OutputEncoding = Encoding.UTF8;
+				//Console.OutputEncoding = Encoding.UTF8;
 				if (args.Length <= 0 || args.Length >= 1 && IsHelpParam (args [0]))
 				{
 					PrintVersion ();
@@ -325,10 +327,60 @@ Commands:
 					new CmdParamName ("item"),
 					new CmdParamName ("set"),
 					new CmdParamName ("refresh"),
-					new CmdParamName ("show")
+					new CmdParamName ("show"),
+					new CmdParamName ("encoding", new string [] { "en", "charset", "encode" })
 				});
 				RefreshConfig ();
 				var cmds = parser.Parse (args);
+				if (cmds.ParamContains ("encoding"))
+				{
+					#region help text: encoding
+					if (CliPasingUtils.ParamContains (cmds, "help"))
+					{
+						PrintVersion ();
+						Console.WriteLine (@"
+Usage:
+    pkgcli /encoding:<code_page|name>
+    pkgcli /en:<code_page|name>
+
+Operation:
+    Set the console output encoding for the current session.
+    Useful when the output contains non-ASCII characters.
+
+Arguments:
+    <code_page>     Numeric code page identifier (e.g., 65001 for UTF-8, 936 for GB2312).
+    <name>          Encoding name (e.g., utf-8, gb2312, windows-1252).
+
+Examples:
+    pkgcli /encoding:65001      (Set to UTF-8)
+    pkgcli /encoding:utf-8
+    pkgcli /en:936              (Set to GB2312/GBK)
+    pkgcli /en:gb2312
+
+Note:
+    This setting only affects the current pkgcli process and does not persist.
+");
+						return;
+					}
+					#endregion
+					try
+					{
+						var c = cmds.GetFromId ("encoding");
+						var i = 0;
+						var isint = false;
+						Encoding en = null;
+						try { i = Convert.ToInt32 (c.Value); isint = true; } catch { isint = false; }
+						if (isint) en = Encoding.GetEncoding (i);
+						else en = Encoding.GetEncoding (c.Value);
+						Console.OutputEncoding = en;
+					}
+					catch (Exception ex)
+					{
+						Console.ForegroundColor = ConsoleColor.Yellow;
+						Console.WriteLine ($"Warning: Set encoding for output failed. Exception {ex.GetType ()}\nMessage: \n    {ex.Message}\nWe will use default encoding.");
+						Console.ResetColor ();
+					}
+				}
 				if (CliPasingUtils.ParamsContainsOr (cmds, "install", "register", "update", "stage"))
 				{
 					#region help text: install register, update, stage
@@ -968,6 +1020,25 @@ Examples:
 				}
 				else if (cmds.ParamsContainsOr ("version"))
 				{
+					#region help text: version
+					if (CliPasingUtils.ParamContains (cmds, "help"))
+					{
+						PrintVersion ();
+						Console.WriteLine (@"
+Usage:
+    pkgcli /version
+    pkgcli /ver
+
+Operation:
+    Display the current version of Package Manager CLI.
+
+Examples:
+    pkgcli /version
+    pkgcli /ver
+");
+						return;
+					}
+					#endregion
 					PrintVersion ();
 					return;
 				}
