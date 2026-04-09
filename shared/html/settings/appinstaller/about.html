@@ -80,6 +80,9 @@
                 <p>
                     <a id="about-eula" data-res-fromfile="publicRes(137)"></a>
                 </p>
+                <p>
+                    <a id="about-thanks" data-res-fromfile="publicRes (230)"></a>
+                </p>
                 <p data-res-fromfile="publicRes (138)"></p>
                 <ul>
                     <li><a href="https://github.com/chausner/PriTools" target="_blank">chausner/PriTools</a></li>
@@ -88,8 +91,8 @@
                     <li><a href="https://github.com/winjs/winjs" target="_blank">WinJS</a></li>
                     <li><a href="https://github.com/evilstreak/markdown-js" target="_blank">markdown.js</a></li>
                     <li><a href="https://codemirror.net/" target="_blank">CodeMirror</a></li>
-<li><a href="https://www.newtonsoft.com/json" target="_blank">Newtonsoft.Json</a></li>
-<li><a href="https://icsharpcode.github.io/SharpZipLib/" target="_blank">SharpZipLib</a></li>
+                    <li><a href="https://www.newtonsoft.com/json" target="_blank">Newtonsoft.Json</a></li>
+                    <li><a href="https://icsharpcode.github.io/SharpZipLib/" target="_blank">SharpZipLib</a></li>
                 </ul>
                 <script>
                     (function() {
@@ -185,7 +188,6 @@
                         });
                         eventutil.addEvent(aboutProjectDescription, "click", function() {
                             function decodeBase64(base64) {
-                                // GitHub 的 content 有换行，必须清理
                                 base64 = base64.replace(/\s/g, "");
                                 return atob(base64);
                             }
@@ -299,6 +301,22 @@
                                 body.style.backgroundColor = "white";
                                 body.style.color = "black";
                             }, 0);
+                        });
+                        var aboutThanks = document.getElementById("about-thanks");
+                        eventutil.addEvent(aboutThanks, "click", function() {
+                            var content = document.createElement("div");
+                            var p = document.createElement("p");
+                            p.textContent = getPublicRes(231);
+                            content.appendChild(p);
+                            var contributes = '<a href="https://github.com/modernw/App-Installer-For-Windows-8.x-Reset/graphs/contributors" target="_blank">\n  \x3C!-- Made with [contrib.rocks](https://contrib.rocks). -->\n  <img src="https://contrib.rocks/image?repo=modernw/App-Installer-For-Windows-8.x-Reset&columns=10" style="max-width:100%" />\n</a>\n';
+                            content.innerHTML += contributes;
+                            var p1 = document.createElement("p");
+                            p1.textContent = getPublicRes(232);
+                            content.appendChild(p1);
+                            var dlg = new MsgBox();
+                            dlg.text = content;
+                            dlg.title = getPublicRes(230);
+                            dlg.show();
                         });
                     })();
                 </script>
