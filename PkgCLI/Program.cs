@@ -328,7 +328,8 @@ Commands:
 					new CmdParamName ("set"),
 					new CmdParamName ("refresh"),
 					new CmdParamName ("show"),
-					new CmdParamName ("encoding", new string [] { "en", "charset", "encode" })
+					new CmdParamName ("encoding", new string [] { "en", "charset", "encode" }),
+					new CmdParamName ("yes", new string [] {"y", "agree"})
 				});
 				RefreshConfig ();
 				var cmds = parser.Parse (args);
@@ -523,6 +524,21 @@ Examples:
 							if (!string.IsNullOrWhiteSpace (c.Value)) list.Add (c.Value);
 						}
 					}
+					var agreecmd = cmds.GetFromId ("yes");
+					bool? agree = null;
+					if (agreecmd != null) agree = true;
+					if (agree == null)
+					{
+						if (list.Count <= 0) agree = true;
+						else
+						{
+							Console.Write ($"We will uninstall {list.Count} app(-s). Do you want to continue?(Y/N) ");
+							var userinput = Console.ReadLine ();
+							if (userinput.NEquals ("y") || userinput.NEquals ("yes")) agree = true;
+							else agree = false;
+						}
+					}
+					if (agree == false) throw new OperationCanceledException ("User canceled.");
 					for (int i = 0; i < list.Count; i++)
 					{
 						Console.WriteLine ();
