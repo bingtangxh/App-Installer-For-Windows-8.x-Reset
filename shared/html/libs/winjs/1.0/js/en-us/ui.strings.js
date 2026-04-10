@@ -4,7 +4,7 @@
 
   This library is supported for use in Windows Store apps only.
 
-  Build: 1.0.9200.20602.win8_ldr.130108-1504
+  Build: 1.0.9200.20789.win8_ldr.130802-2151
   
   Version: Microsoft.WinJS.1.0
 */
