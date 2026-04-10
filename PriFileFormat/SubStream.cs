@@ -71,10 +71,6 @@ namespace PriFileFormat
 			throw new NotSupportedException ();
 		}
 
-		public override void Close ()
-		{
-			base.Close ();
-			baseStream = null;
-		}
+		~SubStream () { baseStream = null; }
 	}
 }

@@ -128,3 +128,10 @@
 .win-contentdialog.win-ui-dark .win-contentdialog-dialog {
     background-color: rgb(31, 0, 104);
 }
+
+.win-ui-dark .win-contentdialog .win-contentdialog-dialog button[type=submit],
+.win-contentdialog.win-ui-dark .win-contentdialog-dialog button[type=submit],
+.win-ui-dark .win-contentdialog .win-contentdialog-dialog input[type=submit],
+.win-contentdialog.win-ui-dark .win-contentdialog-dialog input[type=submit] {
+    border-color: white;
+}

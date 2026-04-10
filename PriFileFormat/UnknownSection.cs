@@ -18,5 +18,6 @@ namespace PriFileFormat
 		{
 			SectionContent = null;
 		}
+		~UnknownSection () { ClearContent (); }
 	}
 }

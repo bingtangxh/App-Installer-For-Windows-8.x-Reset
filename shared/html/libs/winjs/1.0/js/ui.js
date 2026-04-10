@@ -4,7 +4,7 @@
 
   This library is supported for use in Windows Store apps only.
 
-  Build: 1.0.9200.20602.win8_ldr.130108-1504
+  Build: 1.0.9200.20789.win8_ldr.130802-2151
   
   Version: Microsoft.WinJS.1.0
 */
@@ -12320,7 +12320,7 @@ WinJS.Namespace.define("WinJS.UI", {
 
     var animations = WinJS.UI.Animation;
 
-    var leftBufferAmount = 500,
+    var leftBufferAmount = 50,
         itemSelectedEventDelay = 250;
 
     var strings = {
@@ -12401,8 +12401,9 @@ WinJS.Namespace.define("WinJS.UI", {
                 }, true);
                 this._panningDivContainer.addEventListener("MSManipulationStateChanged", function (event) {
                     that._manipulationState = event.currentState;
-                    if (event.currentState === 0) {
+                    if (event.currentState === 0 && event.srcElement === that._panningDivContainer) {
                         that._itemSettledOn();
+                        that._ensureCentered();
                     }
                 }, true);
             },

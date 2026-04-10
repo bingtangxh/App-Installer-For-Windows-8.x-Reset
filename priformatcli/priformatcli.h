@@ -224,7 +224,7 @@ typedef class prifile
 	{
 		LPWSTR lpstr = nullptr;
 		reltask release ([&lpstr] () {
-			if (lpstr) free (lpstr);
+			if (lpstr) PriFormatFreeString (lpstr);
 			lpstr = nullptr;
 		});
 		lpstr = GetPriResource (m_hPriFile, resname.c_str ());

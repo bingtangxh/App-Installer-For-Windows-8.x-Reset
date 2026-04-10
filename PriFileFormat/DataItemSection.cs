@@ -48,6 +48,7 @@ namespace PriFileFormat
 			_dataItems?.Clear ();
 			_dataItems = null;
 		}
+		~DataItemSection () { ClearData (); }
 	}
 
 	public struct DataItemRef

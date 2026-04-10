@@ -115,10 +115,10 @@
 			this.label1.AutoSize = true;
 			this.tableLayoutPanel1.SetColumnSpan(this.label1, 5);
 			this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label1.Font = new System.Drawing.Font("微软雅黑 Light", 20F);
+			this.label1.Font = new System.Drawing.Font("Segoe UI", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label1.Location = new System.Drawing.Point(27, 24);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(727, 45);
+			this.label1.Size = new System.Drawing.Size(727, 46);
 			this.label1.TabIndex = 0;
 			this.label1.Text = "Create Desktop Shortcut";
 			// 
@@ -127,7 +127,7 @@
 			this.label2.AutoSize = true;
 			this.tableLayoutPanel1.SetColumnSpan(this.label2, 5);
 			this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label2.Location = new System.Drawing.Point(27, 79);
+			this.label2.Location = new System.Drawing.Point(27, 80);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(727, 60);
 			this.label2.TabIndex = 1;
@@ -147,7 +147,7 @@
 			this.tableLayoutPanel2.Controls.Add(this.label7, 0, 8);
 			this.tableLayoutPanel2.Controls.Add(this.customIconDisplay, 0, 9);
 			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel2.Location = new System.Drawing.Point(27, 152);
+			this.tableLayoutPanel2.Location = new System.Drawing.Point(27, 153);
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
 			this.tableLayoutPanel2.RowCount = 10;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -160,7 +160,7 @@
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 39F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 18F));
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 13F));
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(235, 324);
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(235, 323);
 			this.tableLayoutPanel2.TabIndex = 2;
 			// 
 			// label3
@@ -251,7 +251,7 @@
 			this.customIconDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.customIconDisplay.Location = new System.Drawing.Point(3, 230);
 			this.customIconDisplay.Name = "customIconDisplay";
-			this.customIconDisplay.Size = new System.Drawing.Size(229, 91);
+			this.customIconDisplay.Size = new System.Drawing.Size(229, 90);
 			this.customIconDisplay.TabIndex = 7;
 			this.customIconDisplay.TabStop = false;
 			// 
@@ -273,7 +273,7 @@
 			this.tableLayoutPanel3.Controls.Add(this.label12, 0, 9);
 			this.tableLayoutPanel3.Controls.Add(this.shortcutNameInput, 0, 10);
 			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel3.Location = new System.Drawing.Point(273, 152);
+			this.tableLayoutPanel3.Location = new System.Drawing.Point(273, 153);
 			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
 			this.tableLayoutPanel3.RowCount = 11;
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -287,7 +287,7 @@
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 18F));
-			this.tableLayoutPanel3.Size = new System.Drawing.Size(235, 324);
+			this.tableLayoutPanel3.Size = new System.Drawing.Size(235, 323);
 			this.tableLayoutPanel3.TabIndex = 3;
 			// 
 			// label5
@@ -476,14 +476,14 @@
 			this.tableLayoutPanel4.Controls.Add(this.imageSizeList, 0, 1);
 			this.tableLayoutPanel4.Controls.Add(this.imagesPreview, 0, 3);
 			this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel4.Location = new System.Drawing.Point(519, 152);
+			this.tableLayoutPanel4.Location = new System.Drawing.Point(519, 153);
 			this.tableLayoutPanel4.Name = "tableLayoutPanel4";
 			this.tableLayoutPanel4.RowCount = 4;
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel4.Size = new System.Drawing.Size(235, 324);
+			this.tableLayoutPanel4.Size = new System.Drawing.Size(235, 323);
 			this.tableLayoutPanel4.TabIndex = 4;
 			// 
 			// label8
@@ -500,7 +500,7 @@
 			// 
 			this.label9.AutoSize = true;
 			this.label9.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label9.Location = new System.Drawing.Point(3, 162);
+			this.label9.Location = new System.Drawing.Point(3, 161);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(229, 20);
 			this.label9.TabIndex = 1;
@@ -516,7 +516,7 @@
 			this.imageSizeList.Location = new System.Drawing.Point(3, 23);
 			this.imageSizeList.Name = "imageSizeList";
 			this.imageSizeList.RowTemplate.Height = 27;
-			this.imageSizeList.Size = new System.Drawing.Size(229, 136);
+			this.imageSizeList.Size = new System.Drawing.Size(229, 135);
 			this.imageSizeList.TabIndex = 2;
 			this.imageSizeList.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.imageSizeList_CellDoubleClick);
 			// 
@@ -536,7 +536,7 @@
 			this.imagesPreview.AutoScroll = true;
 			this.imagesPreview.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.imagesPreview.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-			this.imagesPreview.Location = new System.Drawing.Point(3, 185);
+			this.imagesPreview.Location = new System.Drawing.Point(3, 184);
 			this.imagesPreview.Name = "imagesPreview";
 			this.imagesPreview.Size = new System.Drawing.Size(229, 136);
 			this.imagesPreview.TabIndex = 3;

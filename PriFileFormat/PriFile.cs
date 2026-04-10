@@ -6,12 +6,14 @@ using System;
 
 namespace PriFileFormat
 {
-	public class PriFile
+	public class PriFile: IDisposable
 	{
 		public string Version { get; private set; }
 		public uint TotalFileSize { get; private set; }
 		public IReadOnlyList <TocEntry> TableOfContents { get; private set; }
 		public IReadOnlyList <Section> Sections { get; private set; }
+		private bool _disposed = false;
+		private Stream _internalStream; // 跟踪内部流
 		private PriFile ()
 		{
 		}
@@ -35,6 +37,7 @@ namespace PriFileFormat
 
 		private void ParseInternal (Stream stream, bool ownStream)
 		{
+			if (ownStream) { _internalStream = stream; }
 			using (BinaryReader binaryReader = new BinaryReader (stream, Encoding.ASCII, true))
 			{
 				long fileStartOffset = binaryReader.BaseStream.Position;
@@ -107,6 +110,48 @@ namespace PriFileFormat
 				if (parseFailure)
 					throw new InvalidDataException ();
 			}
+		}
+
+		public void Dispose ()
+		{
+			Dispose (true);
+			GC.SuppressFinalize (this);
+		}
+		protected virtual void Dispose (bool disposing)
+		{
+			if (_disposed) return;
+			if (disposing)
+			{
+				// 释放托管资源
+				if (_internalStream != null)
+				{
+					_internalStream.Dispose ();
+					_internalStream = null;
+				}
+
+				// 释放 section 内容
+				if (Sections != null)
+				{
+					foreach (var section in Sections)
+					{
+						var unknown = section as UnknownSection;
+						if (unknown != null)
+							unknown.ClearContent ();
+
+						var dataSection = section as DataItemSection;
+						if (dataSection != null)
+							dataSection.ClearData ();
+					}
+					Sections = null;
+				}
+			}
+
+			_disposed = true;
+		}
+
+		~PriFile ()
+		{
+			Dispose (false);
 		}
 
 		PriDescriptorSection priDescriptorSection;

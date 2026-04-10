@@ -17,15 +17,15 @@ namespace PriFileFormat
 		}
 		public override bool CanRead
 		{
-			get { return comStream != null; }
+			get { return true; }
 		}
 		public override bool CanSeek
 		{
-			get { return comStream != null; }
+			get { return true; }
 		}
 		public override bool CanWrite
 		{
-			get { return comStream != null; }
+			get { return true; }
 		}
 		public override long Length
 		{
@@ -144,8 +144,9 @@ namespace PriFileFormat
 		}
 		public override void Close ()
 		{
-			base.Close ();
 			comStream = null;
+			base.Close ();
 		}
+		~ComStreamWrapper () { comStream = null;}
 	}
 }
