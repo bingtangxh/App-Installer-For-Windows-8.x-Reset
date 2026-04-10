@@ -264,7 +264,7 @@
                     <span class="support" data-res-byname="IDS_PREINSTALL_SUPPOS"></span>
                     <span class="not-support" data-res-byname="IDS_PREINSTALL_NOSUPPOS"></span>
                 </p>
-                <br id="newline-divide" />
+                <br />
                 <p class="pkgfunctions-label" data-res-byname="IDS_FUNCTIONNAME"></p>
                 <div class="functions">
                     <ul>
@@ -394,27 +394,6 @@
                 <p data-res-byname="IDS_FAILED_REASONNAME"></p>
                 <textarea class="win-textarea" readonly></textarea>
             </div>
-            <script>
-                (function(global) {
-                    var pageContainerPage = document.getElementById("page-container").querySelector(".page");
-                    var pkgversion = pageContainerPage.querySelector(".pkgversion");
-                    var reason = document.querySelector(".reason.installfailed");
-                    var reasonTextArea = reason.querySelector("textarea");
-                    var reasonLabel = reason.querySelector("p");
-                    var eventutils = Windows.UI.Event.Util;
-                    var eventmonitor = Windows.UI.Event.Monitor;
-
-                    function resizeAndPositionEvent(e) {
-                        reason.style.height = "";
-                        var controlsContainer = pageContainerPage.querySelector(".controls");
-                        var maxHeight = pageContainerPage.getBoundingClientRect().height - pkgversion.getBoundingClientRect().top - pkgversion.getBoundingClientRect().height * 2 - controlsContainer.getBoundingClientRect().height;
-                        var suitHeight = reasonTextArea.offsetTop + reasonTextArea.scrollHeight;
-                        reason.style.height = parseInt(Math.min(maxHeight, suitHeight)) + "px";
-                    }
-                    eventmonitor.observe(pkgversion, "position", resizeAndPositionEvent);
-                    eventmonitor.observe(pageContainerPage, "resize", resizeAndPositionEvent);
-                })(this);
-            </script>
             <div class="controls">
                 <div class="checkbox">
                     <input type="checkbox" id="preinst-enablelaunch" class="win-checkbox" style="margin-left: 0;">
