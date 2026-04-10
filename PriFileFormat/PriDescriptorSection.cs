@@ -46,15 +46,6 @@ namespace PriFileFormat
 			DataItemSections = dataItemSections;
 			return true;
 		}
-		~PriDescriptorSection ()
-		{
-			HierarchicalSchemaSections = null;
-			DecisionInfoSections = null;
-			ResourceMapSections = null;
-			ReferencedFileSections = null;
-			DataItemSections = null;
-			PrimaryResourceMapSection = null;
-		}
 	}
 	[Flags]
 	public enum PriDescriptorFlags: ushort

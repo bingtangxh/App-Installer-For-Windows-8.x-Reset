@@ -81,9 +81,5 @@ namespace PriFileFormat
 			}
 		}
 
-		~Section ()
-		{
-			PriFile = null;
-		}
 	}
 }
