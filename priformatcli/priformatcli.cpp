@@ -20,6 +20,32 @@
 #include <algorithm>
 #include <set>
 
+LPWSTR AllocWideString (const std::wstring &str)
+{
+	size_t size = (str.length () + 1) * sizeof (WCHAR);
+	LPWSTR buf = (LPWSTR)CoTaskMemAlloc (size);
+	if (!buf) return nullptr;
+	ZeroMemory (buf, size);
+	wcscpy (buf, str.c_str ());
+	return buf;
+}
+// ≤‚ ‘”√
+LPWSTR AllocWideString (LPCWSTR str)
+{
+	if (!str) return nullptr;
+	size_t size = (wcslen (str) + 1) * sizeof (WCHAR);
+	LPWSTR buf = (LPWSTR)CoTaskMemAlloc (size);
+	if (!buf) return nullptr;
+	ZeroMemory (buf, size);
+	wcscpy (buf, str);
+	return buf;
+}
+#define _wcsdup AllocWideString
+#define free CoTaskMemFree
+#define malloc CoTaskMemAlloc
+#define realloc CoTaskMemRealloc
+#define calloc(_cnt_, _size_) CoTaskMemAlloc (_cnt_ * _size_)
+
 const std::wstring g_swMsResUriProtocolName = L"ms-resource:";
 const size_t g_cbMsResPNameLength = lstrlenW (g_swMsResUriProtocolName.c_str ());
 std::wstring g_swExcept = L"";
