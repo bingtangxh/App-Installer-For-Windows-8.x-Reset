@@ -741,8 +741,18 @@ namespace AppxPackage
 		{
 			get
 			{
-				string value;
-				if (!TryGetValue (key, out value))
+				string value = null;
+				var isfind = false;
+				foreach (var kv in this)
+				{
+					if (kv.Key?.Trim ()?.ToLowerInvariant () == key?.Trim ()?.ToLowerInvariant ())
+					{
+						value = kv.Value;
+						isfind = true;
+						break;
+					}
+				}
+				if (!isfind)
 				{
 					value = string.Empty;
 					base [key] = value;
@@ -763,8 +773,18 @@ namespace AppxPackage
 		}
 		public string At (string key)
 		{
-			string value;
-			if (!TryGetValue (key, out value)) throw new KeyNotFoundException ($"PRBaseApplication.At: key \"{key}\" not found");
+			string value = null;
+			var isfind = false;
+			foreach (var kv in this)
+			{
+				if (kv.Key?.Trim ()?.ToLowerInvariant () == key?.Trim ()?.ToLowerInvariant ())
+				{
+					value = kv.Value;
+					isfind = true;
+					break;
+				}
+			}
+			if (!isfind) throw new KeyNotFoundException ($"MRApplication: cannot find key \"{key}\"");
 			if (!EnablePri ()) return value;
 			if (PriFileHelper.IsMsResourcePrefix (value))
 			{
@@ -776,8 +796,18 @@ namespace AppxPackage
 		}
 		public string NewAt (string key, bool toPriString)
 		{
-			string value;
-			if (!TryGetValue (key, out value))
+			string value = null;
+			var isfind = false;
+			foreach (var kv in this)
+			{
+				if (kv.Key?.Trim ()?.ToLowerInvariant () == key?.Trim ()?.ToLowerInvariant ())
+				{
+					value = kv.Value;
+					isfind = true;
+					break;
+				}
+			}
+			if (!isfind)
 			{
 				value = string.Empty;
 				base [key] = value;
@@ -1780,6 +1810,753 @@ namespace AppxPackage
 				UsePri = parsePri;
 			}
 		}
+		public bool SaveJsonFileCS (string savefilepath)
+		{
+			try
+			{
+				#region
+				using (var fs = File.Create (savefilepath))
+				{
+					using (var zos = new ZipOutputStream (fs))
+					{
+						zos.SetLevel (9);
+						bool parsePri = UsePri;
+						bool usePri = EnablePri;
+						try
+						{
+							UsePri = false;
+							EnablePri = false;
+							object packageInfo = null;
+							#region file
+							var typestr = "unknown";
+							switch (Type)
+							{
+								case PackageType.Appx: typestr = "appx"; break;
+								case PackageType.Bundle: typestr = "bundle"; break;
+								default:
+								case PackageType.Unknown: typestr = "unknown"; break;
+							}
+							var rolestr = "unknown";
+							switch (Role)
+							{
+								case PackageRole.Application: rolestr = "application"; break;
+								case PackageRole.Framework: rolestr = "framework"; break;
+								case PackageRole.Resource: rolestr = "resource"; break;
+								default:
+								case PackageRole.Unknown: rolestr = "unknown"; break;
+							}
+							var pkgfile = new {
+								path = FilePath,
+								valid = IsValid,
+								type = typestr,
+								role = rolestr
+							};
+							#endregion
+							#region id
+							var id = Identity;
+							var pkgid = new {
+								name = id.Name,
+								publisher = id.Publisher,
+								version = id.Version.ToString (),
+								realVersion = id.RealVersion.ToString (),
+								architecture = id.ProcessArchitecture.Select (e => {
+									switch (e)
+									{
+										case Architecture.ARM: return "arm";
+										case Architecture.ARM64: return "arm64";
+										case Architecture.Neutral: return "neutral";
+										case Architecture.x64: return "x64";
+										case Architecture.x86: return "x86";
+										default:
+										case Architecture.Unknown: return "unknown";
+									}
+								}).ToList (),
+								familyName = id.FamilyName,
+								fullName = id.FullName,
+								resourceId = id.ResourceId
+							};
+							#endregion
+							#region prerequistes
+							var preq = Prerequisites;
+							var pkgpreq = new {
+								osMinVersion = preq.OSMinVersion.ToString (),
+								osMaxVersionTested = preq.OSMaxVersionTested.ToString (),
+								osMinVersionDescription = preq.OSMinVersionDescription,
+								osMaxVersionTestedDescription = preq.OSMaxVersionDescription
+							};
+							#endregion
+							#region resources
+							var res = Resources;
+							var pkgres = new {
+								languages = res.Languages,
+								scales = res.Scales,
+								dxFeatureLevels = res.DXFeatures.Select (d => {
+									switch (d)
+									{
+										case DXFeatureLevel.Level9: return 9;
+										case DXFeatureLevel.Level10: return 10;
+										case DXFeatureLevel.Level11: return 11;
+										case DXFeatureLevel.Level12: return 12;
+										default:
+										case DXFeatureLevel.Unspecified: return -1;
+									}
+								}).ToList ()
+							};
+							#endregion
+							#region capabilities
+							var caps = Capabilities;
+							var pkgcaps = new {
+								capabilities = caps.Capabilities,
+								deviceCapabilities = caps.DeviceCapabilities
+							};
+							#endregion
+							#region dependencies
+							var deps = Dependencies;
+							var pkgdeps = Dependencies.Select (d => new {
+								name = d.Name,
+								publisher = d.Publisher,
+								minVersion = d.Version.ToString ()
+							}).ToList ();
+							#endregion
+							using (var priAllRes = new PriAllValuesReader (this))
+							{
+								priAllRes.Init ();
+								#region prop
+								var prop = Properties;
+								var dispname = prop.DisplayName;
+								var dispNameDict = new Dictionary<string, string> ();
+								if (PriFileHelper.IsMsResourcePrefix (dispname))
+									dispNameDict = priAllRes.LocaleResourceAllValues (dispname);
+								dispNameDict ["root"] = dispname;
+								var desc = prop.Description;
+								var descDict = new Dictionary<string, string> ();
+								if (PriFileHelper.IsMsResourcePrefix (desc))
+									descDict = priAllRes.LocaleResourceAllValues (desc);
+								descDict ["root"] = desc;
+								var disppub = prop.Publisher;
+								var dispPubDict = new Dictionary<string, string> ();
+								if (PriFileHelper.IsMsResourcePrefix (disppub))
+									dispPubDict = priAllRes.LocaleResourceAllValues (disppub);
+								dispPubDict ["root"] = disppub;
+								var logoList = priAllRes.FileResourceAllValues (prop.Logo, zos)
+									.Select (kv => {
+										string contrast = "";
+										switch (kv.Key.Contrast)
+										{
+											case PriResourceKey.PriContrast.None: contrast = ""; break;
+											case PriResourceKey.PriContrast.Black: contrast = "black"; break;
+											case PriResourceKey.PriContrast.White: contrast = "white"; break;
+											case PriResourceKey.PriContrast.High: contrast = "high"; break;
+											case PriResourceKey.PriContrast.Low: contrast = "low"; break;
+										}
+
+										if (kv.Key.IsTargetSize)
+										{
+											return new {
+												targetSize = kv.Key.Value,
+												contrast = contrast,
+												name = kv.Value
+											};
+										}
+										else if (kv.Key.IsScale)
+										{
+											return new {
+												scale = kv.Key.Value,
+												contrast = contrast,
+												name = kv.Value
+											};
+										}
+										else if (kv.Key.IsString)
+										{
+											return new {
+												language = kv.Key.Value,
+												name = kv.Value
+											};
+										}
+										else
+										{
+											return (dynamic)null;   // 不满足条件时返回 null
+										}
+									})
+									.Where (item => item != null)   // 过滤掉 null
+									.ToList ();
+								var pkgprop = new {
+									displayName = dispNameDict,
+									publisherDisplayName = dispPubDict,
+									description = descDict,
+									logo = logoList,
+									framework = prop.Framework,
+									resourcePackage = prop.ResourcePackage
+								};
+								#endregion
+								#region apps
+								var apps = Applications;
+								var pkgapps = new List<object> ();
+								foreach (var app in apps)
+								{
+									dynamic obj = new ExpandoObject ();
+									var dict = (IDictionary<string, object>)obj;
+									foreach (var kv in app)
+									{
+										if (Utils.AppFileProperties.Contains (kv.Key, StringComparer.OrdinalIgnoreCase))
+										{
+											dict [Utils.PascalToCamel (kv.Key)] = priAllRes.FileResourceAllValues (kv.Value, zos)
+												.Select (skv => {
+													string contrast = "";
+													switch (skv.Key.Contrast)
+													{
+														case PriResourceKey.PriContrast.None: contrast = ""; break;
+														case PriResourceKey.PriContrast.Black: contrast = "black"; break;
+														case PriResourceKey.PriContrast.White: contrast = "white"; break;
+														case PriResourceKey.PriContrast.High: contrast = "high"; break;
+														case PriResourceKey.PriContrast.Low: contrast = "low"; break;
+													}
+
+													if (skv.Key.IsTargetSize)
+													{
+														return new {
+															targetSize = skv.Key.Value,
+															contrast = contrast,
+															name = skv.Value
+														};
+													}
+													else if (skv.Key.IsScale)
+													{
+														return new {
+															scale = skv.Key.Value,
+															contrast = contrast,
+															name = skv.Value
+														};
+													}
+													else if (skv.Key.IsString)
+													{
+														return new {
+															language = skv.Key.Value,
+															name = skv.Value
+														};
+													}
+													else
+													{
+														return (dynamic)null;   // 不满足条件时返回 null
+													}
+												}).Where (item => item != null).ToList ();
+										}
+										else
+										{
+											if (PriFileHelper.IsMsResourcePrefix (kv.Value))
+											{
+												var itemDict = new Dictionary<string, string> ();
+												itemDict = priAllRes.LocaleResourceAllValues (kv.Value);
+												itemDict ["root"] = kv.Value;
+												dict [Utils.PascalToCamel (kv.Key)] = itemDict;
+											}
+											else
+											{
+												dict [Utils.PascalToCamel (kv.Key)] = kv.Value;
+											}
+										}
+									}
+									pkgapps.Add (obj);
+								}
+								#endregion
+								packageInfo = new {
+									file = pkgfile,
+									identity = pkgid,
+									properties = pkgprop,
+									resources = pkgres,
+									prerequisites = pkgpreq,
+									applications = pkgapps,
+									capabilities = pkgcaps,
+									dependencies = pkgdeps
+								};
+							}
+							var jsonstr = Newtonsoft.Json.JsonConvert.SerializeObject (packageInfo, Newtonsoft.Json.Formatting.None);
+							var ze = new ZipEntry ("info.json");
+							ze.DateTime = DateTime.Now;
+							zos.PutNextEntry (ze);
+							var bytes = Encoding.UTF8.GetBytes (jsonstr);
+							zos.Write (bytes, 0, bytes.Length);
+							zos.CloseEntry ();
+							return true;
+						}
+						finally
+						{
+							EnablePri = usePri;
+							UsePri = parsePri;
+						}
+					}
+				}
+				#endregion
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+				return false;
+			}
+		}
+		public bool SaveXmlFileCS (string savefilepath)
+		{
+			try
+			{
+				#region
+				using (var fs = File.Create (savefilepath))
+				{
+					using (var zos = new ZipOutputStream (fs))
+					{
+						zos.SetLevel (9);
+						bool parsePri = UsePri;
+						bool usePri = EnablePri;
+						try
+						{
+							UsePri = false;
+							EnablePri = false;
+							var xml = new XmlDocument ();
+							var decl = xml.CreateXmlDeclaration ("1.0", "utf-8", "yes");
+							xml.AppendChild (decl);
+							var root = xml.CreateElement ("Package");
+							xml.AppendChild (root);
+							#region file
+							var typestr = "unknown";
+							switch (Type)
+							{
+								case PackageType.Appx: typestr = "appx"; break;
+								case PackageType.Bundle: typestr = "bundle"; break;
+								default:
+								case PackageType.Unknown: typestr = "unknown"; break;
+							}
+							var rolestr = "unknown";
+							switch (Role)
+							{
+								case PackageRole.Application: rolestr = "application"; break;
+								case PackageRole.Framework: rolestr = "framework"; break;
+								case PackageRole.Resource: rolestr = "resource"; break;
+								default:
+								case PackageRole.Unknown: rolestr = "unknown"; break;
+							}
+							{
+								var nodefile = xml.CreateElement ("File");
+								var nodefilepath = xml.CreateElement ("Path");
+								nodefilepath.InnerText = FilePath;
+								var nodefilevalid = xml.CreateElement ("Valid");
+								nodefilevalid.InnerText = IsValid ? "true" : "false";
+								var nodefiletype = xml.CreateElement ("Type");
+								nodefiletype.InnerText = typestr;
+								var nodefilerole = xml.CreateElement ("Role");
+								nodefilerole.InnerText = rolestr;
+								nodefile.AppendChild (nodefilepath);
+								nodefile.AppendChild (nodefilevalid);
+								nodefile.AppendChild (nodefiletype);
+								nodefile.AppendChild (nodefilerole);
+								root.AppendChild (nodefile);
+							}
+							#endregion
+							#region id
+							var id = Identity;
+							{
+								var nodeid = xml.CreateElement ("Identity");
+								var nodeidname = xml.CreateElement ("Name");
+								nodeidname.InnerText = id.Name;
+								var nodeidpub = xml.CreateElement ("Publisher");
+								nodeidpub.InnerText = id.Publisher;
+								var nodeidver = xml.CreateElement ("Version");
+								nodeidver.InnerText = id.Version.ToString ();
+								var nodeidrealver = xml.CreateElement ("RealVersion");
+								nodeidrealver.InnerText = id.RealVersion.ToString ();
+								var nodeidarchs = xml.CreateElement ("ProcessorArchitectures");
+								foreach (var a in id.ProcessArchitecture)
+								{
+									var astr = "";
+									switch (a)
+									{
+										case Architecture.ARM: astr = "arm"; break;
+										case Architecture.ARM64: astr = "arm64"; break;
+										case Architecture.Neutral: astr = "neutral"; break;
+										case Architecture.x64: astr = "x64"; break;
+										case Architecture.x86: astr = "x86"; break;
+										default:
+										case Architecture.Unknown: astr = "unknown"; break;
+									}
+									var nodeidarch = xml.CreateElement ("ProcessorArchitecture");
+									nodeidarch.SetAttribute ("Value", astr);
+									nodeidarchs.AppendChild (nodeidarch);
+								}
+								var nodeidfamily = xml.CreateElement ("FamilyName");
+								nodeidfamily.InnerText = id.FamilyName;
+								var nodeidfull = xml.CreateElement ("FullName");
+								nodeidfull.InnerText = id.FullName;
+								var nodeidresid = xml.CreateElement ("ResourceId");
+								nodeidresid.InnerText = id.ResourceId;
+								nodeid.AppendChild (nodeidname);
+								nodeid.AppendChild (nodeidpub);
+								nodeid.AppendChild (nodeidver);
+								nodeid.AppendChild (nodeidrealver);
+								nodeid.AppendChild (nodeidarchs);
+								nodeid.AppendChild (nodeidfamily);
+								nodeid.AppendChild (nodeidfamily);
+								nodeid.AppendChild (nodeidresid);
+								root.AppendChild (nodeid);
+							}
+							#endregion
+							using (var priAllRes = new PriAllValuesReader (this))
+							{
+								priAllRes.Init ();
+								#region prop
+								var prop = Properties;
+								var dispname = prop.DisplayName;
+								var dispNameDict = new Dictionary<string, string> ();
+								if (PriFileHelper.IsMsResourcePrefix (dispname))
+									dispNameDict = priAllRes.LocaleResourceAllValues (dispname);
+								dispNameDict ["root"] = dispname;
+								var desc = prop.Description;
+								var descDict = new Dictionary<string, string> ();
+								if (PriFileHelper.IsMsResourcePrefix (desc))
+									descDict = priAllRes.LocaleResourceAllValues (desc);
+								descDict ["root"] = desc;
+								var disppub = prop.Publisher;
+								var dispPubDict = new Dictionary<string, string> ();
+								if (PriFileHelper.IsMsResourcePrefix (disppub))
+									dispPubDict = priAllRes.LocaleResourceAllValues (disppub);
+								dispPubDict ["root"] = disppub;
+								{
+									var nodeprop = xml.CreateElement ("Properties");
+									var nodepropname = xml.CreateElement ("DisplayName");
+									foreach (var kv in dispNameDict)
+									{
+										var nodelocale = xml.CreateElement ("LocaleResource");
+										nodelocale.SetAttribute ("Lang", kv.Key);
+										nodelocale.InnerText = kv.Value;
+										nodepropname.AppendChild (nodelocale);
+									}
+									var nodeproppub = xml.CreateElement ("PublisherDisplayName");
+									foreach (var kv in dispPubDict)
+									{
+										var nodelocale = xml.CreateElement ("LocaleResource");
+										nodelocale.SetAttribute ("Lang", kv.Key);
+										nodelocale.InnerText = kv.Value;
+										nodeproppub.AppendChild (nodelocale);
+									}
+									var nodepropdesc = xml.CreateElement ("Description");
+									foreach (var kv in descDict)
+									{
+										var nodelocale = xml.CreateElement ("LocaleResource");
+										nodelocale.SetAttribute ("Lang", kv.Key);
+										nodelocale.InnerText = kv.Value;
+										nodepropdesc.AppendChild (nodelocale);
+									}
+									var nodeproplogo = xml.CreateElement ("Logo");
+									foreach (var kv in priAllRes.FileResourceAllValues (prop.Logo, zos))
+									{
+										#region logo
+										var key = kv.Key;
+										var value = kv.Value;
+										var nodefile = xml.CreateElement ("File");
+										var attrName = xml.CreateAttribute ("Name");
+										attrName.Value = value;
+										nodefile.Attributes.Append (attrName);
+										if (key.Contrast != PriResourceKey.PriContrast.None)
+										{
+											string contrast = "";
+											switch (key.Contrast)
+											{
+												case PriResourceKey.PriContrast.Black: contrast = "black"; break;
+												case PriResourceKey.PriContrast.White: contrast = "white"; break;
+												case PriResourceKey.PriContrast.High: contrast = "high"; break;
+												case PriResourceKey.PriContrast.Low: contrast = "low"; break;
+											}
+											var attrContrast = xml.CreateAttribute ("Contrast");
+											attrContrast.Value = contrast;
+											nodefile.Attributes.Append (attrContrast);
+										}
+										if (key.IsTargetSize)
+										{
+											var attr = xml.CreateAttribute ("TargetSize");
+											attr.Value = key.Value.ToString ();
+											nodefile.Attributes.Append (attr);
+										}
+										else if (key.IsScale)
+										{
+											var attr = xml.CreateAttribute ("Scale");
+											attr.Value = key.Value.ToString ();
+											nodefile.Attributes.Append (attr);
+										}
+										else if (key.IsString)
+										{
+											var attr = xml.CreateAttribute ("Language");
+											attr.Value = key.Value.ToString ();
+											nodefile.Attributes.Append (attr);
+										}
+										nodeproplogo.AppendChild (nodefile);
+										#endregion
+									}
+									var nodepropfrw = xml.CreateElement ("Framework");
+									nodepropfrw.InnerText = prop.Framework ? "true" : "false";
+									var nodepropres = xml.CreateElement ("ResourcePackage");
+									nodepropres.InnerText = prop.ResourcePackage ? "true" : "false";
+									nodeprop.AppendChild (nodepropname);
+									nodeprop.AppendChild (nodeproppub);
+									nodeprop.AppendChild (nodepropdesc);
+									nodeprop.AppendChild (nodeproplogo);
+									nodeprop.AppendChild (nodepropfrw);
+									nodeprop.AppendChild (nodepropres);
+									root.AppendChild (nodeprop);
+								}
+								#endregion
+								#region apps
+								// Applications 节点
+								XmlElement nodeApplications = xml.CreateElement ("Applications");
+
+								foreach (var app in Applications)
+								{
+									XmlElement nodeApp = xml.CreateElement ("Application");
+
+									// AppUserModelId 作为属性
+									string aumidObj = app ["AppUserModelId"];
+									if (aumidObj == null || aumidObj.Trim ().Length == 0) aumidObj = app ["AppUserModelID"];
+									nodeApp.SetAttribute ("AppUserModelId", aumidObj);
+									foreach (var kv in app)
+									{
+										string key = kv.Key;
+										string value = kv.Value;
+
+										// 跳过 AppUserModelId，因为已经作为属性
+										if (string.Equals (key, "AppUserModelId", StringComparison.OrdinalIgnoreCase))
+											continue;
+
+										XmlElement nodeProp = xml.CreateElement (key);
+
+										// 文件资源类型
+										if (Utils.AppFileProperties.Contains (key, StringComparer.OrdinalIgnoreCase))
+										{
+											foreach (var skv in priAllRes.FileResourceAllValues (value, zos))
+											{
+												var fileKey = skv.Key;
+												var fileValue = skv.Value;
+
+												XmlElement nodeFile = xml.CreateElement ("File");
+
+												// Name 必有
+												XmlAttribute attrName = xml.CreateAttribute ("Name");
+												attrName.Value = fileValue;
+												nodeFile.Attributes.Append (attrName);
+
+												// Contrast 可选
+												if (fileKey.Contrast != PriResourceKey.PriContrast.None)
+												{
+													string contrast = "";
+													switch (fileKey.Contrast)
+													{
+														case PriResourceKey.PriContrast.Black: contrast = "black"; break;
+														case PriResourceKey.PriContrast.White: contrast = "white"; break;
+														case PriResourceKey.PriContrast.High: contrast = "high"; break;
+														case PriResourceKey.PriContrast.Low: contrast = "low"; break;
+													}
+													if (!string.IsNullOrEmpty (contrast))
+													{
+														XmlAttribute attrContrast = xml.CreateAttribute ("Contrast");
+														attrContrast.Value = contrast;
+														nodeFile.Attributes.Append (attrContrast);
+													}
+												}
+
+												// TargetSize
+												if (fileKey.IsTargetSize)
+												{
+													XmlAttribute attrTS = xml.CreateAttribute ("TargetSize");
+													attrTS.Value = fileKey.Value.ToString ();
+													nodeFile.Attributes.Append (attrTS);
+												}
+												// Scale
+												else if (fileKey.IsScale)
+												{
+													XmlAttribute attrS = xml.CreateAttribute ("Scale");
+													attrS.Value = fileKey.Value.ToString ();
+													nodeFile.Attributes.Append (attrS);
+												}
+												// Language
+												else if (fileKey.IsString)
+												{
+													XmlAttribute attrL = xml.CreateAttribute ("Lang");
+													attrL.Value = fileKey.Value.ToString ();
+													nodeFile.Attributes.Append (attrL);
+												}
+												nodeProp.AppendChild (nodeFile);
+											}
+										}
+										// 多语言资源
+										else if (PriFileHelper.IsMsResourcePrefix (value))
+										{
+											Dictionary<string, string> localeDict = priAllRes.LocaleResourceAllValues (value);
+											localeDict ["root"] = value.ToString ();
+
+											foreach (KeyValuePair<string, string> lkv in localeDict)
+											{
+												XmlElement nodeLocale = xml.CreateElement ("LocaleResource");
+												nodeLocale.SetAttribute ("Lang", lkv.Key);
+												nodeLocale.InnerText = lkv.Value;
+												nodeProp.AppendChild (nodeLocale);
+											}
+										}
+										else
+										{
+											nodeProp.InnerText = value.ToString ();
+										}
+
+										nodeApp.AppendChild (nodeProp);
+									}
+
+									nodeApplications.AppendChild (nodeApp);
+								}
+								root.AppendChild (nodeApplications);
+								#endregion
+							}
+							#region prerequistes
+							var preq = Prerequisites;
+							{
+								var nodepreq = xml.CreateElement ("Prerequisites");
+								var nodeosmin = xml.CreateElement ("OSMinVersion");
+								nodeosmin.InnerText = preq.OSMinVersion.ToString ();
+								nodeosmin.SetAttribute ("Description", preq.OSMinVersionDescription);
+								var nodeosmaxt = xml.CreateElement ("OSMaxVersionTested");
+								nodeosmaxt.InnerText = preq.OSMaxVersionTested.ToString ();
+								nodeosmaxt.SetAttribute ("Description", preq.OSMaxVersionDescription);
+								nodepreq.AppendChild (nodeosmin);
+								nodepreq.AppendChild (nodeosmaxt);
+								root.AppendChild (nodepreq);
+							}
+							#endregion
+							#region resources
+							XmlElement nodeResources = xml.CreateElement ("Resources");
+							var res = Resources;
+							if (res.Languages != null)
+							{
+								foreach (var lang in res.Languages)
+								{
+									XmlElement nodeRes = xml.CreateElement ("Resource");
+									XmlAttribute attrLang = xml.CreateAttribute ("Language");
+									attrLang.Value = lang;
+									nodeRes.Attributes.Append (attrLang);
+									nodeResources.AppendChild (nodeRes);
+								}
+							}
+							if (res.Scales != null)
+							{
+								foreach (var scale in res.Scales)
+								{
+									XmlElement nodeRes = xml.CreateElement ("Resource");
+									XmlAttribute attrScale = xml.CreateAttribute ("Scale");
+									attrScale.Value = scale.ToString ();
+									nodeRes.Attributes.Append (attrScale);
+									nodeResources.AppendChild (nodeRes);
+								}
+							}
+							if (res.DXFeatures != null)
+							{
+								foreach (var d in res.DXFeatures)
+								{
+									int level = -1;
+									switch (d)
+									{
+										case DXFeatureLevel.Level9: level = 9; break;
+										case DXFeatureLevel.Level10: level = 10; break;
+										case DXFeatureLevel.Level11: level = 11; break;
+										case DXFeatureLevel.Level12: level = 12; break;
+										case DXFeatureLevel.Unspecified:
+										default: level = -1; break;
+									}
+									XmlElement nodeRes = xml.CreateElement ("Resource");
+									XmlAttribute attrDX = xml.CreateAttribute ("DXFeatureLevel");
+									attrDX.Value = level.ToString ();
+									nodeRes.Attributes.Append (attrDX);
+									nodeResources.AppendChild (nodeRes);
+								}
+							}
+							root.AppendChild (nodeResources);
+							#endregion
+							#region capabilities
+							XmlElement nodeCapabilities = xml.CreateElement ("Capabilities");
+							var caps = Capabilities;
+							if (caps.Capabilities != null)
+							{
+								foreach (var cap in caps.Capabilities)
+								{
+									XmlElement nodeCap = xml.CreateElement ("Capability");
+									XmlAttribute attrName = xml.CreateAttribute ("Name");
+									attrName.Value = cap;
+									nodeCap.Attributes.Append (attrName);
+									nodeCapabilities.AppendChild (nodeCap);
+								}
+							}
+							if (caps.DeviceCapabilities != null)
+							{
+								foreach (var devCap in caps.DeviceCapabilities)
+								{
+									XmlElement nodeDevCap = xml.CreateElement ("DeviceCapability");
+									XmlAttribute attrName = xml.CreateAttribute ("Name");
+									attrName.Value = devCap;
+									nodeDevCap.Attributes.Append (attrName);
+									nodeCapabilities.AppendChild (nodeDevCap);
+								}
+							}
+							root.AppendChild (nodeCapabilities);
+							#endregion
+							#region dependencies
+							XmlElement nodeDependencies = xml.CreateElement ("Dependencies");
+							var deps = Dependencies;
+							if (deps != null)
+							{
+								foreach (var dep in deps)
+								{
+									XmlElement nodeDep = xml.CreateElement ("Dependency");
+									XmlAttribute attrName = xml.CreateAttribute ("Name");
+									attrName.Value = dep.Name ?? "";
+									nodeDep.Attributes.Append (attrName);
+									XmlAttribute attrPublisher = xml.CreateAttribute ("Publisher");
+									attrPublisher.Value = dep.Publisher ?? "";
+									nodeDep.Attributes.Append (attrPublisher);
+									XmlAttribute attrMinVersion = xml.CreateAttribute ("MinVersion");
+									attrMinVersion.Value = dep.Version != null ? dep.Version.ToString () : "";
+									nodeDep.Attributes.Append (attrMinVersion);
+									nodeDependencies.AppendChild (nodeDep);
+								}
+							}
+							root.AppendChild (nodeDependencies);
+							#endregion
+							var ze = new ZipEntry ("info.xml");
+							ze.DateTime = DateTime.Now;
+							zos.PutNextEntry (ze);
+							byte [] bytes;
+							using (var ms = new MemoryStream ())
+							{
+								var settings = new XmlWriterSettings {
+									Encoding = Encoding.UTF8,
+									Indent = true,
+									OmitXmlDeclaration = false
+								};
+								using (var writer = XmlWriter.Create (ms, settings))
+								{
+									xml.Save (writer);
+								}
+								bytes = ms.ToArray ();
+							}
+							zos.Write (bytes, 0, bytes.Length);
+							zos.CloseEntry ();
+							return true;
+						}
+						finally
+						{
+							EnablePri = usePri;
+							UsePri = parsePri;
+						}
+					}
+				}
+				#endregion
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+				return false;
+			}
+		}
 		public void SaveJsonFile (string savefilepath, object resolve, object reject)
 		{
 			try
@@ -2060,7 +2837,7 @@ namespace AppxPackage
 			}
 			catch (Exception ex)
 			{
-				if (reject != null) JSHelper.CallJS (reject, ex);
+				if (reject != null) JSHelper.CallJS (reject, new DataUtils._I_Exception (ex));
 			}
 		}
 		public void SaveJsonFileAsync (string savefilepath, object resolve, object reject)
@@ -2531,7 +3308,7 @@ namespace AppxPackage
 			}
 			catch (Exception ex)
 			{
-				if (reject != null) JSHelper.CallJS (reject, ex);
+				if (reject != null) JSHelper.CallJS (reject, new DataUtils._I_Exception (ex));
 			}
 		}
 		public void SaveXmlFileAsync (string savefilepath, object resolve, object reject)

@@ -148,12 +148,6 @@ namespace PriFileFormat
 
 			return true;
 		}
-		~ReverseMapSection ()
-		{
-			Mapping = null;
-			Scopes = null;
-			Items = null;
-		}
 	}
 
 }
