@@ -121,6 +121,11 @@ namespace PriFileFormat
 				FileNameOffset = fileNameOffset;
 			}
 		}
+		~ReferencedFileSection ()
+		{
+			foreach (var file in ReferencedFiles) { file.Parent = null; }
+			ReferencedFiles = null;
+		}
 	}
 	public class ReferencedEntry
 	{
@@ -145,11 +150,13 @@ namespace PriFileFormat
 				return fullName;
 			}
 		}
+		~ReferencedEntry () { Parent = null; }
 	}
 	public class ReferencedFolder: ReferencedEntry
 	{
 		internal ReferencedFolder (ReferencedFolder parent, string name) : base (parent, name) {}
 		public IReadOnlyList<ReferencedEntry> Children { get; internal set; }
+		~ReferencedFolder () { Children = null; }
 	}
 	public class ReferencedFile: ReferencedEntry
 	{

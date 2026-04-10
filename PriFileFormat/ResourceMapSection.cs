@@ -296,6 +296,11 @@ namespace PriFileFormat
 				DataOffset = dataOffset;
 			}
 		}
+		~ResourceMapSection ()
+		{
+			HierarchicalSchemaReference = null;
+			CandidateSets = null;
+		}
 	}
 	public enum ResourceValueType
 	{
@@ -317,6 +322,10 @@ namespace PriFileFormat
 			ResourceMapItem = resourceMapItem;
 			DecisionIndex = decisionIndex;
 			Candidates = candidates;
+		}
+		~CandidateSet ()
+		{
+			Candidates = null;
 		}
 	}
 
@@ -343,6 +352,12 @@ namespace PriFileFormat
 			DataItem = null;
 			Data = data;
 		}
+		~Candidate ()
+		{
+			SourceFile = null;
+			DataItem = null;
+			Data = null;
+		}
 	}
 	public class HierarchicalSchemaReference
 	{
@@ -356,6 +371,10 @@ namespace PriFileFormat
 			Unknown1 = unknown1;
 			Unknown2 = unknown2;
 			UniqueName = uniqueName;
+		}
+		~HierarchicalSchemaReference ()
+		{
+			VersionInfo = null;
 		}
 	}
 	public struct ResourceMapItemRef

@@ -10,8 +10,8 @@ namespace PriFileFormat
 		public HierarchicalSchemaVersionInfo Version { get; private set; }
 		public string UniqueName { get; private set; }
 		public string Name { get; private set; }
-		public IReadOnlyList<ResourceMapScope> Scopes { get; private set; }
-		public IReadOnlyList<ResourceMapItem> Items { get; private set; }
+		public IReadOnlyList <ResourceMapScope> Scopes { get; private set; }
+		public IReadOnlyList <ResourceMapItem> Items { get; private set; }
 		bool extendedVersion;
 		internal const string Identifier1 = "[mrm_hschema]  \0";
 		internal const string Identifier2 = "[mrm_hschemaex] ";
@@ -64,7 +64,7 @@ namespace PriFileFormat
 			uint unicodeDataLength = binaryReader.ReadUInt32 ();
 			binaryReader.ReadUInt32 (); // meaning unknown
 			if (extendedHNames) binaryReader.ReadUInt32 (); // meaning unknown
-			List<ScopeAndItemInfo> scopeAndItemInfos = new List<ScopeAndItemInfo> ((int)(numScopes + numItems));
+			List <ScopeAndItemInfo> scopeAndItemInfos = new List<ScopeAndItemInfo> ((int)(numScopes + numItems));
 			for (int i = 0; i < numScopes + numItems; i++)
 			{
 				ushort parent = binaryReader.ReadUInt16 ();
@@ -78,7 +78,7 @@ namespace PriFileFormat
 				bool nameInAscii = (flags & 0x20) != 0;
 				scopeAndItemInfos.Add (new ScopeAndItemInfo (parent, fullPathLength, isScope, nameInAscii, nameOffset, index));
 			}
-			List<ScopeExInfo> scopeExInfos = new List<ScopeExInfo> ((int)numScopes);
+			List <ScopeExInfo> scopeExInfos = new List <ScopeExInfo> ((int)numScopes);
 			for (int i = 0; i < numScopes; i++)
 			{
 				ushort scopeIndex = binaryReader.ReadUInt16 ();
@@ -127,7 +127,7 @@ namespace PriFileFormat
 			}
 			for (int i = 0; i < numScopes; i++)
 			{
-				List<ResourceMapEntry> children = new List<ResourceMapEntry> (scopeExInfos [i].ChildCount);
+				List <ResourceMapEntry> children = new List<ResourceMapEntry> (scopeExInfos [i].ChildCount);
 				for (int j = 0; j < scopeExInfos [i].ChildCount; j++)
 				{
 					ScopeAndItemInfo saiInfo = scopeAndItemInfos [scopeExInfos [i].FirstChildIndex + j];
@@ -171,6 +171,18 @@ namespace PriFileFormat
 				ChildCount = childCount;
 				FirstChildIndex = firstChildIndex;
 			}
+		}
+		~HierarchicalSchemaSection ()
+		{
+			try
+			{
+				Version = null;
+				foreach (var item in Items) { item.Parent = null; }
+				foreach (var scope in Scopes) { scope.Parent = null; }
+				Scopes = null;
+				Items = null;
+			}
+			catch { }
 		}
 		// Checksum computation is buggy for some files
 
@@ -258,19 +270,21 @@ namespace PriFileFormat
 				return fullName;
 			}
 		}
+		~ResourceMapEntry () { Parent = null; }
 	}
 	public class ResourceMapScope: ResourceMapEntry
 	{
-		internal ResourceMapScope (ushort index, ResourceMapScope parent, string name) : base (index, parent, name) { }
-		public IReadOnlyList<ResourceMapEntry> Children { get; internal set; }
+		internal ResourceMapScope (ushort index, ResourceMapScope parent, string name) : base (index, parent, name) {}
+		public IReadOnlyList <ResourceMapEntry> Children { get; internal set; }
 		public override string ToString ()
 		{
 			return $"Scope {Index} {FullName} ({Children.Count} children)";
 		}
+		~ResourceMapScope () { Children = null; }
 	}
 	public class ResourceMapItem: ResourceMapEntry
 	{
-		internal ResourceMapItem (ushort index, ResourceMapScope parent, string name) : base (index, parent, name) { }
+		internal ResourceMapItem (ushort index, ResourceMapScope parent, string name) : base (index, parent, name) {}
 		public override string ToString ()
 		{
 			return $"Item {Index} {FullName}";
