@@ -12,7 +12,7 @@
 <p>Download the latest release from the Releases section.</p>
 <a href="https://github.com/modernw/App-Installer-For-Windows-8.x-Reset/releases" target="_blank"><img src="https://img.shields.io/github/v/release/modernw/App-Installer-For-Windows-8.x-Reset"></a>
 <p>Note: There is no official release yet, but the test version still does not have the Pre-released label; this is for testing upgrade functionality. Once the official release is complete, previous versions will be marked as Pre-released.</p>
-<a href="https://github.com/modernw/App-Installer-For-Windows-8.x-Reset/tree/master/Tools/Runtime" target="blank">Download Runtime Libraries</a><br>
+<a href="https://github.com/modernw/App-Installer-For-Windows-8.x-Reset/releases/tag/0.0.0.0" target="blank">Download Runtime Libraries</a><br>
 <a href="https://github.com/modernw/App-Installer-For-Windows-8.x-Reset/blob/master/Tools/Dependencies/depsinstaller.zip" target="blank">Download Dependencies for Metro Apps</a>
 <h2>Attention</h2>
 <ul>
