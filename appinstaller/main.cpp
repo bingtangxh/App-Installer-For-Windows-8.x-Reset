@@ -1808,6 +1808,7 @@ std::vector <std::wstring> LoadFileListW (const std::wstring &filePath)
 	std::wstring line;
 	while (std::getline (file, line))
 	{
+		line = std::wnstring::trim (line);
 		if (!line.empty () && line.back () == L'\r') line.pop_back ();
 		if (!line.empty () && !std::wnstring::empty (line) && IsFileExists (line)) result.push_back (line);
 		auto fullFile = CombinePath (GetFileDirectoryW (filePath), line);
