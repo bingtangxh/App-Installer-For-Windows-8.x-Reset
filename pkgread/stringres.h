@@ -323,7 +323,8 @@ std::wstring GetCapabilityDisplayName (const std::wstring &capname)
 	{
 		for (auto &it : g_nameToId)
 		{
-			if (it.first == searchname) return GetRCStringSW (it.second);
+			if (it.first == searchname) 
+				return GetRCStringSW (it.second);
 		}
 	}
 	else return ret;
