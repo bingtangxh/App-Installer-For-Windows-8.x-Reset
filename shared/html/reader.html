@@ -252,6 +252,7 @@
                             var readSave = document.getElementById("read-result-save");
                             var readToXml = document.getElementById("read-result-xml");
                             var readToJson = document.getElementById("read-result-json");
+                            var readRefreshItem = document.getElementById("read-refreshmetadata");
                             readUsepri.checked = set.getKey("PackageReader:DefaultParsingPriFile").readBool();
                             readResult.style.display = "none";
                             readBtn.onclick = function() {
@@ -265,6 +266,7 @@
                                 readToXml.disabled = true;
                                 readToJson.disabled = true;
                                 readUsepri.disabled = true;
+                                readRefreshItem.disabled = true;
 
                                 function onCompleted() {
                                     self.disabled = false;
@@ -274,6 +276,7 @@
                                     readToXml.disabled = false;
                                     readToJson.disabled = false;
                                     readUsepri.disabled = false;
+                                    readRefreshItem.disabled = false;
                                 }
                                 if (!readPkgpath.value) {
                                     readResult.style.display = "";
