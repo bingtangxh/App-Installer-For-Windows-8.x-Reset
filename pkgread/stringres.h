@@ -269,7 +269,7 @@ std::string GetSuitableLanguageValue (const std::map <std::nstring, std::string>
 	if (map.empty ()) return "";
 	std::string ret = GetSuitableLanguageValue (map, pugi::as_utf8 (GetComputerLocaleCodeW ()));
 	if (ret.empty ()) ret = GetSuitableLanguageValue (map, "en-US");
-	if (ret.empty ()) ret = map.begin ()->second;
+	//if (ret.empty ()) ret = map.begin ()->second;
 	return ret;
 }
 struct xmldoc
@@ -323,7 +323,8 @@ std::wstring GetCapabilityDisplayName (const std::wstring &capname)
 	{
 		for (auto &it : g_nameToId)
 		{
-			if (it.first == searchname) return GetRCStringSW (it.second);
+			if (it.first == searchname) 
+				return GetRCStringSW (it.second);
 		}
 	}
 	else return ret;

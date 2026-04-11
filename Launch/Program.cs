@@ -62,7 +62,7 @@ namespace Launch
 			}
 			string appUserModelId = args [0];
 			string argumentLine = BuildCommandLine (args, 1);
-			AppxPackage.PackageManager.ActiveApp (appUserModelId, string.IsNullOrEmpty (argumentLine) ? null : argumentLine);
+			AppxPackage.PackageManager.ActiveApp (appUserModelId, argumentLine);
 		}
 	}
 }
