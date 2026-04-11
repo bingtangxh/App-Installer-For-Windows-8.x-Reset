@@ -797,6 +797,14 @@ namespace Bridge
 		}
 		public void UpdateApplicationItems (object items)
 		{
+			lock (_I_PackageReader._cacheCleanupLock)
+			{
+				try
+				{
+					_I_PackageReader._cache?.Clear ();
+				} 
+				catch { }
+			}
 			var stritems = JsArrayToList (items).Select (e => e?.ToString ()).ToList ();
 			PackageReader.UpdateApplicationItems (stritems);
 		}

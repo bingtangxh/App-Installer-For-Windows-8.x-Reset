@@ -671,10 +671,10 @@
     <lang name="en-US">Problem occurred during saving</lang>
   </resource>
   <resource id="READER_READER_SAVEINGJSON">
-    <lang name="zh-CN"><![CDATA[正在生成 JSON 文件，请稍候... 
-这可能需要比较长的时间。]]></lang>
-    <lang name="en-US"><![CDATA[Generating JSON file, please wait... 
-This may take a long time.]]></lang>
+    <lang name="zh-CN">正在生成 JSON 文件，请稍候... 
+这可能需要比较长的时间。</lang>
+    <lang name="en-US">Generating JSON file, please wait... 
+This may take a long time.</lang>
   </resource>
   <resource id="READER_READER_JSONFILE">
     <lang name="zh-CN">包含 JSON 报告的 ZIP 文件</lang>
@@ -685,10 +685,10 @@ This may take a long time.]]></lang>
     <lang name="en-US">ZIP file containing XML report</lang>
   </resource>
   <resource id="READER_READER_SAVEINGXML">
-    <lang name="zh-CN"><![CDATA[正在生成 XML 文件，请稍候... 
-这可能需要比较长的时间。]]></lang>
-    <lang name="en-US"><![CDATA[Generating XML file, please wait... 
-This may take a long time.]]></lang>
+    <lang name="zh-CN">正在生成 XML 文件，请稍候... 
+这可能需要比较长的时间。</lang>
+    <lang name="en-US">Generating XML file, please wait... 
+This may take a long time.</lang>
   </resource>
   <resource id="READER_ACQUIRE_TITLE">
     <lang name="zh-CN">获取</lang>
@@ -876,7 +876,7 @@ This may take a long time.]]></lang>
   </resource>
   <resource id="APPMETADATA_Square44x44Logo">
     <lang name="zh-CN">应用列表图标 (Windows Phone 或 UWP)</lang>
-    <lang name="en-US">App List Logo (Windows Phone 或 UWP)</lang>
+    <lang name="en-US">App List Logo (Windows Phone or UWP)</lang>
   </resource>
   <resource id="APPMETADATA_Square70x70Logo">
     <lang name="zh-CN">小磁贴图标 (Windows 8.1)</lang>
