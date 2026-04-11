@@ -1,412 +1,657 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <resource id="accessoryManager">
-        <lang name="zh-CN">作为附件应用注册，并选择加入特定应用的通知</lang>
-    </resource>
-    <resource id="activity">
-        <lang name="zh-CN">检测设备的当前动向</lang>
-    </resource>
-    <resource id="allJoyn">
-        <lang name="zh-CN">发现支持 AllJoyn 的应用和设备并与其交互</lang>
-    </resource>
-    <resource id="allowElevation">
-        <lang name="zh-CN">以管理员身份运行</lang>
-    </resource>
-    <resource id="appDiagnostics">
-        <lang name="zh-CN">收集有关其他应用的诊断信息</lang>
-    </resource>
-    <resource id="applicationData">
-        <lang name="zh-CN">访问存储在设备上的本地数据</lang>
-    </resource>
-    <resource id="applicationPackage">
-        <lang name="zh-CN">访问本地程序包内容</lang>
-    </resource>
-    <resource id="appLicensing">
-        <lang name="zh-CN">应用许可</lang>
-    </resource>
-    <resource id="appointments">
-        <lang name="zh-CN">使用日历中的约会</lang>
-    </resource>
-    <resource id="appointmentsSystem">
-        <lang name="zh-CN">读取并修改日历上的所有约会</lang>
-    </resource>
-    <resource id="appointmentSystem">
-        <lang name="zh-CN">系统级别约会访问</lang>
-    </resource>
-    <resource id="authenticationManagerAuthentication">
-        <lang name="zh-CN">获取经过身份验证的资源。</lang>
-    </resource>
-
-    <resource id="blockedChatMessages">
-        <lang name="zh-CN">读取已由“垃圾邮件筛选”应用阻止的短信和彩信</lang>
-    </resource>
-    <resource id="bluetooth">
-        <lang name="zh-CN">与已配对的蓝牙设备通信</lang>
-    </resource>
-    <resource id="bluetooth_genericAttributeProfile">
-        <lang name="zh-CN">蓝牙智能设备</lang>
-    </resource>
-    <resource id="bluetooth_rfcomm">
-        <lang name="zh-CN">蓝牙设备</lang>
-    </resource>
-    <resource id="broadFileSystemAccess">
-        <lang name="zh-CN">文件系统</lang>
-    </resource>
-    <resource id="callHistory">
-        <lang name="zh-CN">呼叫历史记录</lang>
-    </resource>
-    <resource id="callHistorySystem">
-        <lang name="zh-CN">系统级别呼叫历史记录访问</lang>
-    </resource>
-    <resource id="cellularDeviceControl">
-        <lang name="zh-CN">能够控制 Windows 设备</lang>
-    </resource>
-    <resource id="cellularDeviceIdentity">
-        <lang name="zh-CN">访问 Windows 设备标识数据</lang>
-    </resource>
-    <resource id="cellularMessaging">
-        <lang name="zh-CN">利用短信和富通信</lang>
-    </resource>
-    <resource id="chat">
-        <lang name="zh-CN">阅读并删除文本消息</lang>
-    </resource>
-    <resource id="chatSystem">
-        <lang name="zh-CN">阅读并编写所有短信和彩信</lang>
-    </resource>
-    <resource id="codeGeneration">
-        <lang name="zh-CN">动态生成代码</lang>
-    </resource>
-    <resource id="confirmAppClose">
-        <lang name="zh-CN">关闭自身及其窗口，并延迟关闭它们的应用</lang>
-    </resource>
-    <resource id="contacts">
-        <lang name="zh-CN">使用联系人</lang>
-    </resource>
-    <resource id="contactsSystem">
-        <lang name="zh-CN">读取联系人信息</lang>
-    </resource>
-
-    <resource id="contactSystem">
-        <lang name="zh-CN">系统级别联系人访问</lang>
-    </resource>
-    <resource id="cortanaSpeechAccessory">
-        <lang name="zh-CN">适用于附件的语音识别</lang>
-    </resource>
-    <resource id="customInstallActions">
-        <lang name="zh-CN">安装其他软件</lang>
-    </resource>
-    <resource id="deviceManagementDmAccount">
-        <lang name="zh-CN">设置和配置移动运营商开放移动联盟 - 设备管理 (MO OMA-DM) 帐户</lang>
-    </resource>
-    <resource id="deviceManagementEmailAccount">
-        <lang name="zh-CN">添加并管理电子邮件帐户</lang>
-    </resource>
-    <resource id="deviceManagementFoundation">
-        <lang name="zh-CN">移动设备管理配置</lang>
-    </resource>
-    <resource id="deviceManagementWapSecurityPolicies">
-        <lang name="zh-CN">配置无线应用程序协议 (WAP)</lang>
-    </resource>
-    <resource id="deviceMangementFoundation">
-        <lang name="zh-CN">对设备上的移动设备管理 (MDM) 云解决方案提供商 (CSP) 基础设施具有基本的访问权限</lang>
-    </resource>
-    <resource id="deviceUnlock">
-        <lang name="zh-CN">解锁适用于开发人员和企业方案的设备</lang>
-    </resource>
-    <resource id="documentsLibrary">
-        <lang name="zh-CN">使用文档库</lang>
-    </resource>
-    <resource id="dualSimTiles">
-        <lang name="zh-CN">在具有多张 SIM 卡的设备上创建另一个应用列表条目</lang>
-    </resource>
-    <resource id="email">
-        <lang name="zh-CN">读取、分类和发送电子邮件</lang>
-    </resource>
-    <resource id="emailSystem">
-        <lang name="zh-CN">读取、分类和发送限制或敏感的电子邮件。</lang>
-    </resource>
-    <resource id="enterpriseAuthentication">
-        <lang name="zh-CN">使用企业域凭据</lang>
-    </resource>
-    <resource id="enterpriseDataPolicy">
-        <lang name="zh-CN">为你的设备定义特定于企业的策略</lang>
-    </resource>
-    <resource id="enterpriseDeviceLockdown">
-        <lang name="zh-CN">使用设备锁定 API 并访问企业共享的存储文件夹</lang>
-    </resource>
-
-    <resource id="extendedExecutionBackgroundAudio">
-        <lang name="zh-CN">当应用不在前台时播放音频</lang>
-    </resource>
-    <resource id="extendedExecutionCritical">
-        <lang name="zh-CN">开始重要的扩展执行会话</lang>
-    </resource>
-    <resource id="extendedExecutionUnconstrained">
-        <lang name="zh-CN">开始不受限制的扩展执行会话</lang>
-    </resource>
-    <resource id="externalDependenciesVirtualCapability">
-        <lang name="zh-CN">安装外部依赖项</lang>
-    </resource>
-    <resource id="firstSignInSettings">
-        <lang name="zh-CN">在首次登录到设备时访问设置</lang>
-    </resource>
-    <resource id="gameList">
-        <lang name="zh-CN">游戏列表</lang>
-    </resource>
-    <resource id="humaninterfacedevice">
-        <lang name="zh-CN">使用支持人机接口设备 (HID) 协议的设备</lang>
-    </resource>
-    <resource id="hyperLinkLearnMore">
-        <lang name="zh-CN">了解详细信息</lang>
-    </resource>
-    <resource id="inputForegroundObservation">
-        <lang name="zh-CN">当应用程序在前台(处于焦点位置和活动状态)时，观察并截获各种形式的原始输入</lang>
-    </resource>
-    <resource id="inputInjection">
-        <lang name="zh-CN">授予应用权限以将各种形式的输入注入 OneCore 系统</lang>
-    </resource>
-    <resource id="inputInjection_Brokered">
-        <lang name="zh-CN">注入输入并以编程方式推动用户体验</lang>
-    </resource>
-    <resource id="inputObservation">
-        <lang name="zh-CN">观察正在由系统接收的原始输入</lang>
-    </resource>
-    <resource id="inputSuppression">
-        <lang name="zh-CN">取消正在由系统接收的原始输入</lang>
-    </resource>
-    <resource id="internetClient">
-        <lang name="zh-CN">访问 Internet 连接</lang>
-    </resource>
-    <resource id="internetClientServer">
-        <lang name="zh-CN">访问 Internet 连接并充当服务器。</lang>
-    </resource>
-    <resource id="interopServices">
-        <lang name="zh-CN">驱动程序访问</lang>
-    </resource>
-    <resource id="localSystemServices">
-        <lang name="zh-CN">在使用最大权限运行的计算机上安装服务</lang>
-    </resource>
-    <resource id="location">
-        <lang name="zh-CN">使用位置</lang>
-    </resource>
-    <resource id="locationHistory">
-        <lang name="zh-CN">访问设备的位置历史记录</lang>
-    </resource>
-    <resource id="locationSystem">
-        <lang name="zh-CN">定位系统</lang>
-    </resource>
-    <resource id="lockScreenCreatives">
-        <lang name="zh-CN">访问锁屏界面的创造性设置</lang>
-    </resource>
-    <resource id="lowLevelDevices">
-        <lang name="zh-CN">IoT 低级别总线硬件</lang>
-    </resource>
-    <resource id="microphone">
-        <lang name="zh-CN">使用麦克风</lang>
-    </resource>
-    <resource id="modifiableApp">
-        <lang name="zh-CN">允许用户修改应用</lang>
-    </resource>
-    <resource id="musicLibrary">
-        <lang name="zh-CN">使用音乐库</lang>
-    </resource>
-    <resource id="networkConnectionManagerProvisioning">
-        <lang name="zh-CN">定义将设备与 WWAN 和 WLAN 接口相连接的策略</lang>
-    </resource>
-    <resource id="networkDataPlanProvisioning">
-        <lang name="zh-CN">在设备上搜集有关流量套餐的信息并读取网络使用情况</lang>
-    </resource>
-    <resource id="networkingVpnProvider">
-        <lang name="zh-CN">访问 VPN 功能</lang>
-    </resource>
-    <resource id="objects3d">
-        <lang name="zh-CN">以编程方式访问 3D 对象</lang>
-    </resource>
-    <resource id="oemDeployment">
-        <lang name="zh-CN">OEM 和 MO 合作伙伴应用</lang>
-    </resource>
-    <resource id="oemPublicDirectory">
-        <lang name="zh-CN">OEM 和 MO 合作伙伴应用</lang>
-    </resource>
-    <resource id="optical">
-        <lang name="zh-CN">访问光盘驱动器上的功能</lang>
-    </resource>
-
-    <resource id="packagedServices">
-        <lang name="zh-CN">在计算机上安装服务</lang>
-    </resource>
-    <resource id="packageManagement">
-        <lang name="zh-CN">直接管理其他应用</lang>
-    </resource>
-    <resource id="packagePolicySystem">
-        <lang name="zh-CN">控制与安装在设备上的应用相关的系统策略</lang>
-    </resource>
-    <resource id="packageQuery">
-        <lang name="zh-CN">搜集有关其他应用的信息</lang>
-    </resource>
-    <resource id="packageWriteRedirectionCompatibilityShim">
-        <lang name="zh-CN">将文件写入应用的安装文件夹</lang>
-    </resource>
-    <resource id="phoneCall">
-        <lang name="zh-CN">访问设备上所有的电话线</lang>
-    </resource>
-    <resource id="phoneCallHistory">
-        <lang name="zh-CN">读取呼叫历史记录并删除历史记录中的条目</lang>
-    </resource>
-    <resource id="phoneCallHistoryPublic">
-        <lang name="zh-CN">电话呼叫公共历史记录</lang>
-    </resource>
-    <resource id="phoneCallHistorySystem">
-        <lang name="zh-CN">完全修改呼叫历史记录</lang>
-    </resource>
-    <resource id="picturesLibrary">
-        <lang name="zh-CN">使用图片库</lang>
-    </resource>
-    <resource id="pointOfService">
-        <lang name="zh-CN">使用条形码扫描仪和磁卡读卡器</lang>
-    </resource>
-    <resource id="previewStore">
-        <lang name="zh-CN">Microsoft Store 预览版功能</lang>
-    </resource>
-    <resource id="previewUiComposition">
-        <lang name="zh-CN">预览 Windows UI 构成 API 以接收反馈</lang>
-    </resource>
-    <resource id="privateNetworkClientServer">
-        <lang name="zh-CN">访问家庭或工作网络</lang>
-    </resource>
-    <resource id="proximity">
-        <lang name="zh-CN">使用支持近场通信 (NFC) 服务的设备</lang>
-    </resource>
-    <resource id="recordedCallsFolder">
-        <lang name="zh-CN">访问电话录音</lang>
-    </resource>
-
-    <resource id="remotePassportAuthentication">
-        <lang name="zh-CN">访问可用于解锁远程电脑的凭据</lang>
-    </resource>
-    <resource id="removableStorage">
-        <lang name="zh-CN">使用存储在外部存储设备上的数据</lang>
-    </resource>
-    <resource id="runFullTrust">
-        <lang name="zh-CN">使用全部系统资源</lang>
-    </resource>
-    <resource id="screenDuplication">
-        <lang name="zh-CN">在其他设备上投射屏幕</lang>
-    </resource>
-    <resource id="sharedUserCertificates">
-        <lang name="zh-CN">使用设备上可用的软件和硬件证书</lang>
-    </resource>
-    <resource id="smsSend">
-        <lang name="zh-CN">发送短信和彩信</lang>
-    </resource>
-    <resource id="spatialPerception">
-        <lang name="zh-CN">查看你当前和过去的环境</lang>
-    </resource>
-    <resource id="systemManagement">
-        <lang name="zh-CN">IoT 系统管理</lang>
-    </resource>
-    <resource id="teamEditionExperience">
-        <lang name="zh-CN">访问控制试验体验的内部 API</lang>
-    </resource>
-    <resource id="uiAccess">
-        <lang name="zh-CN">与你的计算机上的每个应用程序交互</lang>
-    </resource>
-    <resource id="unvirtualizedResources">
-        <lang name="zh-CN">写入在卸载时不会清除的注册表项和文件</lang>
-    </resource>
-    <resource id="usb">
-        <lang name="zh-CN">访问 USB 连接的设备</lang>
-    </resource>
-    <resource id="userAccountInformation">
-        <lang name="zh-CN">访问帐户的用户名和头像</lang>
-    </resource>
-    <resource id="userDataAccountSetup">
-        <lang name="zh-CN">直接访问存储在设备上的帐户</lang>
-    </resource>
-    <resource id="userDataAccountsProvider">
-        <lang name="zh-CN">用户数据帐户提供程序</lang>
-    </resource>
-    <resource id="userDataSystem">
-        <lang name="zh-CN">对你的数据具有不受限制的访问权限</lang>
-    </resource>
-
-    <resource id="userPrincipalName">
-        <lang name="zh-CN">检索用户主体名称 (UPN)，无需许可提示</lang>
-    </resource>
-    <resource id="userSigninSupport">
-        <lang name="zh-CN">在设备上使用帐户登录到应用</lang>
-    </resource>
-    <resource id="videosLibrary">
-        <lang name="zh-CN">使用视频库</lang>
-    </resource>
-    <resource id="visualElementsSystem">
-        <lang name="zh-CN">访问应用的磁贴数据</lang>
-    </resource>
-    <resource id="visualVoiceMail">
-        <lang name="zh-CN">对可视语音信箱具有完全访问权限</lang>
-    </resource>
-    <resource id="voipCall">
-        <lang name="zh-CN">使用设备的 IP 语音 (VoIP) 服务</lang>
-    </resource>
-    <resource id="walletSystem">
-        <lang name="zh-CN">对存储的“电子钱包”应用卡具有完全访问权限</lang>
-    </resource>
-    <resource id="webcam">
-        <lang name="zh-CN">使用网络摄像头</lang>
-    </resource>
-    <resource id="wiFiControl">
-        <lang name="zh-CN">扫描并连接到 WLAN 网络</lang>
-    </resource>
-    <resource id="xboxAccessoryManagement">
-        <lang name="zh-CN">Xbox 附件</lang>
-    </resource>
-
-    <resource id="backgroundMediaPlayback">
-        <lang name="zh-CN">在后台播放媒体</lang>
-    </resource>
-    <resource id="extendedExecution">
-        <lang name="zh-CN">允许应用程序在进入后台后继续执行一段时间的操作</lang>
-    </resource>
-    <resource id="graphicsCaptureProgrammatic">
-        <lang name="zh-CN">允许使用图形捕获</lang>
-    </resource>
-    <resource id="graphicsCaptureWithoutBorder">
-        <lang name="zh-CN">允许无边框图形捕获</lang>
-    </resource>
-    <resource id="inProcessMediaExtension">
-        <lang name="zh-CN">进程内媒体扩展</lang>
-    </resource>
-    <resource id="inputInjectionBrokered">
-        <lang name="zh-CN">允许应用程序以编程方式将各种形式的输入注入系统，例如 HID、触摸、笔、键盘或鼠标。</lang>
-    </resource>
-    <resource id="offlineMapsManagement">
-        <lang name="zh-CN">允许应用程序访问离线地图。</lang>
-    </resource>
-    <resource id="phoneCallSystem">
-        <lang name="zh-CN">允许应用访问设备上的所有电话线</lang>
-    </resource>
-    <resource id="remoteSystem">
-        <lang name="zh-CN">允许应用程序访问与用户的 Microsoft 帐户关联的设备列表</lang>
-    </resource>
-    <resource id="slapiQueryLicenseValue">
-        <lang name="zh-CN">查询软件许可政策</lang>
-    </resource>
-    <resource id="storeAppInstall">
-        <lang name="zh-CN">管理应用安装</lang>
-    </resource>
-    <resource id="userDataAccounts">
-        <lang name="zh-CN">可访问电子邮件、联系人、日历等的用户数据帐户</lang>
-    </resource>
-    <resource id="userDataTasks">
-        <lang name="zh-CN">允许应用程序访问任务设置的当前状态</lang>
-    </resource>
-    <resource id="userDataTasksSystem">
-        <lang name="zh-CN">可访问系统任务项</lang>
-    </resource>
-    <resource id="userNotificationListener">
-        <lang name="zh-CN">允许应用程序访问通知设置的当前状态</lang>
-    </resource>
-    <resource id="webPlatformMediaExtension">
-        <lang name="zh-CN">Web 平台媒体扩展</lang>
-    </resource>
+  <resource id="accessoryManager">
+    <lang name="zh-CN">作为附件应用注册，并选择加入特定应用的通知</lang>
+    <lang name="en-us">Register as an accessory app and opt-in to specific app’s notifications</lang>
+    <lang name="en-gb">Register as an accessory app and opt-in to specific app’s notifications</lang>
+  </resource>
+  <resource id="activity">
+    <lang name="zh-CN">检测设备的当前动向</lang>
+    <lang name="en-us">Detect the current motion of your device</lang>
+    <lang name="en-gb">Detect the current motion of your device</lang>
+  </resource>
+  <resource id="allJoyn">
+    <lang name="zh-CN">发现支持 AllJoyn 的应用和设备并与其交互</lang>
+    <lang name="en-us">Discover and interact with AllJoyn enabled apps and devices</lang>
+    <lang name="en-gb">Discover and interact with AllJoyn enabled apps and devices</lang>
+  </resource>
+  <resource id="allowElevation">
+    <lang name="zh-CN">以管理员身份运行</lang>
+    <lang name="en-us">Run as administrator</lang>
+    <lang name="en-gb">Run as administrator</lang>
+  </resource>
+  <resource id="appDiagnostics">
+    <lang name="zh-CN">收集有关其他应用的诊断信息</lang>
+    <lang name="en-us">Gathers diagnostic information about other apps</lang>
+    <lang name="en-gb">Gathers diagnostic information about other apps</lang>
+  </resource>
+  <resource id="applicationData">
+    <lang name="zh-CN">访问存储在设备上的本地数据</lang>
+    <lang name="en-us">Access local data stored on your device</lang>
+    <lang name="en-gb">Access local data stored on your device</lang>
+  </resource>
+  <resource id="applicationPackage">
+    <lang name="zh-CN">访问本地程序包内容</lang>
+    <lang name="en-us">Access local package contents</lang>
+    <lang name="en-gb">Access local package contents</lang>
+  </resource>
+  <resource id="appLicensing">
+    <lang name="zh-CN">应用许可</lang>
+    <lang name="en-us">App Licensing</lang>
+    <lang name="en-gb">App Licensing</lang>
+  </resource>
+  <resource id="appointments">
+    <lang name="zh-CN">使用日历中的约会</lang>
+    <lang name="en-us">Use the appointments in your calendar</lang>
+    <lang name="en-gb">Use the appointments in your calendar</lang>
+  </resource>
+  <resource id="appointmentsSystem">
+    <lang name="zh-CN">读取并修改日历上的所有约会</lang>
+    <lang name="en-us">Read and modify all appointments on your calendar</lang>
+    <lang name="en-gb">Read and modify all appointments on your calendar</lang>
+  </resource>
+  <resource id="appointmentSystem">
+    <lang name="zh-CN">系统级别约会访问</lang>
+    <lang name="en-us">System Level Appointment Access</lang>
+    <lang name="en-gb">System Level Appointment Access</lang>
+  </resource>
+  <resource id="authenticationManagerAuthentication">
+    <lang name="zh-CN">获取经过身份验证的资源。</lang>
+    <lang name="en-us">Getting authenticated resources.</lang>
+    <lang name="en-gb">Getting authenticated resources.</lang>
+  </resource>
+  <resource id="blockedChatMessages">
+    <lang name="zh-CN">读取已由“垃圾邮件筛选”应用阻止的短信和彩信</lang>
+    <lang name="en-us">Read SMS and MMS messages that have been blocked by the Spam Filter app</lang>
+    <lang name="en-gb">Read SMS and MMS messages that have been blocked by the Spam Filter app</lang>
+  </resource>
+  <resource id="bluetooth">
+    <lang name="zh-CN">与已配对的蓝牙设备通信</lang>
+    <lang name="en-us">Communicate with already paired Bluetooth devices</lang>
+    <lang name="en-gb">Communicate with already paired Bluetooth devices</lang>
+  </resource>
+  <resource id="bluetooth_genericAttributeProfile">
+    <lang name="zh-CN">蓝牙智能设备</lang>
+    <lang name="en-us">Bluetooth smart device</lang>
+    <lang name="en-gb">Bluetooth smart device</lang>
+  </resource>
+  <resource id="bluetooth_rfcomm">
+    <lang name="zh-CN">蓝牙设备</lang>
+    <lang name="en-us">Bluetooth device</lang>
+    <lang name="en-gb">Bluetooth device</lang>
+  </resource>
+  <resource id="broadFileSystemAccess">
+    <lang name="zh-CN">文件系统</lang>
+    <lang name="en-us">File System</lang>
+    <lang name="en-gb">File System</lang>
+  </resource>
+  <resource id="callHistory">
+    <lang name="zh-CN">呼叫历史记录</lang>
+    <lang name="en-us">Call History</lang>
+    <lang name="en-gb">Call History</lang>
+  </resource>
+  <resource id="callHistorySystem">
+    <lang name="zh-CN">系统级别呼叫历史记录访问</lang>
+    <lang name="en-us">System Level Call History Access</lang>
+    <lang name="en-gb">System Level Call History Access</lang>
+  </resource>
+  <resource id="cellularDeviceControl">
+    <lang name="zh-CN">能够控制 Windows 设备</lang>
+    <lang name="en-us">Have control over your Windows device</lang>
+    <lang name="en-gb">Have control over your Windows device</lang>
+  </resource>
+  <resource id="cellularDeviceIdentity">
+    <lang name="zh-CN">访问 Windows 设备标识数据</lang>
+    <lang name="en-us">Access your Windows device identification data</lang>
+    <lang name="en-gb">Access your Windows device identification data</lang>
+  </resource>
+  <resource id="cellularMessaging">
+    <lang name="zh-CN">利用短信和富通信</lang>
+    <lang name="en-us">Make use of SMS and RCS</lang>
+    <lang name="en-gb">Make use of SMS and RCS</lang>
+  </resource>
+  <resource id="chat">
+    <lang name="zh-CN">阅读并删除文本消息</lang>
+    <lang name="en-us">Read and delete Text Messages</lang>
+    <lang name="en-gb">Read and delete Text Messages</lang>
+  </resource>
+  <resource id="chatSystem">
+    <lang name="zh-CN">阅读并编写所有短信和彩信</lang>
+    <lang name="en-us">Read and write all SMS and MMS messages</lang>
+    <lang name="en-gb">Read and write all SMS and MMS messages</lang>
+  </resource>
+  <resource id="codeGeneration">
+    <lang name="zh-CN">动态生成代码</lang>
+    <lang name="en-us">Generate code dynamically</lang>
+    <lang name="en-gb">Generate code dynamically</lang>
+  </resource>
+  <resource id="confirmAppClose">
+    <lang name="zh-CN">关闭自身及其窗口，并延迟关闭它们的应用</lang>
+    <lang name="en-us">Close themselves and their own windows, and delay the closing of their app</lang>
+    <lang name="en-gb">Close themselves and their own windows, and delay the closing of their app</lang>
+  </resource>
+  <resource id="contacts">
+    <lang name="zh-CN">使用联系人</lang>
+    <lang name="en-us">Use your contacts</lang>
+    <lang name="en-gb">Use your contacts</lang>
+  </resource>
+  <resource id="contactsSystem">
+    <lang name="zh-CN">读取联系人信息</lang>
+    <lang name="en-us">Read contact information </lang>
+    <lang name="en-gb">Read contact information </lang>
+  </resource>
+  <resource id="contactSystem">
+    <lang name="zh-CN">系统级别联系人访问</lang>
+    <lang name="en-us">System Level Contact Access</lang>
+    <lang name="en-gb">System Level Contact Access</lang>
+  </resource>
+  <resource id="cortanaSpeechAccessory">
+    <lang name="zh-CN">适用于附件的语音识别</lang>
+    <lang name="en-us">Speech Recognition for Accessories</lang>
+    <lang name="en-gb">Speech Recognition for Accessories</lang>
+  </resource>
+  <resource id="customInstallActions">
+    <lang name="zh-CN">安装其他软件</lang>
+    <lang name="en-us">Install additional software</lang>
+    <lang name="en-gb">Install additional software</lang>
+  </resource>
+  <resource id="deviceManagementDmAccount">
+    <lang name="zh-CN">设置和配置移动运营商开放移动联盟 - 设备管理 (MO OMA-DM) 帐户</lang>
+    <lang name="en-us">Provision and configure Mobile Operator Open Mobile Alliance - Device Management (MO OMA-DM) accounts</lang>
+    <lang name="en-gb">Provision and configure Mobile Operator Open Mobile Alliance - Device Management (MO OMA-DM) accounts</lang>
+  </resource>
+  <resource id="deviceManagementEmailAccount">
+    <lang name="zh-CN">添加并管理电子邮件帐户</lang>
+    <lang name="en-us">Add and Manage Email Accounts</lang>
+    <lang name="en-gb">Add and Manage Email Accounts</lang>
+  </resource>
+  <resource id="deviceManagementFoundation">
+    <lang name="zh-CN">移动设备管理配置</lang>
+    <lang name="en-us">Mobile Device Management Configuration</lang>
+    <lang name="en-gb">Mobile Device Management Configuration</lang>
+  </resource>
+  <resource id="deviceManagementWapSecurityPolicies">
+    <lang name="zh-CN">配置无线应用程序协议 (WAP)</lang>
+    <lang name="en-us">Configure Wireless Application Protocol (WAP)</lang>
+    <lang name="en-gb">Configure Wireless Application Protocol (WAP)</lang>
+  </resource>
+  <resource id="deviceMangementFoundation">
+    <lang name="zh-CN">对设备上的移动设备管理 (MDM) 云解决方案提供商 (CSP) 基础设施具有基本的访问权限</lang>
+    <lang name="en-us">Have basic access to the Mobile Device Management (MDM) configuration service provider (CSP) infrastructure on the device</lang>
+    <lang name="en-gb">Have basic access to the Mobile Device Management (MDM) configuration service provider (CSP) infrastructure on the device</lang>
+  </resource>
+  <resource id="deviceUnlock">
+    <lang name="zh-CN">解锁适用于开发人员和企业方案的设备</lang>
+    <lang name="en-us">Unlock your device for developer and enterprise scenarios</lang>
+    <lang name="en-gb">Unlock your device for developer and enterprise scenarios</lang>
+  </resource>
+  <resource id="documentsLibrary">
+    <lang name="zh-CN">使用文档库</lang>
+    <lang name="en-us">Use your documents library</lang>
+    <lang name="en-gb">Use your documents library</lang>
+  </resource>
+  <resource id="dualSimTiles">
+    <lang name="zh-CN">在具有多张 SIM 卡的设备上创建另一个应用列表条目</lang>
+    <lang name="en-us">Create an additional app list entry on devices that have multiple SIMs</lang>
+    <lang name="en-gb">Create an additional app list entry on devices that have multiple SIMs</lang>
+  </resource>
+  <resource id="email">
+    <lang name="zh-CN">读取、分类和发送电子邮件</lang>
+    <lang name="en-us">Read, triage and send your emails</lang>
+    <lang name="en-gb">Read, triage and send your emails</lang>
+  </resource>
+  <resource id="emailSystem">
+    <lang name="zh-CN">读取、分类和发送限制或敏感的电子邮件。</lang>
+    <lang name="en-us">Read, triage and send your restricted or sensitive emails.</lang>
+    <lang name="en-gb">Read, triage and send your restricted or sensitive emails.</lang>
+  </resource>
+  <resource id="enterpriseAuthentication">
+    <lang name="zh-CN">使用企业域凭据</lang>
+    <lang name="en-us">Use your enterprise domain credentials</lang>
+    <lang name="en-gb">Use your enterprise domain credentials</lang>
+  </resource>
+  <resource id="enterpriseDataPolicy">
+    <lang name="zh-CN">为你的设备定义特定于企业的策略</lang>
+    <lang name="en-us">Define enterprise-specific policies for your device</lang>
+    <lang name="en-gb">Define enterprise-specific policies for your device</lang>
+  </resource>
+  <resource id="enterpriseDeviceLockdown">
+    <lang name="zh-CN">使用设备锁定 API 并访问企业共享的存储文件夹</lang>
+    <lang name="en-us">Use your device lockdown API and access the enterprise shared storage folders</lang>
+    <lang name="en-gb">Use your device lockdown API and access the enterprise shared storage folders</lang>
+  </resource>
+  <resource id="extendedExecutionBackgroundAudio">
+    <lang name="zh-CN">当应用不在前台时播放音频</lang>
+    <lang name="en-us">Play audio when the app is not in the foreground</lang>
+    <lang name="en-gb">Play audio when the app is not in the foreground</lang>
+  </resource>
+  <resource id="extendedExecutionCritical">
+    <lang name="zh-CN">开始重要的扩展执行会话</lang>
+    <lang name="en-us">Begin a critical extended execution session</lang>
+    <lang name="en-gb">Begin a critical extended execution session</lang>
+  </resource>
+  <resource id="extendedExecutionUnconstrained">
+    <lang name="zh-CN">开始不受限制的扩展执行会话</lang>
+    <lang name="en-us">Begin an unconstrained extended execution session</lang>
+    <lang name="en-gb">Begin an unconstrained extended execution session</lang>
+  </resource>
+  <resource id="externalDependenciesVirtualCapability">
+    <lang name="zh-CN">安装外部依赖项</lang>
+    <lang name="en-us">Install external dependencies</lang>
+    <lang name="en-gb">Install external dependencies</lang>
+  </resource>
+  <resource id="firstSignInSettings">
+    <lang name="zh-CN">在首次登录到设备时访问设置</lang>
+    <lang name="en-us">Access your settings from when you first signed in to your device</lang>
+    <lang name="en-gb">Access your settings from when you first signed in to your device</lang>
+  </resource>
+  <resource id="gameList">
+    <lang name="zh-CN">游戏列表</lang>
+    <lang name="en-us">Games List</lang>
+    <lang name="en-gb">Games List</lang>
+  </resource>
+  <resource id="humaninterfacedevice">
+    <lang name="zh-CN">使用支持人机接口设备 (HID) 协议的设备</lang>
+    <lang name="en-us">Use your devices that support the Human Interface Device (HID) protocol</lang>
+    <lang name="en-gb">Use your devices that support the Human Interface Device (HID) protocol</lang>
+  </resource>
+  <resource id="hyperLinkLearnMore">
+    <lang name="zh-CN">了解详细信息</lang>
+    <lang name="en-us">Learn more</lang>
+    <lang name="en-gb">Learn more</lang>
+  </resource>
+  <resource id="inputForegroundObservation">
+    <lang name="zh-CN">当应用程序在前台(处于焦点位置和活动状态)时，观察并截获各种形式的原始输入</lang>
+    <lang name="en-us">Observe and intercept various forms of raw input while the application is in foreground (in focus and active)</lang>
+    <lang name="en-gb">Observe and intercept various forms of raw input while the application is in foreground (in focus and active)</lang>
+  </resource>
+  <resource id="inputInjection">
+    <lang name="zh-CN">授予应用权限以将各种形式的输入注入 OneCore 系统</lang>
+    <lang name="en-us">Grant the app permission to inject various forms of input into a OneCore system</lang>
+    <lang name="en-gb">Grant the app permission to inject various forms of input into a OneCore system</lang>
+  </resource>
+  <resource id="inputInjection_Brokered">
+    <lang name="zh-CN">注入输入并以编程方式推动用户体验</lang>
+    <lang name="en-US">Injecting input and programmatically driving user experience</lang>
+  </resource>
+  <resource id="inputObservation">
+    <lang name="zh-CN">观察正在由系统接收的原始输入</lang>
+    <lang name="en-us">Observe raw input being received by the system</lang>
+    <lang name="en-gb">Observe raw input being received by the system</lang>
+  </resource>
+  <resource id="inputSuppression">
+    <lang name="zh-CN">取消正在由系统接收的原始输入</lang>
+    <lang name="en-us">Suppress raw input being received by the system</lang>
+    <lang name="en-gb">Suppress raw input being received by the system</lang>
+  </resource>
+  <resource id="internetClient">
+    <lang name="zh-CN">访问 Internet 连接</lang>
+    <lang name="en-us">Access your Internet connection</lang>
+    <lang name="en-gb">Access your Internet connection</lang>
+  </resource>
+  <resource id="internetClientServer">
+    <lang name="zh-CN">访问 Internet 连接并充当服务器。</lang>
+    <lang name="en-us">Access your Internet connection and act as a server.</lang>
+    <lang name="en-gb">Access your Internet connection and act as a server.</lang>
+  </resource>
+  <resource id="interopServices">
+    <lang name="zh-CN">驱动程序访问</lang>
+    <lang name="en-us">Driver Access</lang>
+    <lang name="en-gb">Driver Access</lang>
+  </resource>
+  <resource id="localSystemServices">
+    <lang name="zh-CN">在使用最大权限运行的计算机上安装服务</lang>
+    <lang name="en-us">Install a service on the machine that runs with maximum privileges</lang>
+    <lang name="en-gb">Install a service on the machine that runs with maximum privileges</lang>
+  </resource>
+  <resource id="location">
+    <lang name="zh-CN">使用位置</lang>
+    <lang name="en-us">Use your location</lang>
+    <lang name="en-gb">Use your location</lang>
+  </resource>
+  <resource id="locationHistory">
+    <lang name="zh-CN">访问设备的位置历史记录</lang>
+    <lang name="en-us">Access the location history of your device</lang>
+    <lang name="en-gb">Access the location history of your device</lang>
+  </resource>
+  <resource id="locationSystem">
+    <lang name="zh-CN">定位系统</lang>
+    <lang name="en-us">Location System</lang>
+    <lang name="en-gb">Location System</lang>
+  </resource>
+  <resource id="lockScreenCreatives">
+    <lang name="zh-CN">访问锁屏界面的创造性设置</lang>
+    <lang name="en-us">Access your lock screen creative settings</lang>
+    <lang name="en-gb">Access your lock screen creative settings</lang>
+  </resource>
+  <resource id="lowLevelDevices">
+    <lang name="zh-CN">IoT 低级别总线硬件</lang>
+    <lang name="en-us">IoT Low-Level Bus Hardware</lang>
+    <lang name="en-gb">IoT Low-Level Bus Hardware</lang>
+  </resource>
+  <resource id="microphone">
+    <lang name="zh-CN">使用麦克风</lang>
+    <lang name="en-us">Use your microphone</lang>
+    <lang name="en-gb">Use your microphone</lang>
+  </resource>
+  <resource id="modifiableApp">
+    <lang name="zh-CN">允许用户修改应用</lang>
+    <lang name="en-us">Enable the user to modify the app</lang>
+    <lang name="en-gb">Enable the user to modify the app</lang>
+  </resource>
+  <resource id="musicLibrary">
+    <lang name="zh-CN">使用音乐库</lang>
+    <lang name="en-us">Use your music library</lang>
+    <lang name="en-gb">Use your music library</lang>
+  </resource>
+  <resource id="networkConnectionManagerProvisioning">
+    <lang name="zh-CN">定义将设备与 WWAN 和 WLAN 接口相连接的策略</lang>
+    <lang name="en-us">Define the policies that connect your device with WWAN and WLAN interfaces</lang>
+    <lang name="en-gb">Define the policies that connect your device with WWAN and WLAN interfaces</lang>
+  </resource>
+  <resource id="networkDataPlanProvisioning">
+    <lang name="zh-CN">在设备上搜集有关流量套餐的信息并读取网络使用情况</lang>
+    <lang name="en-us">Gather information about data plans on the device and read network usage</lang>
+    <lang name="en-gb">Gather information about data plans on the device and read network usage</lang>
+  </resource>
+  <resource id="networkingVpnProvider">
+    <lang name="zh-CN">访问 VPN 功能</lang>
+    <lang name="en-us">Access VPN features</lang>
+    <lang name="en-gb">Access VPN features</lang>
+  </resource>
+  <resource id="objects3d">
+    <lang name="zh-CN">以编程方式访问 3D 对象</lang>
+    <lang name="en-us">Programmatically access your 3D Objects</lang>
+    <lang name="en-gb">Programmatically access your 3D Objects</lang>
+  </resource>
+  <resource id="oemDeployment">
+    <lang name="zh-CN">OEM 和 MO 合作伙伴应用</lang>
+    <lang name="en-us">OEM and MO Partner App</lang>
+    <lang name="en-gb">OEM and MO Partner App</lang>
+  </resource>
+  <resource id="oemPublicDirectory">
+    <lang name="zh-CN">OEM 和 MO 合作伙伴应用</lang>
+    <lang name="en-us">OEM and MO Partner App</lang>
+    <lang name="en-gb">OEM and MO Partner App</lang>
+  </resource>
+  <resource id="optical">
+    <lang name="zh-CN">访问光盘驱动器上的功能</lang>
+    <lang name="en-us">Access functions on the optical disc drives</lang>
+    <lang name="en-gb">Access functions on the optical disc drives</lang>
+  </resource>
+  <resource id="packagedServices">
+    <lang name="zh-CN">在计算机上安装服务</lang>
+    <lang name="en-us">Install a service on the machine</lang>
+    <lang name="en-gb">Install a service on the machine</lang>
+  </resource>
+  <resource id="packageManagement">
+    <lang name="zh-CN">直接管理其他应用</lang>
+    <lang name="en-us">Manage other apps directly</lang>
+    <lang name="en-gb">Manage other apps directly</lang>
+  </resource>
+  <resource id="packagePolicySystem">
+    <lang name="zh-CN">控制与安装在设备上的应用相关的系统策略</lang>
+    <lang name="en-us">Control system policies related to apps that are installed on the device</lang>
+    <lang name="en-gb">Control system policies related to apps that are installed on the device</lang>
+  </resource>
+  <resource id="packageQuery">
+    <lang name="zh-CN">搜集有关其他应用的信息</lang>
+    <lang name="en-us">Gather information about other apps</lang>
+    <lang name="en-gb">Gather information about other apps</lang>
+  </resource>
+  <resource id="packageWriteRedirectionCompatibilityShim">
+    <lang name="zh-CN">将文件写入应用的安装文件夹</lang>
+    <lang name="en-us">Write files to the app’s install folder</lang>
+    <lang name="en-gb">Write files to the app’s install folder</lang>
+  </resource>
+  <resource id="phoneCall">
+    <lang name="zh-CN">访问设备上所有的电话线</lang>
+    <lang name="en-us">Access all the phone lines on your device</lang>
+    <lang name="en-gb">Access all the phone lines on your device</lang>
+  </resource>
+  <resource id="phoneCallHistory">
+    <lang name="zh-CN">读取呼叫历史记录并删除历史记录中的条目</lang>
+    <lang name="en-us">Read the call history and delete entries in the history</lang>
+    <lang name="en-gb">Read the call history and delete entries in the history</lang>
+  </resource>
+  <resource id="phoneCallHistoryPublic">
+    <lang name="zh-CN">电话呼叫公共历史记录</lang>
+    <lang name="en-us">Phone Calls Public History</lang>
+    <lang name="en-gb">Phone Calls Public History</lang>
+  </resource>
+  <resource id="phoneCallHistorySystem">
+    <lang name="zh-CN">完全修改呼叫历史记录</lang>
+    <lang name="en-us">Fully modify your call history</lang>
+    <lang name="en-gb">Fully modify your call history</lang>
+  </resource>
+  <resource id="picturesLibrary">
+    <lang name="zh-CN">使用图片库</lang>
+    <lang name="en-us">Use your pictures library</lang>
+    <lang name="en-gb">Use your pictures library</lang>
+  </resource>
+  <resource id="pointOfService">
+    <lang name="zh-CN">使用条形码扫描仪和磁卡读卡器</lang>
+    <lang name="en-us">Use barcode scanners and magnetic card readers</lang>
+    <lang name="en-gb">Use barcode scanners and magnetic card readers</lang>
+  </resource>
+  <resource id="previewStore">
+    <lang name="zh-CN">Microsoft Store 预览版功能</lang>
+    <lang name="en-us">Microsoft Store Preview Features</lang>
+    <lang name="en-gb">Microsoft Store Preview Features</lang>
+  </resource>
+  <resource id="previewUiComposition">
+    <lang name="zh-CN">预览 Windows UI 构成 API 以接收反馈</lang>
+    <lang name="en-us">Preview the Windows UI Composition API to receive feedback</lang>
+    <lang name="en-gb">Preview the Windows UI Composition API to receive feedback</lang>
+  </resource>
+  <resource id="privateNetworkClientServer">
+    <lang name="zh-CN">访问家庭或工作网络</lang>
+    <lang name="en-us">Access your home or work networks</lang>
+    <lang name="en-gb">Access your home or work networks</lang>
+  </resource>
+  <resource id="proximity">
+    <lang name="zh-CN">使用支持近场通信 (NFC) 服务的设备</lang>
+    <lang name="en-us">Use devices that support Near Field Communication (NFC) services</lang>
+    <lang name="en-gb">Use devices that support Near Field Communication (NFC) services</lang>
+  </resource>
+  <resource id="recordedCallsFolder">
+    <lang name="zh-CN">访问电话录音</lang>
+    <lang name="en-us">Access your recorded calls</lang>
+    <lang name="en-gb">Access your recorded calls</lang>
+  </resource>
+  <resource id="remotePassportAuthentication">
+    <lang name="zh-CN">访问可用于解锁远程电脑的凭据</lang>
+    <lang name="en-us">Access credentials that can be used to unlock a remote PC</lang>
+    <lang name="en-gb">Access credentials that can be used to unlock a remote PC</lang>
+  </resource>
+  <resource id="removableStorage">
+    <lang name="zh-CN">使用存储在外部存储设备上的数据</lang>
+    <lang name="en-us">Use data stored on an external storage device</lang>
+    <lang name="en-gb">Use data stored on an external storage device</lang>
+  </resource>
+  <resource id="runFullTrust">
+    <lang name="zh-CN">使用全部系统资源</lang>
+    <lang name="en-us">Uses all system resources</lang>
+    <lang name="en-gb">Uses all system resources</lang>
+  </resource>
+  <resource id="screenDuplication">
+    <lang name="zh-CN">在其他设备上投射屏幕</lang>
+    <lang name="en-us">Project the screen on another device</lang>
+    <lang name="en-gb">Project the screen on another device</lang>
+  </resource>
+  <resource id="sharedUserCertificates">
+    <lang name="zh-CN">使用设备上可用的软件和硬件证书</lang>
+    <lang name="en-us">Use the software and hardware certificates available on your device</lang>
+    <lang name="en-gb">Use the software and hardware certificates available on your device</lang>
+  </resource>
+  <resource id="smsSend">
+    <lang name="zh-CN">发送短信和彩信</lang>
+    <lang name="en-us">Send SMS and MMS messages</lang>
+    <lang name="en-gb">Send SMS and MMS messages</lang>
+  </resource>
+  <resource id="spatialPerception">
+    <lang name="zh-CN">查看你当前和过去的环境</lang>
+    <lang name="en-us">See your current and past surroundings</lang>
+    <lang name="en-gb">See your current and past surroundings</lang>
+  </resource>
+  <resource id="systemManagement">
+    <lang name="zh-CN">IoT 系统管理</lang>
+    <lang name="en-us">IoT System Adminstration</lang>
+    <lang name="en-gb">IoT System Adminstration</lang>
+  </resource>
+  <resource id="teamEditionExperience">
+    <lang name="zh-CN">访问控制试验体验的内部 API</lang>
+    <lang name="en-us">Access internal APIs that control experimental experiences</lang>
+    <lang name="en-gb">Access internal APIs that control experimental experiences</lang>
+  </resource>
+  <resource id="uiAccess">
+    <lang name="zh-CN">与你的计算机上的每个应用程序交互</lang>
+    <lang name="en-us">Interact with every application on your computer</lang>
+    <lang name="en-gb">Interact with every application on your computer</lang>
+  </resource>
+  <resource id="unvirtualizedResources">
+    <lang name="zh-CN">写入在卸载时不会清除的注册表项和文件</lang>
+    <lang name="en-us">Write registry entries and files that are not cleaned up on uninstall</lang>
+    <lang name="en-gb">Write registry entries and files that are not cleaned up on uninstall</lang>
+  </resource>
+  <resource id="usb">
+    <lang name="zh-CN">访问 USB 连接的设备</lang>
+    <lang name="en-us">Access your USB connected devices</lang>
+    <lang name="en-gb">Access your USB connected devices</lang>
+  </resource>
+  <resource id="userAccountInformation">
+    <lang name="zh-CN">访问帐户的用户名和头像</lang>
+    <lang name="en-us">Access to your Account’s username and picture</lang>
+    <lang name="en-gb">Access to your Account’s username and picture</lang>
+  </resource>
+  <resource id="userDataAccountSetup">
+    <lang name="zh-CN">直接访问存储在设备上的帐户</lang>
+    <lang name="en-us">Directly access your accounts stored on the device</lang>
+    <lang name="en-gb">Directly access your accounts stored on the device</lang>
+  </resource>
+  <resource id="userDataAccountsProvider">
+    <lang name="zh-CN">用户数据帐户提供程序</lang>
+    <lang name="en-us">User Data Accounts Provider</lang>
+    <lang name="en-gb">User Data Accounts Provider</lang>
+  </resource>
+  <resource id="userDataSystem">
+    <lang name="zh-CN">对你的数据具有不受限制的访问权限</lang>
+    <lang name="en-us">Have unrestricted access to your data</lang>
+    <lang name="en-gb">Have unrestricted access to your data</lang>
+  </resource>
+  <resource id="userPrincipalName">
+    <lang name="zh-CN">检索用户主体名称 (UPN)，无需许可提示</lang>
+    <lang name="en-us">Retrieve your User Principal Name (UPN) without a consent prompt</lang>
+    <lang name="en-gb">Retrieve your User Principal Name (UPN) without a consent prompt</lang>
+  </resource>
+  <resource id="userSigninSupport">
+    <lang name="zh-CN">在设备上使用帐户登录到应用</lang>
+    <lang name="en-us">Sign you in to your app using the account on your device</lang>
+    <lang name="en-gb">Sign you in to your app using the account on your device</lang>
+  </resource>
+  <resource id="videosLibrary">
+    <lang name="zh-CN">使用视频库</lang>
+    <lang name="en-us">Use your video library</lang>
+    <lang name="en-gb">Use your video library</lang>
+  </resource>
+  <resource id="visualElementsSystem">
+    <lang name="zh-CN">访问应用的磁贴数据</lang>
+    <lang name="en-us">Access the app's tile data</lang>
+    <lang name="en-gb">Access the app's tile data</lang>
+  </resource>
+  <resource id="visualVoiceMail">
+    <lang name="zh-CN">对可视语音信箱具有完全访问权限</lang>
+    <lang name="en-us">Have full access to the your visual voicemail</lang>
+    <lang name="en-gb">Have full access to the your visual voicemail</lang>
+  </resource>
+  <resource id="voipCall">
+    <lang name="zh-CN">使用设备的 IP 语音 (VoIP) 服务</lang>
+    <lang name="en-us">Use your device's voice over IP (VoIP) services</lang>
+    <lang name="en-gb">Use your device's voice over IP (VoIP) services</lang>
+  </resource>
+  <resource id="walletSystem">
+    <lang name="zh-CN">对存储的“电子钱包”应用卡具有完全访问权限</lang>
+    <lang name="en-us">Have full access to your stored Wallet app cards</lang>
+    <lang name="en-gb">Have full access to your stored Wallet app cards</lang>
+  </resource>
+  <resource id="webcam">
+    <lang name="zh-CN">使用网络摄像头</lang>
+    <lang name="en-us">Use your webcam</lang>
+    <lang name="en-gb">Use your webcam</lang>
+  </resource>
+  <resource id="wiFiControl">
+    <lang name="zh-CN">扫描并连接到 WLAN 网络</lang>
+    <lang name="en-us">Scan and connect to WiFi networks</lang>
+    <lang name="en-gb">Scan and connect to WiFi networks</lang>
+  </resource>
+  <resource id="xboxAccessoryManagement">
+    <lang name="zh-CN">Xbox 附件</lang>
+    <lang name="en-us">Xbox Accessory</lang>
+    <lang name="en-gb">Xbox Accessory</lang>
+  </resource>
+  <resource id="backgroundMediaPlayback">
+    <lang name="zh-CN">在后台播放媒体</lang>
+    <lang name="en-US">Playing media in the background</lang>
+  </resource>
+  <resource id="extendedExecution">
+    <lang name="zh-CN">允许应用程序在进入后台后继续执行一段时间的操作</lang>
+    <lang name="en-US">Allows the application to continue performing operations for a period of time after entering the background.</lang>
+  </resource>
+  <resource id="graphicsCaptureProgrammatic">
+    <lang name="zh-CN">允许使用图形捕获</lang>
+    <lang name="en-US">Allow the use of graphical capture</lang>
+  </resource>
+  <resource id="graphicsCaptureWithoutBorder">
+    <lang name="zh-CN">允许无边框图形捕获</lang>
+    <lang name="en-US">Allow borderless graphics capture</lang>
+  </resource>
+  <resource id="inProcessMediaExtension">
+    <lang name="zh-CN">进程内媒体扩展</lang>
+    <lang name="en-US">In-process media extensions</lang>
+  </resource>
+  <resource id="inputInjectionBrokered">
+    <lang name="zh-CN">允许应用程序以编程方式将各种形式的输入注入系统，例如 HID、触摸、笔、键盘或鼠标。</lang>
+    <lang name="en-US">It allows applications to programmatically inject various forms of input into the system, such as HID, touch, pen, keyboard, or mouse.</lang>
+  </resource>
+  <resource id="offlineMapsManagement">
+    <lang name="zh-CN">允许应用程序访问离线地图。</lang>
+    <lang name="en-US">Allow the application to access offline maps.</lang>
+  </resource>
+  <resource id="phoneCallSystem">
+    <lang name="zh-CN">允许应用访问设备上的所有电话线</lang>
+    <lang name="en-US">Allow the application to access all phone lines on the device</lang>
+  </resource>
+  <resource id="remoteSystem">
+    <lang name="zh-CN">允许应用程序访问与用户的 Microsoft 帐户关联的设备列表</lang>
+    <lang name="en-US">Allow applications to access a list of devices associated with a user's Microsoft account.</lang>
+  </resource>
+  <resource id="slapiQueryLicenseValue">
+    <lang name="zh-CN">查询软件许可政策</lang>
+    <lang name="en-us">Query software licensing policies</lang>
+    <lang name="en-gb">Query software licensing policies</lang>
+  </resource>
+  <resource id="storeAppInstall">
+    <lang name="zh-CN">管理应用安装</lang>
+    <lang name="en-US">Management application installation</lang>
+  </resource>
+  <resource id="userDataAccounts">
+    <lang name="zh-CN">可访问电子邮件、联系人、日历等的用户数据帐户</lang>
+    <lang name="en-US">User data accounts that can access emails, contacts, calendars, etc.</lang>
+  </resource>
+  <resource id="userDataTasks">
+    <lang name="zh-CN">允许应用程序访问任务设置的当前状态</lang>
+    <lang name="en-US">Allow applications to access the current state of task settings</lang>
+  </resource>
+  <resource id="userDataTasksSystem">
+    <lang name="zh-CN">可访问系统任务项</lang>
+    <lang name="en-US">Accessible system task items</lang>
+  </resource>
+  <resource id="userNotificationListener">
+    <lang name="zh-CN">允许应用程序访问通知设置的当前状态</lang>
+    <lang name="en-US">Allow the application to access the current state of notification settings</lang>
+  </resource>
+  <resource id="webPlatformMediaExtension">
+    <lang name="zh-CN">Web 平台媒体扩展</lang>
+    <lang name="en-US">Web platform media extension</lang>
+  </resource>
 </resources>
