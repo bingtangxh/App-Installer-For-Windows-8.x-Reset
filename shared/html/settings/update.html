@@ -372,12 +372,11 @@
                         try {
                             WinJS.xhr({
                                 url: "https://api.github.com/repos/modernw/App-Installer-For-Windows-8.x-Reset/releases/latest"
-                            }).done(function(resp) {
+                            }).then(function(resp) {
                                 // console.log("success", resp);
                                 var json = JSON.parse(resp.responseText);
                                 window.fetchedJson = json;
                                 // console.log(json);
-                                self.disabled = false;
                                 newVersionVersion.textContent = json.name;
                                 newVersionVersion.setAttribute("data-version", json.tag_name);
                                 window.newver = json.tag_name;
@@ -396,7 +395,6 @@
                                         break;
                                     }
                                 }
-                                window.parent.setDisabledForOperation(false);
                                 if (compareVersion(window.currver, window.newver) >= 0) {
                                     checkUpdateText.textContent = getPublicRes(114);
                                     checkUpdateBtn.textContent = getPublicRes(115);
@@ -419,8 +417,10 @@
                                 progress.style.display = "none";
                                 docLink.style.display = "";
                                 docLink.href = json.documentation_url;
-                                self.disabled = false;
+                                WinJS.Promise.wrap();
+                            }).done(function() {
                                 window.parent.setDisabledForOperation(false);
+                                self.disabled = false;
                             });
                         } catch (error) {
                             //  console.log("error", error);
@@ -432,6 +432,13 @@
                             window.parent.setDisabledForOperation(false);
                         }
                     } else if (checkUpdateBtn.getAttribute("data-action") == "download") {
+                        switch (external.System.processorArchitecture) {
+                            case 5:
+                                external.Process.open(newVersionUrl.href);
+                                self.disabled = false;
+                                window.parent.setDisabledForOperation(false);
+                                return;
+                        }
                         var storage = Bridge.External.Storage;
                         var path = storage.path;
                         stopProcess = true;

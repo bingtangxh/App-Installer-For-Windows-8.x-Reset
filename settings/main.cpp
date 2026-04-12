@@ -418,6 +418,15 @@ public ref class _I_System
 			return (error == ERROR_OLD_WIN_VERSION) ? FALSE : FALSE;
 		}
 	}
+	property int ProcessorArchitecture
+	{
+		int get ()
+		{
+			SYSTEM_INFO si;
+			GetNativeSystemInfo (&si);
+			return si.wProcessorArchitecture;
+		}
+	}
 };
 public ref class _I_System2: public _I_System
 {
@@ -1208,6 +1217,14 @@ public ref class MainHtmlWnd: public System::Windows::Forms::Form, public IScrip
 				th->Start ();
 			}
 			bool Kill (String ^filename, bool allproc, bool onlyname) { return KillProcessByFilePath (MPStringToStdW (filename), allproc, onlyname); }
+			bool Start (String ^filename, String ^args) 
+			{
+				LPCWSTR lpArgs = (args && args->Length) ? MPStringToPtrW (args) : nullptr;
+				HINSTANCE result = ShellExecuteW (nullptr, L"open", MPStringToStdW (filename).c_str (), lpArgs, nullptr, SW_SHOWNORMAL);
+				if (reinterpret_cast <intptr_t> (result) <= 32) return false;
+				return true;
+			}
+			bool Open (String ^url) { return Start (url, nullptr); }
 		};
 		[ComVisible (true)]
 		ref class _I_ResourcePri
