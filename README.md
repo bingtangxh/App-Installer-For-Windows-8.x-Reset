@@ -4,9 +4,9 @@
 <h2>Required runtime libraries</h2>
 <ul>
   <li>Microsoft .NET Framework 4.5 (may be pre-installed on Windows 8.x and later)</li>
-  <li>Microsoft .NET Framework 4.6</li>
-  <li>Microsoft Visual C++ 2013 Redistributable (x86)</li>
-  <li>Microsoft Visual C++ 2015 Redistributable (x86)</li>
+  <li>Microsoft .NET Framework 4.6 (x86/ARM)</li>
+  <li>Microsoft Visual C++ 2013 Redistributable (x86/ARM)</li>
+  <li>Microsoft Visual C++ 2015 Redistributable (x86/ARM)</li>
 </ul>
 <h2>Download</h2>
 <p>Download the latest release from the Releases section.</p>
