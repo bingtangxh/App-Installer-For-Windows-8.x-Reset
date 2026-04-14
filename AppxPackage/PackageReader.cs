@@ -13,6 +13,7 @@ using ICSharpCode.SharpZipLib;
 using System.IO;
 using System.Xml;
 using ICSharpCode.SharpZipLib.Zip;
+using System.Security.Cryptography;
 //using PriFormat;
 namespace AppxPackage
 {
@@ -106,6 +107,47 @@ namespace AppxPackage
 				}
 			}
 			return ret;
+		}
+	}
+	[ComVisible (true)]
+	internal static class PublisherIdHelper
+	{
+		// Base32 编码表 (Crockford 变体，去掉 I L O U 避免混淆)
+		private const string Base32Chars = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+		/// <summary>
+		/// 从证书的可分辨名称 (Distinguished Name) 计算出对应的 Publisher ID。
+		/// </summary>
+		/// <param name="distinguishedName">
+		/// 证书 DN 字符串，例如 "CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
+		/// </param>
+		/// <returns>13 位小写字母数字组成的 Publisher ID</returns>
+		/// <exception cref="ArgumentNullException">distinguishedName 为 null 时抛出</exception>
+		public static string GetPublisherId (string distinguishedName)
+		{
+			if (distinguishedName == null)
+				throw new ArgumentNullException (nameof (distinguishedName));
+			byte [] dnBytes = Encoding.Unicode.GetBytes (distinguishedName);
+			byte [] hash;
+			using (var sha256 = SHA256.Create ())
+			{
+				hash = sha256.ComputeHash (dnBytes);
+			}
+			byte [] first8Bytes = new byte [8];
+			Array.Copy (hash, 0, first8Bytes, 0, 8);
+			var binaryBuilder = new StringBuilder (64);
+			for (int i = 0; i < first8Bytes.Length; i++)
+			{
+				binaryBuilder.Append (Convert.ToString (first8Bytes [i], 2).PadLeft (8, '0'));
+			}
+			string binaryString = binaryBuilder.ToString ().PadRight (65, '0');
+			var resultBuilder = new StringBuilder (13);
+			for (int i = 0; i < 65; i += 5)
+			{
+				string fiveBits = binaryString.Substring (i, 5);
+				int index = Convert.ToInt32 (fiveBits, 2);
+				resultBuilder.Append (Base32Chars [index]);
+			}
+			return resultBuilder.ToString ().ToLowerInvariant ();
 		}
 	}
 	internal class PriAllValuesReader: IDisposable
@@ -491,6 +533,7 @@ namespace AppxPackage
 		}
 		public string Publisher { get { return StringValue (1); } }
 		public string ResourceId { get { return StringValue (4); } }
+		public string PublisherId => PublisherIdHelper.GetPublisherId (Publisher);
 		public DataUtils.Version Version
 		{
 			get
@@ -519,7 +562,9 @@ namespace AppxPackage
 				resource_id = ResourceId,
 				architecture = ProcessArchitecture.Select (e => (int)e).ToList (),
 				version = Version.BuildJSON (),
-				realver = RealVersion.BuildJSON ()
+				realver = RealVersion.BuildJSON (),
+				publisher_id = PublisherId,
+				_publisher_id = "Note: The publisher id obtained may be inaccurate."
 			};
 		}
 	}
@@ -1873,7 +1918,9 @@ namespace AppxPackage
 								}).ToList (),
 								familyName = id.FamilyName,
 								fullName = id.FullName,
-								resourceId = id.ResourceId
+								resourceId = id.ResourceId,
+								publisherId = id.PublisherId,
+								_publisherId = "Note: The publisher id obtained may be inaccurate."
 							};
 							#endregion
 							#region prerequistes
@@ -2194,6 +2241,10 @@ namespace AppxPackage
 								nodeid.AppendChild (nodeidfamily);
 								nodeid.AppendChild (nodeidfamily);
 								nodeid.AppendChild (nodeidresid);
+								var nodeidpublid = xml.CreateElement ("PublisherId");
+								nodeidpublid.InnerText = id.PublisherId;
+								nodeidpublid.SetAttribute ("Description", "Note: The publisher id obtained may be inaccurate.");
+								nodeid.AppendChild (nodeidpublid);
 								root.AppendChild (nodeid);
 							}
 							#endregion
@@ -2620,7 +2671,9 @@ namespace AppxPackage
 								}).ToList (),
 								familyName = id.FamilyName,
 								fullName = id.FullName,
-								resourceId = id.ResourceId
+								resourceId = id.ResourceId,
+								publisherId = id.PublisherId,
+								_publisherId = "Note: The publisher id obtained may be inaccurate."
 							};
 							#endregion
 							#region prerequistes
@@ -2949,6 +3002,10 @@ namespace AppxPackage
 								nodeid.AppendChild (nodeidfamily);
 								nodeid.AppendChild (nodeidfamily);
 								nodeid.AppendChild (nodeidresid);
+								var nodeidpublid = xml.CreateElement ("PublisherId");
+								nodeidpublid.InnerText = id.PublisherId;
+								nodeidpublid.SetAttribute ("Description", "Note: The publisher id obtained may be inaccurate.");
+								nodeid.AppendChild (nodeidpublid);
 								root.AppendChild (nodeid);
 							}
 							#endregion

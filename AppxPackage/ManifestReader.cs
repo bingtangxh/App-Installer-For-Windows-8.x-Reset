@@ -178,6 +178,7 @@ namespace AppxPackage
 		}
 		public string Publisher { get { return StringValue (1); } }
 		public string ResourceId { get { return StringValue (4); } }
+		public string PublisherId => PublisherIdHelper.GetPublisherId (Publisher);
 		public DataUtils.Version Version
 		{
 			get
@@ -197,7 +198,9 @@ namespace AppxPackage
 				publisher = Publisher,
 				resource_id = ResourceId,
 				architecture = ProcessArchitecture.Select (e => (int)e).ToList (),
-				version = Version.BuildJSON ()
+				version = Version.BuildJSON (),
+				publisher_id = PublisherId,
+				_publisher_id = "Note: The publisher id obtained may be inaccurate."
 			};
 		}
 	}

@@ -137,7 +137,9 @@ namespace PkgCLI
 					}).ToList (),
 					familyName = id.FamilyName,
 					fullName = id.FullName,
-					resourceId = id.ResourceId
+					resourceId = id.ResourceId,
+					publisherId = id.PublisherId,
+					_publisherId = "Note: The publisher id obtained may be inaccurate."
 				},
 				properties = new {
 					displayName = prop.DisplayName,
@@ -574,7 +576,9 @@ namespace PkgCLI
 					}).ToList (),
 					familyName = id.FamilyName,
 					fullName = id.FullName,
-					resourceId = id.ResourceId
+					resourceId = id.ResourceId,
+					publisherId = id.PublisherId,
+					_publisherId = "Note: The publisher id obtained may be inaccurate."
 				},
 				properties = new {
 					displayName = prop.DisplayName,

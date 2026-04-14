@@ -104,6 +104,10 @@
                 <td>Resource ID</td>
                 <td name="resource_id"></td>
             </tr>
+            <tr title="Note: The publisher id obtained may be inaccurate.">
+                <td>Publisher ID</td>
+                <td name="publisher_id"></td>
+            </tr>
             <tr class="spec">
                 <td colspan="2">Properties</td>
             </tr>
@@ -319,6 +323,7 @@
                 t.querySelector("[name='package_family_name']").textContent = pi.identity.package_family_name;
                 t.querySelector("[name='package_full_name']").textContent = pi.identity.package_full_name;
                 t.querySelector("[name='resource_id']").textContent = pi.identity.resource_id;
+                t.querySelector("[name='publisher_id']").textContent = pi.identity.publisher_id;
                 t.querySelector("[name='display_name']").textContent = pi.properties.display_name;
                 t.querySelector("[name='publisher_display_name']").textContent = pi.properties.publisher_display_name;
                 t.querySelector("[name='description']").textContent = pi.properties.description;
