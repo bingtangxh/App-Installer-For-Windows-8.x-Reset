@@ -28,6 +28,20 @@ namespace Reader
 			InitSize ();
 			Text = Bridge.ResXmlStore.StringRes.Get ("READER_APPTITLE");
 			this.Load += Form_Load;
+			try
+			{
+				if (this is WAShell.ModernForm)
+				{
+					this.WindowIcon = new Icon (Path.Combine (AppDomain.CurrentDomain.BaseDirectory, "icons\\32_reader.ico"));
+				}
+			}
+			catch
+			{
+				if (this is WAShell.ModernForm)
+				{
+					this.WindowIcon = this.Icon;
+				}
+			}
 		}
 		private void InitSize ()
 		{

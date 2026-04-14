@@ -28,6 +28,20 @@ namespace Manager
 			InitSize ();
 			Text = Bridge.ResXmlStore.StringRes.Get ("MANAGER_APPTITLE");
 			this.Load += Form_Load;
+			try
+			{
+				if (this is WAShell.ModernForm)
+				{
+					this.WindowIcon = new Icon (Path.Combine (AppDomain.CurrentDomain.BaseDirectory, "icons\\32_manager.ico"));
+				}
+			}
+			catch
+			{
+				if (this is WAShell.ModernForm)
+				{
+					this.WindowIcon = this.Icon;
+				}
+			}
 		}
 		private void InitSize ()
 		{

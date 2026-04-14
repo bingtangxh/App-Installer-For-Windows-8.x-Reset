@@ -41,7 +41,6 @@
 			this.Name = "ManagerShell";
 			this.PageScale = 125;
 			this.Text = "Form1";
-			this.WindowIcon = ((System.Drawing.Icon)(resources.GetObject("$this.WindowIcon")));
 			this.Load += new System.EventHandler(this.ManagerShell_Load);
 			this.Resize += new System.EventHandler(this.ManagerShell_Resize);
 			this.ResumeLayout(false);
