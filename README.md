@@ -1,5 +1,7 @@
 <h1>App Installer For Windows 8.x (Reset)</h1>
 <p>This application aims to provide a more elegant way to install Windows Store apps. It offers a visual window for users to browse app information, install, launch apps, or get error details.</p>
+<p>When using the App Installer to install the package, the certificates in the package will be automatically imported, eliminating the need for manual import and greatly simplifying the installation of Windows Store apps.</p>
+<p>However, note that other programs included in the project's installer package, besides the App Installer, will not automatically import their certificates. Fortunately, the App Installer supports automatic installation parameters.</p>
 <p>Supports running on Windows 8 and later.</p>
 <h2>Required runtime libraries</h2>
 <ul>
