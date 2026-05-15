@@ -9,6 +9,7 @@
   <li>Microsoft .NET Framework 4.6 (x86/ARM)</li>
   <li>Microsoft Visual C++ 2013 Redistributable (x86/ARM)</li>
   <li>Microsoft Visual C++ 2015 Redistributable (x86/ARM)</li>
+  <p>Note: Windows 8.x on ARM devices may require an update to install the VC2015 runtime library.</p>
 </ul>
 <h2>Download</h2>
 <p>Download the latest release from the Releases section.</p>
